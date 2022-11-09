@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "D:\\niprojectcsharptorpedo\\Pirate_War_v1\\Pirate_War_v1\\Pirate_War_v1.csproj": {}
+    "C:\\Users\\kissm\\OneDrive\\Documents\\GitHub\\Pirate_War_Torpedo\\Pirate_War_v1\\Pirate_War_v1\\Pirate_War_v1.csproj": {}
   },
   "projects": {
-    "D:\\niprojectcsharptorpedo\\Pirate_War_v1\\Pirate_War_v1\\Pirate_War_v1.csproj": {
+    "C:\\Users\\kissm\\OneDrive\\Documents\\GitHub\\Pirate_War_Torpedo\\Pirate_War_v1\\Pirate_War_v1\\Pirate_War_v1.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\niprojectcsharptorpedo\\Pirate_War_v1\\Pirate_War_v1\\Pirate_War_v1.csproj",
+        "projectUniqueName": "C:\\Users\\kissm\\OneDrive\\Documents\\GitHub\\Pirate_War_Torpedo\\Pirate_War_v1\\Pirate_War_v1\\Pirate_War_v1.csproj",
         "projectName": "Pirate_War_v1",
-        "projectPath": "D:\\niprojectcsharptorpedo\\Pirate_War_v1\\Pirate_War_v1\\Pirate_War_v1.csproj",
+        "projectPath": "C:\\Users\\kissm\\OneDrive\\Documents\\GitHub\\Pirate_War_Torpedo\\Pirate_War_v1\\Pirate_War_v1\\Pirate_War_v1.csproj",
         "packagesPath": "C:\\Users\\kissm\\.nuget\\packages\\",
-        "outputPath": "D:\\niprojectcsharptorpedo\\Pirate_War_v1\\Pirate_War_v1\\obj\\",
+        "outputPath": "C:\\Users\\kissm\\OneDrive\\Documents\\GitHub\\Pirate_War_Torpedo\\Pirate_War_v1\\Pirate_War_v1\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\kissm\\AppData\\Roaming\\NuGet\\NuGet.Config",
