@@ -7,6 +7,20 @@
     </ApplicationDefinition>
   </ItemGroup>
   <ItemGroup>
+    <Compile Update="Credits.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="game_select.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="Credits.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="game_select.xaml">
+      <SubType>Designer</SubType>
+    </Page>
     <Page Update="MainWindow.xaml">
       <SubType>Designer</SubType>
     </Page>

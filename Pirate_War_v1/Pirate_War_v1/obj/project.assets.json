@@ -8,23 +8,23 @@
     "net6.0-windows7.0": []
   },
   "packageFolders": {
-    "C:\\Users\\kissm\\.nuget\\packages\\": {}
+    "C:\\Users\\czipa\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\niprojectcsharptorpedo\\Pirate_War_v1\\Pirate_War_v1\\Pirate_War_v1.csproj",
+      "projectUniqueName": "C:\\Users\\czipa\\Documents\\GitHub\\Pirate_War_Torpedo\\Pirate_War_v1\\Pirate_War_v1\\Pirate_War_v1.csproj",
       "projectName": "Pirate_War_v1",
-      "projectPath": "D:\\niprojectcsharptorpedo\\Pirate_War_v1\\Pirate_War_v1\\Pirate_War_v1.csproj",
-      "packagesPath": "C:\\Users\\kissm\\.nuget\\packages\\",
-      "outputPath": "D:\\niprojectcsharptorpedo\\Pirate_War_v1\\Pirate_War_v1\\obj\\",
+      "projectPath": "C:\\Users\\czipa\\Documents\\GitHub\\Pirate_War_Torpedo\\Pirate_War_v1\\Pirate_War_v1\\Pirate_War_v1.csproj",
+      "packagesPath": "C:\\Users\\czipa\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\czipa\\Documents\\GitHub\\Pirate_War_Torpedo\\Pirate_War_v1\\Pirate_War_v1\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "C:\\Users\\kissm\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\czipa\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
-        "net6.0-windows"
+        "net6.0-windows7.0"
       ],
       "sources": {
         "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
@@ -51,8 +51,7 @@
           "net47",
           "net471",
           "net472",
-          "net48",
-          "net481"
+          "net48"
         ],
         "assetTargetFallback": true,
         "warn": true,
@@ -64,7 +63,7 @@
             "privateAssets": "none"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.402\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.102\\RuntimeIdentifierGraph.json"
       }
     }
   }

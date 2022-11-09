@@ -24,5 +24,30 @@ namespace Pirate_War_v1
         {
             InitializeComponent();
         }
+        private void PlayClicked(object sender, RoutedEventArgs e)
+        {
+            game_select objgame_select = new game_select();
+            this.Close();
+            objgame_select.Show();
+        }
+        private void ScoreboardClicked(object sender, RoutedEventArgs e)
+        {
+
+        }
+        private void HowToPlayClicked(object sender, RoutedEventArgs e)
+        {
+
+        }
+        private void CreditsClicked(object sender, RoutedEventArgs e)
+        {
+            Credits objCredits = new Credits();
+            objCredits.Show();
+
+        }
+        private void ExitClicked(object sender, RoutedEventArgs e)
+        {
+            System.Environment.Exit(0);
+        }
+
     }
 }

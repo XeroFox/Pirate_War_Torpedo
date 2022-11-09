@@ -7,4 +7,12 @@
     <UseWPF>true</UseWPF>
   </PropertyGroup>
 
+  <ItemGroup>
+    <None Remove="spr_underwater_bg.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="spr_underwater_bg.png" />
+  </ItemGroup>
+
 </Project>
