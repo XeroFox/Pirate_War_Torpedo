@@ -4,17 +4,30 @@
 winexe
 C#
 .cs
+<<<<<<< Updated upstream
 D:\niprojectcsharptorpedo\Pirate_War_v1\Pirate_War_v1\obj\Debug\net6.0-windows\
+=======
+C:\Users\Kiss Szabolcs\Documents\GitHub\Pirate_War_Torpedo\Pirate_War_v1\Pirate_War_v1\obj\Debug\net6.0-windows\
+>>>>>>> Stashed changes
 Pirate_War_v1
 none
 false
 TRACE;DEBUG;NET;NET6_0;NETCOREAPP
+<<<<<<< Updated upstream
 D:\niprojectcsharptorpedo\Pirate_War_v1\Pirate_War_v1\App.xaml
 11407045341
 
 5314881333
 194618410957
 MainWindow.xaml;
+=======
+C:\Users\Kiss Szabolcs\Documents\GitHub\Pirate_War_Torpedo\Pirate_War_v1\Pirate_War_v1\App.xaml
+2-1681046469
+1-582050430
+6-1051437264
+194-2004305220
+MainWindow.xaml;Torpedo_1v1.xaml;
+>>>>>>> Stashed changes
 
 False
 

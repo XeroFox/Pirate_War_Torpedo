@@ -12,8 +12,8 @@
       }
     ],
     "additionalProbingPaths": [
-      "C:\\Users\\kissm\\.dotnet\\store\\|arch|\\|tfm|",
-      "C:\\Users\\kissm\\.nuget\\packages"
+      "C:\\Users\\Kiss Szabolcs\\.dotnet\\store\\|arch|\\|tfm|",
+      "C:\\Users\\Kiss Szabolcs\\.nuget\\packages"
     ],
     "configProperties": {
       "Microsoft.NETCore.DotNetHostPolicy.SetAppPaths": true

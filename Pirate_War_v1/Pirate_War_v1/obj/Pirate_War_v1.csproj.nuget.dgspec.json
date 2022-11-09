@@ -1,6 +1,7 @@
 {
   "format": 1,
   "restore": {
+<<<<<<< Updated upstream
     "D:\\niprojectcsharptorpedo\\Pirate_War_v1\\Pirate_War_v1\\Pirate_War_v1.csproj": {}
   },
   "projects": {
@@ -12,9 +13,22 @@
         "projectPath": "D:\\niprojectcsharptorpedo\\Pirate_War_v1\\Pirate_War_v1\\Pirate_War_v1.csproj",
         "packagesPath": "C:\\Users\\kissm\\.nuget\\packages\\",
         "outputPath": "D:\\niprojectcsharptorpedo\\Pirate_War_v1\\Pirate_War_v1\\obj\\",
+=======
+    "C:\\Users\\Kiss Szabolcs\\Documents\\GitHub\\Pirate_War_Torpedo\\Pirate_War_v1\\Pirate_War_v1\\Pirate_War_v1.csproj": {}
+  },
+  "projects": {
+    "C:\\Users\\Kiss Szabolcs\\Documents\\GitHub\\Pirate_War_Torpedo\\Pirate_War_v1\\Pirate_War_v1\\Pirate_War_v1.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "C:\\Users\\Kiss Szabolcs\\Documents\\GitHub\\Pirate_War_Torpedo\\Pirate_War_v1\\Pirate_War_v1\\Pirate_War_v1.csproj",
+        "projectName": "Pirate_War_v1",
+        "projectPath": "C:\\Users\\Kiss Szabolcs\\Documents\\GitHub\\Pirate_War_Torpedo\\Pirate_War_v1\\Pirate_War_v1\\Pirate_War_v1.csproj",
+        "packagesPath": "C:\\Users\\Kiss Szabolcs\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\Kiss Szabolcs\\Documents\\GitHub\\Pirate_War_Torpedo\\Pirate_War_v1\\Pirate_War_v1\\obj\\",
+>>>>>>> Stashed changes
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\kissm\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\Kiss Szabolcs\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -58,7 +72,7 @@
               "privateAssets": "none"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.402\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.100\\RuntimeIdentifierGraph.json"
         }
       }
     }

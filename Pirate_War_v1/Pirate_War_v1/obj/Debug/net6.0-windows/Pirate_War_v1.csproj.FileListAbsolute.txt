@@ -1,0 +1,25 @@
+C:\Users\Kiss Szabolcs\Documents\GitHub\Pirate_War_Torpedo\Pirate_War_v1\Pirate_War_v1\bin\Debug\net6.0-windows\Pirate_War_v1.exe
+C:\Users\Kiss Szabolcs\Documents\GitHub\Pirate_War_Torpedo\Pirate_War_v1\Pirate_War_v1\bin\Debug\net6.0-windows\Pirate_War_v1.deps.json
+C:\Users\Kiss Szabolcs\Documents\GitHub\Pirate_War_Torpedo\Pirate_War_v1\Pirate_War_v1\bin\Debug\net6.0-windows\Pirate_War_v1.runtimeconfig.json
+C:\Users\Kiss Szabolcs\Documents\GitHub\Pirate_War_Torpedo\Pirate_War_v1\Pirate_War_v1\bin\Debug\net6.0-windows\Pirate_War_v1.dll
+C:\Users\Kiss Szabolcs\Documents\GitHub\Pirate_War_Torpedo\Pirate_War_v1\Pirate_War_v1\bin\Debug\net6.0-windows\Pirate_War_v1.pdb
+C:\Users\Kiss Szabolcs\Documents\GitHub\Pirate_War_Torpedo\Pirate_War_v1\Pirate_War_v1\obj\Debug\net6.0-windows\Pirate_War_v1.csproj.AssemblyReference.cache
+C:\Users\Kiss Szabolcs\Documents\GitHub\Pirate_War_Torpedo\Pirate_War_v1\Pirate_War_v1\obj\Debug\net6.0-windows\MainWindow.g.cs
+C:\Users\Kiss Szabolcs\Documents\GitHub\Pirate_War_Torpedo\Pirate_War_v1\Pirate_War_v1\obj\Debug\net6.0-windows\Torpedo_1v1.g.cs
+C:\Users\Kiss Szabolcs\Documents\GitHub\Pirate_War_Torpedo\Pirate_War_v1\Pirate_War_v1\obj\Debug\net6.0-windows\App.g.cs
+C:\Users\Kiss Szabolcs\Documents\GitHub\Pirate_War_Torpedo\Pirate_War_v1\Pirate_War_v1\obj\Debug\net6.0-windows\Pirate_War_v1_MarkupCompile.cache
+C:\Users\Kiss Szabolcs\Documents\GitHub\Pirate_War_Torpedo\Pirate_War_v1\Pirate_War_v1\obj\Debug\net6.0-windows\Pirate_War_v1_MarkupCompile.lref
+C:\Users\Kiss Szabolcs\Documents\GitHub\Pirate_War_Torpedo\Pirate_War_v1\Pirate_War_v1\obj\Debug\net6.0-windows\MainWindow.baml
+C:\Users\Kiss Szabolcs\Documents\GitHub\Pirate_War_Torpedo\Pirate_War_v1\Pirate_War_v1\obj\Debug\net6.0-windows\Torpedo_1v1.baml
+C:\Users\Kiss Szabolcs\Documents\GitHub\Pirate_War_Torpedo\Pirate_War_v1\Pirate_War_v1\obj\Debug\net6.0-windows\Pirate_War_v1.g.resources
+C:\Users\Kiss Szabolcs\Documents\GitHub\Pirate_War_Torpedo\Pirate_War_v1\Pirate_War_v1\obj\Debug\net6.0-windows\Pirate_War_v1.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Kiss Szabolcs\Documents\GitHub\Pirate_War_Torpedo\Pirate_War_v1\Pirate_War_v1\obj\Debug\net6.0-windows\Pirate_War_v1.AssemblyInfoInputs.cache
+C:\Users\Kiss Szabolcs\Documents\GitHub\Pirate_War_Torpedo\Pirate_War_v1\Pirate_War_v1\obj\Debug\net6.0-windows\Pirate_War_v1.AssemblyInfo.cs
+C:\Users\Kiss Szabolcs\Documents\GitHub\Pirate_War_Torpedo\Pirate_War_v1\Pirate_War_v1\obj\Debug\net6.0-windows\Pirate_War_v1.csproj.CoreCompileInputs.cache
+C:\Users\Kiss Szabolcs\Documents\GitHub\Pirate_War_Torpedo\Pirate_War_v1\Pirate_War_v1\obj\Debug\net6.0-windows\Pirate_War_v1.dll
+C:\Users\Kiss Szabolcs\Documents\GitHub\Pirate_War_Torpedo\Pirate_War_v1\Pirate_War_v1\obj\Debug\net6.0-windows\refint\Pirate_War_v1.dll
+C:\Users\Kiss Szabolcs\Documents\GitHub\Pirate_War_Torpedo\Pirate_War_v1\Pirate_War_v1\obj\Debug\net6.0-windows\Pirate_War_v1.pdb
+C:\Users\Kiss Szabolcs\Documents\GitHub\Pirate_War_Torpedo\Pirate_War_v1\Pirate_War_v1\obj\Debug\net6.0-windows\Pirate_War_v1.genruntimeconfig.cache
+C:\Users\Kiss Szabolcs\Documents\GitHub\Pirate_War_Torpedo\Pirate_War_v1\Pirate_War_v1\obj\Debug\net6.0-windows\ref\Pirate_War_v1.dll
+C:\Users\Kiss Szabolcs\Documents\GitHub\Pirate_War_Torpedo\Pirate_War_v1\Pirate_War_v1\bin\Debug\net6.0-windows\sources\Font\Bauhus 93.ttf
+C:\Users\Kiss Szabolcs\Documents\GitHub\Pirate_War_Torpedo\Pirate_War_v1\Pirate_War_v1\obj\Debug\net6.0-windows\Pirate_War_v1_Content.g.cs
