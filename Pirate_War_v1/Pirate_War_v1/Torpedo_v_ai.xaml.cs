@@ -41,9 +41,16 @@ namespace Pirate_War_v1
 
         List<ImageBrush> rotateSprites = new List<ImageBrush>();
 
+        List<ImageBrush> shipSprites = new List<ImageBrush>();
+
         int selectionMode = 0;
         int selectedShip = 0;
         int rotationMode = 0;
+
+        bool placeable = false;
+
+        int[] selectedGridPlayerIndex = {0,0};
+        int[] selectedGridAiIndex = {0,0};
 
         public Torpedo_v_ai()
         {
@@ -141,8 +148,12 @@ namespace Pirate_War_v1
             int[] matrix2 = { Convert.ToInt32(Math.Floor((p.X - 708) / 50)), Convert.ToInt32(Math.Floor((p.Y - 160) / 50)) };
             matrix2[0] = (matrix2[0] < 0 ? -1 : matrix2[0] > 8 ? 8 : matrix2[0]);
             matrix2[1] = (matrix2[1] < 0 ? -1 : matrix2[1] > 8 ? 8 : matrix2[1]);
-            p1_name.Text = matrix1[0] + " : " + matrix1[1];
-            ai_name.Text = matrix2[0] + " : " + matrix2[1];
+            selectedGridPlayerIndex[0] = matrix1[0]+1;
+            selectedGridPlayerIndex[1] = matrix1[1]+1;
+            selectedGridAiIndex[0] = matrix2[0]+1;
+            selectedGridAiIndex[1] = matrix2[1]+1;
+            p1_name.Text = selectedGridPlayerIndex[0] + " : " + selectedGridPlayerIndex[1];
+            ai_name.Text = selectedGridAiIndex[0] + " : " + selectedGridAiIndex[1];
 
             locatePressableItems(p.X, p.Y);
 
@@ -211,8 +222,11 @@ namespace Pirate_War_v1
             }
         }
 
+
+
         void loadSpriteDatas()
         {
+            //Rotation Sprites
             rotateSprites.Add(new ImageBrush
             {
                 ImageSource = new BitmapImage(new Uri(Directory.GetCurrentDirectory() + "\\sources\\spr_rotate_btn.png", UriKind.Absolute))
@@ -231,7 +245,7 @@ namespace Pirate_War_v1
             });
 
 
-
+            //Cursor Sprites
             cursorSprites.Add(new ImageBrush
             {
                 ImageSource = new BitmapImage(new Uri(Directory.GetCurrentDirectory() + "\\sources\\spr_hand.png", UriKind.Absolute))
@@ -239,6 +253,32 @@ namespace Pirate_War_v1
             cursorSprites.Add(new ImageBrush
             {
                 ImageSource = new BitmapImage(new Uri(Directory.GetCurrentDirectory() + "\\sources\\spr_stroked_hand.png", UriKind.Absolute))
+            });
+
+            //Ship Sprites
+            shipSprites.Add(new ImageBrush
+            {
+                ImageSource = new BitmapImage(new Uri(Directory.GetCurrentDirectory() + "\\sources\\spr_ship_gunboat.png", UriKind.Absolute))
+            });
+            shipSprites.Add(new ImageBrush
+            {
+                ImageSource = new BitmapImage(new Uri(Directory.GetCurrentDirectory() + "\\sources\\spr_ship_gunboat_damaged.png", UriKind.Absolute))
+            });
+            shipSprites.Add(new ImageBrush
+            {
+                ImageSource = new BitmapImage(new Uri(Directory.GetCurrentDirectory() + "\\sources\\spr_ship_brig.png", UriKind.Absolute))
+            });
+            shipSprites.Add(new ImageBrush
+            {
+                ImageSource = new BitmapImage(new Uri(Directory.GetCurrentDirectory() + "\\sources\\spr_ship_brig_destroyed.png", UriKind.Absolute))
+            });
+            shipSprites.Add(new ImageBrush
+            {
+                ImageSource = new BitmapImage(new Uri(Directory.GetCurrentDirectory() + "\\sources\\spr_ship_frigate.png", UriKind.Absolute))
+            });
+            shipSprites.Add(new ImageBrush
+            {
+                ImageSource = new BitmapImage(new Uri(Directory.GetCurrentDirectory() + "\\sources\\spr_ship_frigate_damaged.png", UriKind.Absolute))
             });
         }
 
@@ -274,13 +314,15 @@ namespace Pirate_War_v1
             }
             else
             {
-                bool placeable = true;
+
+                placeable = false;
                 selectedRectangle.Visibility = Visibility.Hidden;
                 rotationButton.Visibility = Visibility.Visible;
                 rotationShipView.Visibility = Visibility.Visible;
 
                 if (player_zone[matrix1[0] + 1, matrix1[1] + 1] == 0)
                 {
+                    placeable = true;
                     placingShipRect[0].Visibility = Visibility.Visible;
                     Canvas.SetLeft(placingShipRect[0], 172 + matrix1[0] * 50);
                     Canvas.SetTop(placingShipRect[0], 160 + matrix1[1] * 50);
