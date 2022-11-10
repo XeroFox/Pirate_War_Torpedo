@@ -151,8 +151,10 @@ namespace Pirate_War_v1
             return newMatrix;
         }
         
-        public static int[,] generateAiShips(int[,] matrix)
+        public static object[] generateAiShips(int[,] matrix)
         {
+            List<int[]> indexPairs = new List<int[]>();
+
             int[,] newMatrix = matrix;
             Random r = new Random();
             int[] ships = { 4, 2, 1 };
@@ -161,8 +163,10 @@ namespace Pirate_War_v1
             int tmpX = r.Next(1,6);
             int tmpY = r.Next(1,6);
             int rot = r.Next(0, 2);
+            int[] tmpindx = new int[] { tmpX, tmpY, rot, 4};
 
             newMatrix = updateMatrix(tmpX,tmpY,4,newMatrix,rot);
+            indexPairs.Add(tmpindx);
 
 
             while (ships[1] != 0)
@@ -173,8 +177,10 @@ namespace Pirate_War_v1
 
                 if (is_ship_placeable(tmpX, tmpY, 3, newMatrix, rot))
                 {
+                    tmpindx = new int[] { tmpX, tmpY, rot, 3};
                     newMatrix = updateMatrix(tmpX, tmpY, 3, newMatrix, rot);
                     ships[1]--;
+                    indexPairs.Add(tmpindx);
                 }
             }
 
@@ -187,15 +193,15 @@ namespace Pirate_War_v1
 
                 if (is_ship_placeable(tmpX, tmpY, 2, newMatrix, rot))
                 {
+                    tmpindx = new int[] { tmpX, tmpY, rot, 2 };
                     newMatrix = updateMatrix(tmpX, tmpY, 2, newMatrix, rot);
                     ships[0]--;
+                    indexPairs.Add(tmpindx);
                 }
             }
-            
-            
+            object[] ret_values = { newMatrix, indexPairs };
 
-
-            return newMatrix;
+            return ret_values;
         }
     }
 }

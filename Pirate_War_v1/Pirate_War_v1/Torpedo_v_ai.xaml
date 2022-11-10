@@ -7,7 +7,9 @@
         mc:Ignorable="d"
         ResizeMode="NoResize"
         WindowStartupLocation="CenterScreen"
+        KeyDown="Window_KeyDown"
         Title="Torpedo_v_ai" Height="720" Width="1280">
+
     <Grid>
         <Canvas x:Name="canvas"  MouseMove="OnMouseMoveHandler" MouseLeftButtonDown="canvas_MouseLeftButtonDown" MouseRightButtonDown="canvas_MouseRightButtonDown">
             <Image x:Name="ai_game_bg" Height="720" Width="1280" Source="C:\Users\kissm\OneDrive\Documents\GitHub\Pirate_War_Torpedo\Pirate_War_v1\Pirate_War_v1\sources\csharp_torpedo.png"/>

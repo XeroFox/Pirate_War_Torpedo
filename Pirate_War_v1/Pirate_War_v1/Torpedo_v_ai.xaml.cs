@@ -55,18 +55,28 @@ namespace Pirate_War_v1
 
         int[] maxPlaceableShips = { 4, 2, 1 };
         int[] currPlayerShips = { 0, 0, 0 };
-        int[] currAiShips = { 0, 0, 0 };
+        int[] currAiShips = { 4, 2, 1 };
 
 
+        Dictionary<int[], Rectangle> playerShips_dict = new Dictionary<int[], Rectangle>();
 
-        List<Rectangle> playerShips = new List<Rectangle>();
+
+        List<int[]> aiShips_list = new List<int[]>();
+
+        Dictionary<int[], Rectangle> aiShips_dict = new Dictionary<int[], Rectangle>();
+
+        bool isAiShipVisible = false;
+
 
         public Torpedo_v_ai()
         {
             InitializeComponent();
             player_zone = Torpedo_v_ai_matrix_movement.clearMatrixElements();
             ai_zone = Torpedo_v_ai_matrix_movement.clearMatrixElements();
-            ai_zone = Torpedo_v_ai_matrix_movement.generateAiShips(ai_zone);
+            var ai_temp_data_generate = Torpedo_v_ai_matrix_movement.generateAiShips(ai_zone);
+            ai_zone = (int[,])ai_temp_data_generate[0];
+            aiShips_list = (List<int[]>)ai_temp_data_generate[1];
+            
 
             for (int i = 0; i < 4; i++)
             {
@@ -85,6 +95,8 @@ namespace Pirate_War_v1
             loadSpriteDatas();
 
             setCustomPointerSprite(0);
+
+            drawAiShips();
 
             String[] ai_name_first = File.ReadAllLines(Directory.GetCurrentDirectory() + "\\ai_names\\first.txt");
             String[] ai_name_mid = File.ReadAllLines(Directory.GetCurrentDirectory() + "\\ai_names\\mid.txt");
@@ -223,11 +235,15 @@ namespace Pirate_War_v1
                 Visibility = Visibility.Visible,
                 Fill = (shipType == 2 ? shipSprites[0] : shipType == 3 ? shipSprites[2] : shipSprites[4])
             };
-            playerShips.Add(tmpRect);
-            canvas.Children.Add(playerShips[playerShips.Count()-1]);
-            Canvas.SetTop(playerShips[playerShips.Count() - 1], 160+YY*50 - (rotation == 0 ? (shipType == 2 ? -10 : shipType == 3 ? 13 : 25) : -playerShips[playerShips.Count() - 1].Width));
-            Canvas.SetLeft(playerShips[playerShips.Count() - 1], 172+XX*50 - (rotation == 0 ? (shipType == 4 ? 15 : 0) : (shipType == 2 ? -10 : shipType == 3 ? 13 : 25)));
+            int[] tmpindx = { XX + 1, YY + 1 };
+            playerShips_dict.Add(tmpindx, tmpRect);
+
+            canvas.Children.Add(playerShips_dict[tmpindx]);
+            Canvas.SetTop(playerShips_dict[tmpindx], 160+YY*50 - (rotation == 0 ? (shipType == 2 ? -10 : shipType == 3 ? 13 : 25) : - playerShips_dict[tmpindx].Width));
+            Canvas.SetLeft(playerShips_dict[tmpindx], 172+XX*50 - (rotation == 0 ? (shipType == 4 ? 15 : 0) : (shipType == 2 ? -10 : shipType == 3 ? 13 : 25)));
+            
             player_zone = Torpedo_v_ai_matrix_movement.updateMatrix(selectedGridPlayerIndex[0], selectedGridPlayerIndex[1], shipType, player_zone, rotation);
+            
             currPlayerShips[shipType - 2]++;
             placeable = false;
 
@@ -261,9 +277,49 @@ namespace Pirate_War_v1
                 int[] tmp = { -1, -1 };
                 drawSelectedMatrixIndex(tmp, tmp);
             }
+
+
+            var entries = playerShips_dict.Select(d =>
+            string.Format("\"{0}:{1}\": [{2}]", d.Key[0], d.Key[1], string.Join(",", d.Value)));
+            string messageBoxText = "{" + string.Join(",", entries) + "}";
+            string caption = "Player Ships Dict";
+            MessageBoxButton button = MessageBoxButton.YesNoCancel;
+            MessageBoxImage icon = MessageBoxImage.Warning;
+            MessageBoxResult result;
+
+            result = MessageBox.Show(messageBoxText, caption, button, icon, MessageBoxResult.Yes);
         }
 
 
+
+
+        void drawAiShips()
+        {
+            foreach (int[] element in aiShips_list)
+            {
+                Rectangle tmpRect = new Rectangle
+                {
+                    Width = (element[3] == 2 ? 100 : element[3] == 3 ? 150 : 215),
+                    Height = (element[3] == 2 ? 30 : element[3] == 3 ? 75 : 100),
+                    Opacity = 1,
+                    RenderTransform = (element[2] == 1 ? new RotateTransform(270) : new RotateTransform(0)),
+                    Visibility = Visibility.Hidden,
+                    Fill = (element[3] == 2 ? shipSprites[0] : element[3] == 3 ? shipSprites[2] : shipSprites[4])
+                };
+                int[] tmpindx = new int[] { element[0], element[1] };
+                aiShips_dict.Add(tmpindx,tmpRect);
+
+                canvas.Children.Add(aiShips_dict[tmpindx]);
+                Canvas.SetTop(aiShips_dict[tmpindx], 160 + (element[1]-1) * 50 - (element[2] == 0 ? (element[3] == 2 ? -10 : element[3] == 3 ? 13 : 25) : -aiShips_dict[tmpindx].Width));
+                Canvas.SetLeft(aiShips_dict[tmpindx], 708 + (element[0]-1) * 50 - (element[2] == 0 ? (element[3] == 4 ? 15 : 0) : (element[3] == 2 ? -10 : element[3] == 3 ? 13 : 25)));
+                
+            }
+
+            ai_gunboat.Text = currAiShips[0] + "/" + maxPlaceableShips[0];
+            ai_brig.Text = currAiShips[1] + "/" + maxPlaceableShips[1];
+            ai_frig.Text = currAiShips[2] + "/" + maxPlaceableShips[2];
+
+        }
 
         void loadSpriteDatas()
         {
@@ -576,6 +632,18 @@ namespace Pirate_War_v1
                     placingShipRect[1].Fill = Brushes.Red;
                     placingShipRect[2].Fill = Brushes.Red;
                     placingShipRect[3].Fill = Brushes.Red;
+                }
+            }
+        }
+
+        private void Window_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (Keyboard.IsKeyDown(Key.LeftCtrl) && e.Key == Key.P)
+            {
+                isAiShipVisible = !isAiShipVisible;
+                foreach (var ai in aiShips_dict)
+                {
+                    ai.Value.Visibility = (isAiShipVisible ? Visibility.Visible : Visibility.Hidden);
                 }
             }
         }
