@@ -158,38 +158,42 @@ namespace Pirate_War_v1
             Random positionX = new Random();
             Random positionY = new Random();
             int[] ships = { 4, 2, 1 };
-          
-                int tmpX = positionX.Next(1,5);
-                int tmpY = positionY.Next(1,5);
-                int rot = rotation.Next(0, 2);
 
-                newMatrix = updateMatrix(tmpX,tmpY,4,newMatrix,rot);
+            ships[2]--;
+            int tmpX = positionX.Next(1,5);
+            int tmpY = positionY.Next(1,5);
+            int rot = rotation.Next(0, 2);
+
+            newMatrix = updateMatrix(tmpX,tmpY,4,newMatrix,rot);
 
 
-            /*
-                 tmpX = positionX.Next(1, 6);
-                 tmpY = positionY.Next(1, 6);
-                 rot = rotation.Next(0, 1);
+            while (ships[1] != 0)
+            {
+                tmpX = positionX.Next(1, 6);
+                tmpY = positionY.Next(1, 6);
+                rot = rotation.Next(0, 2);
 
                 if (is_ship_placeable(tmpX, tmpY, 3, newMatrix, rot))
                 {
                     newMatrix = updateMatrix(tmpX, tmpY, 3, newMatrix, rot);
                     ships[1]--;
                 }
-                
-            
+            }
 
-            
-                 tmpX = positionX.Next(1, 7);
-                 tmpY = positionY.Next(1, 7);
-                 rot = rotation.Next(0, 1);
+
+            while (ships[0] != 0)
+            {
+                tmpX = positionX.Next(1, 7);
+                tmpY = positionY.Next(1, 7);
+                rot = rotation.Next(0, 2);
 
                 if (is_ship_placeable(tmpX, tmpY, 2, newMatrix, rot))
                 {
                     newMatrix = updateMatrix(tmpX, tmpY, 2, newMatrix, rot);
                     ships[0]--;
                 }
-            */
+            }
+            
             
 
 
