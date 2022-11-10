@@ -52,6 +52,8 @@ namespace Pirate_War_v1
         int[] selectedGridPlayerIndex = {0,0};
         int[] selectedGridAiIndex = {0,0};
 
+        List<Rectangle> playerShips = new List<Rectangle>();
+
         public Torpedo_v_ai()
         {
             InitializeComponent();
@@ -205,6 +207,27 @@ namespace Pirate_War_v1
                 }
                 rotationShipView.Fill = (rotationMode == 0 ? rotateSprites[2] : rotateSprites[3]);
             }
+            if (placeable)
+            {
+                placeShip(rotationMode, selectedShip, selectedGridPlayerIndex[0] - 1, selectedGridPlayerIndex[1] - 1);
+            }
+        }
+
+        void placeShip(int rotation, int shipType, int XX, int YY)
+        {
+            Rectangle tmpRect = new Rectangle
+            {
+                Width = (shipType == 2 ? 100 : shipType == 3 ? 150 : 215),
+                Height = (shipType == 2 ? 30 : shipType == 3 ? 75 : 100),
+                Opacity = 1,
+                RenderTransform = (rotation == 1 ? new RotateTransform(-90) : new RotateTransform(0)),
+                Visibility = Visibility.Visible,
+                Fill = (shipType == 2 ? shipSprites[0] : shipType == 3 ? shipSprites[2] : shipSprites[4])
+            };
+            playerShips.Add(tmpRect);
+            canvas.Children.Add(playerShips[playerShips.Count()-1]);
+            Canvas.SetTop(playerShips[playerShips.Count() - 1], 160+YY*50 - (rotation == 0 ? (shipType == 2 ? -10 : shipType == 3 ? 13 : 25) : -playerShips[playerShips.Count() - 1].Width));
+            Canvas.SetLeft(playerShips[playerShips.Count() - 1], 172+XX*50 - (rotation == 0 ? (shipType == 4 ? 15 : 0) : (shipType == 2 ? -10 : shipType == 3 ? 13 : 25)));
         }
 
         private void canvas_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
