@@ -154,24 +154,22 @@ namespace Pirate_War_v1
         public static int[,] generateAiShips(int[,] matrix)
         {
             int[,] newMatrix = matrix;
-            Random rotation = new Random();
-            Random positionX = new Random();
-            Random positionY = new Random();
+            Random r = new Random();
             int[] ships = { 4, 2, 1 };
 
             ships[2]--;
-            int tmpX = positionX.Next(1,5);
-            int tmpY = positionY.Next(1,5);
-            int rot = rotation.Next(0, 2);
+            int tmpX = r.Next(1,6);
+            int tmpY = r.Next(1,6);
+            int rot = r.Next(0, 2);
 
             newMatrix = updateMatrix(tmpX,tmpY,4,newMatrix,rot);
 
 
             while (ships[1] != 0)
             {
-                tmpX = positionX.Next(1, 6);
-                tmpY = positionY.Next(1, 6);
-                rot = rotation.Next(0, 2);
+                tmpX = r.Next(1, 7);
+                tmpY = r.Next(1, 7);
+                rot = r.Next(0, 2);
 
                 if (is_ship_placeable(tmpX, tmpY, 3, newMatrix, rot))
                 {
@@ -183,9 +181,9 @@ namespace Pirate_War_v1
 
             while (ships[0] != 0)
             {
-                tmpX = positionX.Next(1, 7);
-                tmpY = positionY.Next(1, 7);
-                rot = rotation.Next(0, 2);
+                tmpX = r.Next(1, 8);
+                tmpY = r.Next(1, 8);
+                rot = r.Next(0, 2);
 
                 if (is_ship_placeable(tmpX, tmpY, 2, newMatrix, rot))
                 {
