@@ -57,33 +57,20 @@ namespace Pirate_War_v1
         public Torpedo_v_ai()
         {
             InitializeComponent();
-            for(int i = 0; i < 10; i++)
+            player_zone = Torpedo_v_ai_matrix_movement.clearMatrixElements();
+            ai_zone = Torpedo_v_ai_matrix_movement.clearMatrixElements();
+
+            for (int i = 0; i < 4; i++)
             {
-                if(i < 4)
+                placingShipRect.Add(new Rectangle
                 {
-                    placingShipRect.Add(new Rectangle
-                    {
-                        Width = 50,
-                        Height = 50,
-                        Opacity = 0.3,
-                        Visibility = Visibility.Hidden,
-                        Fill = Brushes.Green
-                    });
-                    canvas.Children.Add(placingShipRect[i]);
-                }
-                for(int j = 0; j < 10; j++)
-                {
-                    if(i == 0 || i == 9 || j == 0 || j == 9)
-                    {
-                        player_zone[i, j] = -1;
-                        ai_zone[i, j] = -1;
-                    }
-                    else
-                    {
-                        player_zone[i, j] = 0;
-                        ai_zone[i, j] = 0;
-                    }
-                }
+                    Width = 50,
+                    Height = 50,
+                    Opacity = 0.3,
+                    Visibility = Visibility.Hidden,
+                    Fill = Brushes.Green
+                });
+                canvas.Children.Add(placingShipRect[i]);
             }
             canvas.Children.Add(selectedRectangle);
 
@@ -228,6 +215,10 @@ namespace Pirate_War_v1
             canvas.Children.Add(playerShips[playerShips.Count()-1]);
             Canvas.SetTop(playerShips[playerShips.Count() - 1], 160+YY*50 - (rotation == 0 ? (shipType == 2 ? -10 : shipType == 3 ? 13 : 25) : -playerShips[playerShips.Count() - 1].Width));
             Canvas.SetLeft(playerShips[playerShips.Count() - 1], 172+XX*50 - (rotation == 0 ? (shipType == 4 ? 15 : 0) : (shipType == 2 ? -10 : shipType == 3 ? 13 : 25)));
+            player_zone = Torpedo_v_ai_matrix_movement.updateMatrix(selectedGridPlayerIndex[0], selectedGridPlayerIndex[1], shipType, player_zone, rotation);
+            placeable = false;
+            int[] tmp = { -1, -1 };
+            drawSelectedMatrixIndex(tmp, tmp);
         }
 
         private void canvas_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
@@ -358,6 +349,7 @@ namespace Pirate_War_v1
                                 placingShipRect[1].Visibility = Visibility.Visible;
                                 Canvas.SetLeft(placingShipRect[1], 172 + (matrix1[0] + 1) * 50);
                                 Canvas.SetTop(placingShipRect[1], 160 + matrix1[1] * 50);
+                                placeable = Torpedo_v_ai_matrix_movement.is_ship_placeable(selectedGridPlayerIndex[0], selectedGridPlayerIndex[1],2,player_zone,0);
                             }
                             else
                             {
@@ -373,6 +365,7 @@ namespace Pirate_War_v1
                                 placingShipRect[1].Visibility = Visibility.Visible;
                                 Canvas.SetLeft(placingShipRect[1], 172 + matrix1[0] * 50);
                                 Canvas.SetTop(placingShipRect[1], 160 + (matrix1[1] + 1) * 50);
+                                placeable = Torpedo_v_ai_matrix_movement.is_ship_placeable(selectedGridPlayerIndex[0], selectedGridPlayerIndex[1], 2, player_zone, 1);
                             }
                             else
                             {
@@ -395,6 +388,7 @@ namespace Pirate_War_v1
                                 Canvas.SetTop(placingShipRect[1], 160 + matrix1[1] * 50);
                                 Canvas.SetLeft(placingShipRect[2], 172 + (matrix1[0] + 2) * 50);
                                 Canvas.SetTop(placingShipRect[2], 160 + matrix1[1] * 50);
+                                placeable = Torpedo_v_ai_matrix_movement.is_ship_placeable(selectedGridPlayerIndex[0], selectedGridPlayerIndex[1], 3, player_zone, 0);
                             }
                             else if(matrix1[0] < 7)
                             {
@@ -422,6 +416,7 @@ namespace Pirate_War_v1
                                 Canvas.SetTop(placingShipRect[1], 160 + (matrix1[1] + 1) * 50);
                                 Canvas.SetLeft(placingShipRect[2], 172 + matrix1[0] * 50);
                                 Canvas.SetTop(placingShipRect[2], 160 + (matrix1[1] + 2) * 50);
+                                placeable = Torpedo_v_ai_matrix_movement.is_ship_placeable(selectedGridPlayerIndex[0], selectedGridPlayerIndex[1], 3, player_zone, 1);
                             }
                             else if (matrix1[1] < 7)
                             {
@@ -456,6 +451,7 @@ namespace Pirate_War_v1
                                 Canvas.SetTop(placingShipRect[2], 160 + matrix1[1] * 50);
                                 Canvas.SetLeft(placingShipRect[3], 172 + (matrix1[0] + 3) * 50);
                                 Canvas.SetTop(placingShipRect[3], 160 + matrix1[1] * 50);
+                                placeable = Torpedo_v_ai_matrix_movement.is_ship_placeable(selectedGridPlayerIndex[0], selectedGridPlayerIndex[1], 4, player_zone, 0);
                             }
                             else if (matrix1[0] < 6)
                             {
@@ -498,6 +494,7 @@ namespace Pirate_War_v1
                                 Canvas.SetTop(placingShipRect[2], 160 + (matrix1[1] + 2) * 50);
                                 Canvas.SetLeft(placingShipRect[3], 172 + matrix1[0] * 50);
                                 Canvas.SetTop(placingShipRect[3], 160 + (matrix1[1] + 3) * 50);
+                                placeable = Torpedo_v_ai_matrix_movement.is_ship_placeable(selectedGridPlayerIndex[0], selectedGridPlayerIndex[1], 4, player_zone, 1);
                             }
                             else if (matrix1[1] < 6)
                             {
