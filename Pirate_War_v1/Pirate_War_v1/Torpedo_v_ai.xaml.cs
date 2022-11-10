@@ -52,6 +52,13 @@ namespace Pirate_War_v1
         int[] selectedGridPlayerIndex = {0,0};
         int[] selectedGridAiIndex = {0,0};
 
+
+        int[] maxPlaceableShips = { 4, 2, 1 };
+        int[] currPlayerShips = { 0, 0, 0 };
+        int[] currAiShips = { 0, 0, 0 };
+
+
+
         List<Rectangle> playerShips = new List<Rectangle>();
 
         public Torpedo_v_ai()
@@ -59,6 +66,7 @@ namespace Pirate_War_v1
             InitializeComponent();
             player_zone = Torpedo_v_ai_matrix_movement.clearMatrixElements();
             ai_zone = Torpedo_v_ai_matrix_movement.clearMatrixElements();
+            ai_zone = Torpedo_v_ai_matrix_movement.generateAiShips(ai_zone);
 
             for (int i = 0; i < 4; i++)
             {
@@ -84,6 +92,7 @@ namespace Pirate_War_v1
             Random random = new Random();
             ai_name.Text = ai_name_first[random.Next(0,ai_name_first.Length)] + " " + ai_name_mid[random.Next(0, ai_name_mid.Length)] + " " + ai_name_last[random.Next(0, ai_name_last.Length)];
 
+
         }
 
         void setCustomPointerSprite(int subimage)
@@ -103,7 +112,8 @@ namespace Pirate_War_v1
         {
             if(pX > 60 && pX < 145)
             {
-                if((pY > 60 && pY < 240) || (pY > 280 && pY < 415) || (pY > 480 && pY < 572))
+                if((pY > 60 && pY < 240) && currPlayerShips[2] < maxPlaceableShips[2] || (pY > 280 && pY < 415) && currPlayerShips[1] < maxPlaceableShips[1]
+                    || (pY > 480 && pY < 572) && currPlayerShips[0] < maxPlaceableShips[0])
                 {
                     setCustomPointerSprite(1);
                 }
@@ -144,6 +154,8 @@ namespace Pirate_War_v1
             p1_name.Text = selectedGridPlayerIndex[0] + " : " + selectedGridPlayerIndex[1];
             ai_name.Text = selectedGridAiIndex[0] + " : " + selectedGridAiIndex[1];
 
+            ai_hit.Text = ai_zone[selectedGridAiIndex[0], selectedGridAiIndex[1]].ToString();
+
             locatePressableItems(p.X, p.Y);
 
             drawSelectedMatrixIndex(matrix1, matrix2);
@@ -156,7 +168,7 @@ namespace Pirate_War_v1
             Point p = e.GetPosition(canvas);
             if (p.X > 60 && p.X < 145)
             {
-                if (p.Y > 60 && p.Y < 240 )
+                if (p.Y > 60 && p.Y < 240 && currPlayerShips[2] < maxPlaceableShips[2])
                 {
                     var bc = new BrushConverter();
                     p1_gunboat.Foreground = bc.ConvertFrom("#3a76a9") as Brush;
@@ -165,7 +177,7 @@ namespace Pirate_War_v1
                     selectedShip = 4;
                     selectionMode = 1;
                 }
-                else if (p.Y > 280 && p.Y < 415)
+                else if (p.Y > 280 && p.Y < 415 && currPlayerShips[1] < maxPlaceableShips[1])
                 {
                     var bc = new BrushConverter();
                     p1_gunboat.Foreground = bc.ConvertFrom("#3a76a9") as Brush;
@@ -174,7 +186,7 @@ namespace Pirate_War_v1
                     selectedShip = 3;
                     selectionMode = 1;
                 }
-                else if (p.Y > 480 && p.Y < 572)
+                else if (p.Y > 480 && p.Y < 572 && currPlayerShips[0] < maxPlaceableShips[0])
                 {
                     var bc = new BrushConverter();
                     p1_brig.Foreground = bc.ConvertFrom("#3a76a9") as Brush;
@@ -216,9 +228,24 @@ namespace Pirate_War_v1
             Canvas.SetTop(playerShips[playerShips.Count() - 1], 160+YY*50 - (rotation == 0 ? (shipType == 2 ? -10 : shipType == 3 ? 13 : 25) : -playerShips[playerShips.Count() - 1].Width));
             Canvas.SetLeft(playerShips[playerShips.Count() - 1], 172+XX*50 - (rotation == 0 ? (shipType == 4 ? 15 : 0) : (shipType == 2 ? -10 : shipType == 3 ? 13 : 25)));
             player_zone = Torpedo_v_ai_matrix_movement.updateMatrix(selectedGridPlayerIndex[0], selectedGridPlayerIndex[1], shipType, player_zone, rotation);
+            currPlayerShips[shipType - 2]++;
             placeable = false;
+
+            p1_gunboat.Text = currPlayerShips[0] + "/" + maxPlaceableShips[0];
+            p1_brig.Text = currPlayerShips[1] + "/" + maxPlaceableShips[1];
+            p1_frig.Text = currPlayerShips[2] + "/" + maxPlaceableShips[2];
+
             int[] tmp = { -1, -1 };
             drawSelectedMatrixIndex(tmp, tmp);
+            if(currPlayerShips[shipType - 2] >= maxPlaceableShips[shipType - 2])
+            {
+                selectionMode = 0;
+                selectedShip = 0;
+                var bc = new BrushConverter();
+                p1_gunboat.Foreground = bc.ConvertFrom("#3a76a9") as Brush;
+                p1_brig.Foreground = bc.ConvertFrom("#3a76a9") as Brush;
+                p1_frig.Foreground = bc.ConvertFrom("#3a76a9") as Brush;
+            }
         }
 
         private void canvas_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
@@ -314,7 +341,7 @@ namespace Pirate_War_v1
                     setCustomPointerSprite(1);
 
                 }
-                else if (ai_zone[matrix2[0] + 1, matrix2[1] + 1] == 0)
+                else if (ai_zone[matrix2[0] + 1, matrix2[1] + 1] != 1 && ai_zone[matrix2[0] + 1, matrix2[1] + 1] != -1)
                 {
                     selectedRectangle.Visibility = Visibility.Visible;
                     Canvas.SetLeft(selectedRectangle, 708 + matrix2[0] * 50);
