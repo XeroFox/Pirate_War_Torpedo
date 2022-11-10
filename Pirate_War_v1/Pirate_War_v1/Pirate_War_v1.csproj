@@ -9,7 +9,6 @@
 
   <ItemGroup>
 	  <Folder Include="ai_names\" />
-	  <Folder Include="sources\" />
   </ItemGroup>
 
   <ItemGroup>
@@ -34,6 +33,12 @@
     <None Update="sources\spr_hand.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Update="sources\spr_rotate_btn.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="sources\spr_rotate_btn_hover.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="sources\spr_ship_brig.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -50,6 +55,12 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="sources\spr_ship_gunboat_damaged.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="sources\spr_ship_rotate_0.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="sources\spr_ship_rotate_1.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="sources\spr_stroked_hand.png">

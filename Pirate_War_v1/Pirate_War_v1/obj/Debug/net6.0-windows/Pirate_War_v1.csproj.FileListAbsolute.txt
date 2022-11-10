@@ -36,3 +36,7 @@ C:\Users\kissm\OneDrive\Documents\GitHub\Pirate_War_Torpedo\Pirate_War_v1\Pirate
 C:\Users\kissm\OneDrive\Documents\GitHub\Pirate_War_Torpedo\Pirate_War_v1\Pirate_War_v1\bin\Debug\net6.0-windows\sources\spr_ship_gunboat_damaged.png
 C:\Users\kissm\OneDrive\Documents\GitHub\Pirate_War_Torpedo\Pirate_War_v1\Pirate_War_v1\bin\Debug\net6.0-windows\sources\spr_stroked_hand.png
 C:\Users\kissm\OneDrive\Documents\GitHub\Pirate_War_Torpedo\Pirate_War_v1\Pirate_War_v1\bin\Debug\net6.0-windows\sources\spr_underwater_bg.png
+C:\Users\kissm\OneDrive\Documents\GitHub\Pirate_War_Torpedo\Pirate_War_v1\Pirate_War_v1\bin\Debug\net6.0-windows\sources\spr_rotate_btn.png
+C:\Users\kissm\OneDrive\Documents\GitHub\Pirate_War_Torpedo\Pirate_War_v1\Pirate_War_v1\bin\Debug\net6.0-windows\sources\spr_rotate_btn_hover.png
+C:\Users\kissm\OneDrive\Documents\GitHub\Pirate_War_Torpedo\Pirate_War_v1\Pirate_War_v1\bin\Debug\net6.0-windows\sources\spr_ship_rotate_0.png
+C:\Users\kissm\OneDrive\Documents\GitHub\Pirate_War_Torpedo\Pirate_War_v1\Pirate_War_v1\bin\Debug\net6.0-windows\sources\spr_ship_rotate_1.png

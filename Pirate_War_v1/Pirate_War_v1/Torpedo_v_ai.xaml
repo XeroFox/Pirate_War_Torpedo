@@ -9,7 +9,7 @@
         WindowStartupLocation="CenterScreen"
         Title="Torpedo_v_ai" Height="720" Width="1280">
     <Grid>
-        <Canvas x:Name="canvas"  MouseMove="OnMouseMoveHandler">
+        <Canvas x:Name="canvas"  MouseMove="OnMouseMoveHandler" MouseLeftButtonDown="canvas_MouseLeftButtonDown" MouseRightButtonDown="canvas_MouseRightButtonDown">
             <Image x:Name="ai_game_bg" Height="720" Width="1280" Source="C:\Users\kissm\OneDrive\Documents\GitHub\Pirate_War_Torpedo\Pirate_War_v1\Pirate_War_v1\sources\csharp_torpedo.png"/>
             <TextBlock x:Name="p1_frig" Text="0/1" TextWrapping="Wrap" FontSize="36" FontFamily="Bauhaus 93" Foreground="#3a76a9" Canvas.Left="79" Canvas.Top="229"/>
             <TextBlock x:Name="p1_brig" Text="0/2" TextWrapping="Wrap" FontSize="36" FontFamily="Bauhaus 93" Foreground="#3a76a9" Canvas.Left="79" Canvas.Top="410"/>
@@ -32,7 +32,11 @@
             <TextBlock x:Name="p1_name" Text="Player 1" TextWrapping="Wrap" FontSize="36" FontFamily="Bauhaus 93" Foreground="#3a76a9" Canvas.Left="172" Canvas.Top="108"/>
             <TextBlock x:Name="ai_name" Text="Stancliff 'Mechanized' Garfield" TextWrapping="Wrap" FontSize="29" FontFamily="Bauhaus 93" Foreground="#3a76a9" Canvas.Left="708" Canvas.Top="118"/>
 
+            <Rectangle Visibility="Hidden" Name="rotationButton" Width="50" Height="50" Canvas.Left="615" Canvas.Top="327"/>
+            <Rectangle Visibility="Hidden" Name="rotationShipView" Width="74" Height="75" Canvas.Left="604" Canvas.Top="400"/>
+
             <Ellipse Name="customPointer" Width="50" Height="50" Panel.ZIndex="1000"/>
+
         </Canvas>
     </Grid>
 </Window>
