@@ -274,6 +274,7 @@ namespace Pirate_War_v1
             }
             else
             {
+                bool placeable = true;
                 selectedRectangle.Visibility = Visibility.Hidden;
                 rotationButton.Visibility = Visibility.Visible;
                 rotationShipView.Visibility = Visibility.Visible;
@@ -290,13 +291,12 @@ namespace Pirate_War_v1
                             if (matrix1[0] < 7)
                             {
                                 placingShipRect[1].Visibility = Visibility.Visible;
-                                placingShipRect[0].Fill = Brushes.Green;
-                                placingShipRect[1].Fill = Brushes.Green;
                                 Canvas.SetLeft(placingShipRect[1], 172 + (matrix1[0] + 1) * 50);
                                 Canvas.SetTop(placingShipRect[1], 160 + matrix1[1] * 50);
                             }
                             else
                             {
+                                placeable = false;
                                 placingShipRect[0].Fill = Brushes.Red;
                                 placingShipRect[1].Visibility = Visibility.Hidden;
                             }
@@ -306,13 +306,12 @@ namespace Pirate_War_v1
                             if (matrix1[1] < 7)
                             {
                                 placingShipRect[1].Visibility = Visibility.Visible;
-                                placingShipRect[0].Fill = Brushes.Green;
-                                placingShipRect[1].Fill = Brushes.Green;
                                 Canvas.SetLeft(placingShipRect[1], 172 + matrix1[0] * 50);
                                 Canvas.SetTop(placingShipRect[1], 160 + (matrix1[1] + 1) * 50);
                             }
                             else
                             {
+                                placeable = false;
                                 placingShipRect[0].Fill = Brushes.Red;
                                 placingShipRect[1].Visibility = Visibility.Hidden;
                             }
@@ -327,9 +326,6 @@ namespace Pirate_War_v1
                             {
                                 placingShipRect[1].Visibility = Visibility.Visible;
                                 placingShipRect[2].Visibility = Visibility.Visible;
-                                placingShipRect[0].Fill = Brushes.Green;
-                                placingShipRect[1].Fill = Brushes.Green;
-                                placingShipRect[2].Fill = Brushes.Green;
                                 Canvas.SetLeft(placingShipRect[1], 172 + (matrix1[0] + 1) * 50);
                                 Canvas.SetTop(placingShipRect[1], 160 + matrix1[1] * 50);
                                 Canvas.SetLeft(placingShipRect[2], 172 + (matrix1[0] + 2) * 50);
@@ -337,15 +333,15 @@ namespace Pirate_War_v1
                             }
                             else if(matrix1[0] < 7)
                             {
+                                placeable = false;
                                 placingShipRect[1].Visibility = Visibility.Visible;
                                 placingShipRect[2].Visibility = Visibility.Hidden;
-                                placingShipRect[0].Fill = Brushes.Red;
-                                placingShipRect[1].Fill = Brushes.Red;
                                 Canvas.SetLeft(placingShipRect[1], 172 + (matrix1[0]+1) * 50);
                                 Canvas.SetTop(placingShipRect[1], 160 + matrix1[1] * 50);
                             }
                             else
                             {
+                                placeable = false;
                                 placingShipRect[0].Fill = Brushes.Red;
                                 placingShipRect[1].Visibility = Visibility.Hidden;
                                 placingShipRect[2].Visibility = Visibility.Hidden;
@@ -357,9 +353,6 @@ namespace Pirate_War_v1
                             {
                                 placingShipRect[1].Visibility = Visibility.Visible;
                                 placingShipRect[2].Visibility = Visibility.Visible;
-                                placingShipRect[0].Fill = Brushes.Green;
-                                placingShipRect[1].Fill = Brushes.Green;
-                                placingShipRect[2].Fill = Brushes.Green;
                                 Canvas.SetLeft(placingShipRect[1], 172 + matrix1[0] * 50);
                                 Canvas.SetTop(placingShipRect[1], 160 + (matrix1[1] + 1) * 50);
                                 Canvas.SetLeft(placingShipRect[2], 172 + matrix1[0] * 50);
@@ -367,15 +360,15 @@ namespace Pirate_War_v1
                             }
                             else if (matrix1[1] < 7)
                             {
+                                placeable = false;
                                 placingShipRect[1].Visibility = Visibility.Visible;
                                 placingShipRect[2].Visibility = Visibility.Hidden;
-                                placingShipRect[0].Fill = Brushes.Red;
-                                placingShipRect[1].Fill = Brushes.Red;
                                 Canvas.SetLeft(placingShipRect[1], 172 + matrix1[0] * 50);
                                 Canvas.SetTop(placingShipRect[1], 160 + (matrix1[1]+1) * 50);
                             }
                             else
                             {
+                                placeable = false;
                                 placingShipRect[0].Fill = Brushes.Red;
                                 placingShipRect[1].Visibility = Visibility.Hidden;
                                 placingShipRect[2].Visibility = Visibility.Hidden;
@@ -392,10 +385,6 @@ namespace Pirate_War_v1
                                 placingShipRect[1].Visibility = Visibility.Visible;
                                 placingShipRect[2].Visibility = Visibility.Visible;
                                 placingShipRect[3].Visibility = Visibility.Visible;
-                                placingShipRect[0].Fill = Brushes.Green;
-                                placingShipRect[1].Fill = Brushes.Green;
-                                placingShipRect[2].Fill = Brushes.Green;
-                                placingShipRect[3].Fill = Brushes.Green;
                                 Canvas.SetLeft(placingShipRect[1], 172 + (matrix1[0] + 1) * 50);
                                 Canvas.SetTop(placingShipRect[1], 160 + matrix1[1] * 50);
                                 Canvas.SetLeft(placingShipRect[2], 172 + (matrix1[0] + 2) * 50);
@@ -405,12 +394,10 @@ namespace Pirate_War_v1
                             }
                             else if (matrix1[0] < 6)
                             {
+                                placeable = false;
                                 placingShipRect[1].Visibility = Visibility.Visible;
                                 placingShipRect[2].Visibility = Visibility.Visible;
                                 placingShipRect[3].Visibility = Visibility.Hidden;
-                                placingShipRect[0].Fill = Brushes.Red;
-                                placingShipRect[1].Fill = Brushes.Red;
-                                placingShipRect[2].Fill = Brushes.Red;
                                 Canvas.SetLeft(placingShipRect[1], 172 + (matrix1[0] + 1) * 50);
                                 Canvas.SetTop(placingShipRect[1], 160 + matrix1[1] * 50);
                                 Canvas.SetLeft(placingShipRect[2], 172 + (matrix1[0] + 2) * 50);
@@ -418,17 +405,16 @@ namespace Pirate_War_v1
                             }
                             else if (matrix1[0] < 7)
                             {
+                                placeable = false;
                                 placingShipRect[1].Visibility = Visibility.Visible;
                                 placingShipRect[2].Visibility = Visibility.Hidden;
                                 placingShipRect[3].Visibility = Visibility.Hidden;
-                                placingShipRect[0].Fill = Brushes.Red;
-                                placingShipRect[1].Fill = Brushes.Red;
                                 Canvas.SetLeft(placingShipRect[1], 172 + (matrix1[0] + 1) * 50);
                                 Canvas.SetTop(placingShipRect[1], 160 + matrix1[1] * 50);
                             }
                             else
                             {
-                                placingShipRect[0].Fill = Brushes.Red;
+                                placeable = false;
                                 placingShipRect[1].Visibility = Visibility.Hidden;
                                 placingShipRect[2].Visibility = Visibility.Hidden;
                                 placingShipRect[3].Visibility = Visibility.Hidden;
@@ -441,10 +427,6 @@ namespace Pirate_War_v1
                                 placingShipRect[1].Visibility = Visibility.Visible;
                                 placingShipRect[2].Visibility = Visibility.Visible;
                                 placingShipRect[3].Visibility = Visibility.Visible;
-                                placingShipRect[0].Fill = Brushes.Green;
-                                placingShipRect[1].Fill = Brushes.Green;
-                                placingShipRect[2].Fill = Brushes.Green;
-                                placingShipRect[3].Fill = Brushes.Green;
                                 Canvas.SetLeft(placingShipRect[1], 172 + matrix1[0] * 50);
                                 Canvas.SetTop(placingShipRect[1], 160 + (matrix1[1] + 1) * 50);
                                 Canvas.SetLeft(placingShipRect[2], 172 + matrix1[0] * 50);
@@ -454,12 +436,10 @@ namespace Pirate_War_v1
                             }
                             else if (matrix1[1] < 6)
                             {
+                                placeable = false;
                                 placingShipRect[1].Visibility = Visibility.Visible;
                                 placingShipRect[2].Visibility = Visibility.Visible;
                                 placingShipRect[3].Visibility = Visibility.Hidden;
-                                placingShipRect[0].Fill = Brushes.Red;
-                                placingShipRect[1].Fill = Brushes.Red;
-                                placingShipRect[2].Fill = Brushes.Red;
                                 Canvas.SetLeft(placingShipRect[1], 172 + matrix1[0] * 50);
                                 Canvas.SetTop(placingShipRect[1], 160 + (matrix1[1] + 1) * 50);
                                 Canvas.SetLeft(placingShipRect[2], 172 + matrix1[0] * 50);
@@ -467,17 +447,16 @@ namespace Pirate_War_v1
                             }
                             else if (matrix1[1] < 7)
                             {
+                                placeable = false;
                                 placingShipRect[1].Visibility = Visibility.Visible;
                                 placingShipRect[2].Visibility = Visibility.Hidden;
                                 placingShipRect[3].Visibility = Visibility.Hidden;
-                                placingShipRect[0].Fill = Brushes.Red;
-                                placingShipRect[1].Fill = Brushes.Red;
                                 Canvas.SetLeft(placingShipRect[1], 172 + matrix1[0] * 50);
                                 Canvas.SetTop(placingShipRect[1], 160 + (matrix1[1] + 1) * 50);
                             }
                             else
                             {
-                                placingShipRect[0].Fill = Brushes.Red;
+                                placeable = false;
                                 placingShipRect[1].Visibility = Visibility.Hidden;
                                 placingShipRect[2].Visibility = Visibility.Hidden;
                                 placingShipRect[3].Visibility = Visibility.Hidden;
@@ -493,6 +472,21 @@ namespace Pirate_War_v1
                     placingShipRect[1].Visibility = Visibility.Hidden;
                     placingShipRect[2].Visibility = Visibility.Hidden;
                     placingShipRect[3].Visibility = Visibility.Hidden;
+                }
+
+                if (placeable)
+                {
+                    placingShipRect[0].Fill = Brushes.Green;
+                    placingShipRect[1].Fill = Brushes.Green;
+                    placingShipRect[2].Fill = Brushes.Green;
+                    placingShipRect[3].Fill = Brushes.Green;
+                }
+                else
+                {
+                    placingShipRect[0].Fill = Brushes.Red;
+                    placingShipRect[1].Fill = Brushes.Red;
+                    placingShipRect[2].Fill = Brushes.Red;
+                    placingShipRect[3].Fill = Brushes.Red;
                 }
             }
         }
