@@ -15,16 +15,12 @@ namespace Pirate_War_v1
         public string Name { get; set; }
         public List<Coordinates> Table { get; set; }
         public List<Ships> ships { get; set; }
-        public int Hit { get; set; }
-        public int Miss { get; set; }
 
         public GameTable(string name)
         {
             Name = name;
             Table = new List<Coordinates>();
             this.clearTable();
-            Hit = 0;
-            Miss = 0;
             ships = new List<Ships>();
         }
 

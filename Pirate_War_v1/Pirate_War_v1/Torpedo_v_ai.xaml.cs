@@ -38,6 +38,8 @@ namespace Pirate_War_v1
         GameTable playerTable = new GameTable("Player");
         GameTable aiTable = new GameTable("AI");
 
+        GameData gameData = new GameData();
+
         List<ImageBrush> cursorSprites = new List<ImageBrush>();
         List<ImageBrush> rotateSprites = new List<ImageBrush>();
         List<ImageBrush> shipSprites = new List<ImageBrush>();
@@ -79,6 +81,7 @@ namespace Pirate_War_v1
         Turn game_curr_turn = Turn.PLAYER;
 
 
+
         //---------------MAIN---------------
         public Torpedo_v_ai()
         {
@@ -90,7 +93,11 @@ namespace Pirate_War_v1
             };
             canvas.Children.Add(selectedRectangle);
             aiTable.generateRandomShips();
-            curr_turn.Text = "Player 1 Placing Ships";
+            p1_name.Text = playerTable.Name;
+            ai_name.Text = aiTable.Name;
+            refreshScores();
+            curr_turn.Text = playerTable.Name + " Placing Ships";
+            
 
             for (int i = 0; i < 4; i++)
             {
@@ -157,6 +164,7 @@ namespace Pirate_War_v1
                         createMarker(mouseX, mouseY, isScored);
                         if (isScored)
                         {
+                            gameData.P1_HIT++;
                             if (shot_result)
                             {
                                 aiTable.getShipByCoordinate(mouseY, mouseX).shipBody.Visibility = Visibility.Visible;
@@ -167,7 +175,13 @@ namespace Pirate_War_v1
                                 ai_gunboat.Text = currAiShips[0] + "/" + maxPlaceableShips[0];
                             }
                         }
+                        else
+                        {
+                            gameData.P1_MISS++;
+                        }
+                        gameData.saveMove(mouseX-1, mouseY, isScored,playerTable.Name);
                         drawSelectedGrid();
+                        refreshScores();
                     }
 
                 }
@@ -207,8 +221,8 @@ namespace Pirate_War_v1
                     {
                         STATE = States.PLAYING;
                         game_curr_turn = Turn.PLAYER;
-                        curr_turn.Text = p1_name.Text + "'s Turn";
                         playerTable.removeNines();
+                        refreshScores();
                     }
                     placeable = false;
                     drawSelectedGrid();
@@ -221,16 +235,10 @@ namespace Pirate_War_v1
             }
         }
 
+
         private void canvas_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
         {
-            if (STATE == States.PREP)
-            {
-                selectedShipType = 0;
-                p1_gunboat.Foreground = bc.ConvertFrom("#3a76a9") as Brush;
-                p1_brig.Foreground = bc.ConvertFrom("#3a76a9") as Brush;
-                p1_frig.Foreground = bc.ConvertFrom("#3a76a9") as Brush;
-                drawSelectedGrid();
-            }
+            Debug.WriteLine(gameData.toJSON());
         }
 
         private void Window_KeyDown(object sender, KeyEventArgs e)
@@ -306,6 +314,22 @@ namespace Pirate_War_v1
                     rotationButton.Fill = rotateSprites[0];
                 }
             }
+        }
+
+        void refreshScores()
+        {
+            if (game_curr_turn == Turn.PLAYER)
+            {
+                curr_turn.Text = playerTable.Name + "'s Turn";
+            }
+            else if(game_curr_turn == Turn.AI)
+            {
+                curr_turn.Text = aiTable.Name + "'s Turn";
+            }
+            p1_hit.Text = gameData.P1_HIT.ToString();
+            p1_miss.Text = gameData.P1_MISS.ToString();
+            ai_hit.Text = gameData.P2_HIT.ToString();
+            ai_miss.Text = gameData.P2_MISS.ToString();
         }
 
         void drawAiShips()
