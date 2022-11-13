@@ -12,7 +12,7 @@
 
     <Grid>
         <Canvas x:Name="canvas"  MouseMove="OnMouseMoveHandler" MouseLeftButtonDown="canvas_MouseLeftButtonDown" MouseRightButtonDown="canvas_MouseRightButtonDown">
-            <Image x:Name="ai_game_bg" Height="720" Width="1280" Source="C:\Users\kissm\OneDrive\Documents\GitHub\Pirate_War_Torpedo\Pirate_War_v1\Pirate_War_v1\sources\csharp_torpedo.png"/>
+            <Rectangle x:Name="ai_game_bg" Height="720" Width="1280"/>
             <TextBlock x:Name="p1_frig" Text="0/1" TextWrapping="Wrap" FontSize="36" FontFamily="Bauhaus 93" Foreground="#3a76a9" Canvas.Left="79" Canvas.Top="229"/>
             <TextBlock x:Name="p1_brig" Text="0/2" TextWrapping="Wrap" FontSize="36" FontFamily="Bauhaus 93" Foreground="#3a76a9" Canvas.Left="79" Canvas.Top="410"/>
             <TextBlock x:Name="p1_gunboat" Text="0/4" TextWrapping="Wrap" FontSize="36" FontFamily="Bauhaus 93" Foreground="#3a76a9" Canvas.Left="79" Canvas.Top="566"/>

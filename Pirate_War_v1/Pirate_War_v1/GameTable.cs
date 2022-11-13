@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Shell;
 
 namespace Pirate_War_v1
@@ -92,11 +93,11 @@ namespace Pirate_War_v1
 
             for (int i = 0; i < shipType; i++)
             {
-                if(rot == 0 && getCoordinate(xx,yy+i).Value > 0 || getCoordinate(xx, yy + i).Value == -1)
+                if(rot == 0 && (getCoordinate(xx,yy + i).Value > 0 || getCoordinate(xx, yy + i).Value == -1))
                 {
                     result = false;
                 }
-                else if (rot == 1 && getCoordinate(xx + i, yy).Value > 0 || getCoordinate(xx + i, yy).Value == -1)
+                else if (rot == 1 && (getCoordinate(xx + i, yy).Value > 0 || getCoordinate(xx + i, yy).Value == -1))
                 {
                     result = false;
                 }
@@ -169,9 +170,10 @@ namespace Pirate_War_v1
             }
         }
 
-        public void makeAShot(int XX, int YY)
+        public bool makeAShot(int XX, int YY)
         {
             int shipType = 0;
+            bool result = false;
             if(getCoordinate(XX,YY).Value == 0)
             {
                 getCoordinate(XX, YY).Value = 1;
@@ -179,13 +181,15 @@ namespace Pirate_War_v1
             {
                 shipType = getCoordinate(XX, YY).Value;
                 getCoordinate(XX, YY).Value = getCoordinate(XX, YY).Value + getCoordinate(XX, YY).Value * 10;
-                checkIfDestroyed(XX, YY, shipType);
+                result = checkIfDestroyed(XX, YY, shipType);
             }
+            return result;
         }
 
-        public void checkIfDestroyed(int XX, int YY, int shipType)
+        public bool checkIfDestroyed(int XX, int YY, int shipType)
         {
             int count = 0;
+            bool result = false;
             foreach(Coordinates coordinates in getShipByCoordinate(XX, YY).PlacedCoordinates)
             {
                 if(getCoordinate(coordinates.X,coordinates.Y).Value == shipType + shipType * 10)
@@ -201,9 +205,9 @@ namespace Pirate_War_v1
                 string caption = "Player Ships Dict";
                 MessageBoxButton button = MessageBoxButton.YesNoCancel;
                 MessageBoxImage icon = MessageBoxImage.Warning;
-                MessageBoxResult result;
+                MessageBoxResult alerbox;
 
-                result = MessageBox.Show(messageBoxText, caption, button, icon, MessageBoxResult.Yes);
+                alerbox = MessageBox.Show(messageBoxText, caption, button, icon, MessageBoxResult.Yes);
                 foreach (Coordinates coordinates in getShipByCoordinate(XX, YY).PlacedCoordinates)
                 {
                     if (getCoordinate(coordinates.X, coordinates.Y).Value == shipType + shipType * 10)
@@ -212,9 +216,25 @@ namespace Pirate_War_v1
                     }
                 }
                 getShipByCoordinate(XX, YY).Destroyed = true;
+                Panel.SetZIndex(getShipByCoordinate(XX, YY).shipBody,50);
                 getShipByCoordinate(XX, YY).SpriteIndex = getShipByCoordinate(XX, YY).SpriteIndex+1;
+                result = true;
             }
+
+            return result;
             
+        }
+
+        public bool isScored(int XX, int YY)
+        {
+            if (getCoordinate(XX,YY).Value == 0)
+            {
+                return false;
+            }
+            else
+            {
+                return true;
+            }
         }
 
         public void printTable()

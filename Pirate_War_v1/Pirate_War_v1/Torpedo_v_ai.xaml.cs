@@ -29,6 +29,11 @@ namespace Pirate_War_v1
             PLAYING,
             SCORING
         }
+        enum Turn
+        {
+            PLAYER,
+            AI
+        }
 
         GameTable playerTable = new GameTable("Player");
         GameTable aiTable = new GameTable("AI");
@@ -36,13 +41,14 @@ namespace Pirate_War_v1
         List<ImageBrush> cursorSprites = new List<ImageBrush>();
         List<ImageBrush> rotateSprites = new List<ImageBrush>();
         List<ImageBrush> shipSprites = new List<ImageBrush>();
+        List<ImageBrush> markerSprites = new List<ImageBrush>();
 
         List<Rectangle> placingShipRect = new List<Rectangle>();
 
         int MARGINLEFT1 = 172;
         int MARGINLEFT2 = 708;
         int MARGINTOP = 160;
-        int GRIDSIZE = 50;
+        int CELLSIZE = 50;
 
         int mouseX = 0;
         int mouseY = 0;
@@ -59,53 +65,18 @@ namespace Pirate_War_v1
         States STATE = States.PREP;
 
         int rotation = 0;
-        int selectedShipType = 0;
+        int selectedShipType = 4;
 
         string[] columnName = new string[] { "A", "B", "C", "D", "E", "F", "G", "H" };
         BrushConverter bc = new BrushConverter();
-
-        /*
-        int[,] player_zone = new int[10,10];
-        int[,] ai_zone = new int[10, 10];
-
-        
-
-        
-
-
-        int selectionMode = 0;
-        int selectedShip = 0;
-        int rotationMode = 0;
-
-        bool placeable = false;
-
-        int[] selectedGridPlayerIndex = {0,0};
-        int[] selectedGridAiIndex = {0,0};
-
 
         int[] maxPlaceableShips = { 4, 2, 1 };
         int[] currPlayerShips = { 0, 0, 0 };
         int[] currAiShips = { 4, 2, 1 };
 
+        bool placeable = false;
 
-        Dictionary<int[], Rectangle> playerShips_dict = new Dictionary<int[], Rectangle>();
-
-
-        List<int[]> aiShips_list = new List<int[]>();
-
-        Dictionary<int[], Rectangle> aiShips_dict = new Dictionary<int[], Rectangle>();
-
-        bool isAiShipVisible = false;
-
-
-        string state = "PREPARATION";
-
-        bool isGameStarted = false;
-        int currentGameTurn = 0;
-
-        int[] playerCurrHit_Miss = new int[] {0,0};
-        int[] aiCurrHit_Miss = new int[] {0,0};
-        */
+        Turn game_curr_turn = Turn.PLAYER;
 
 
         //---------------MAIN---------------
@@ -113,8 +84,13 @@ namespace Pirate_War_v1
         {
             InitializeComponent();
             loadSpriteDatas();
+            ai_game_bg.Fill = new ImageBrush
+            {
+                ImageSource = new BitmapImage(new Uri(Directory.GetCurrentDirectory() + "\\sources\\csharp_torpedo.png", UriKind.Absolute))
+            };
             canvas.Children.Add(selectedRectangle);
             aiTable.generateRandomShips();
+            curr_turn.Text = "Player 1 Placing Ships";
 
             for (int i = 0; i < 4; i++)
             {
@@ -128,74 +104,138 @@ namespace Pirate_War_v1
                 });
                 canvas.Children.Add(placingShipRect[i]);
             }
-
-            /*player_zone = Torpedo_v_ai_matrix_movement.clearMatrixElements();
-            ai_zone = Torpedo_v_ai_matrix_movement.clearMatrixElements();
-            var ai_temp_data_generate = Torpedo_v_ai_matrix_movement.generateAiShips(ai_zone);
-            ai_zone = (int[,])ai_temp_data_generate[0];
-            aiShips_list = (List<int[]>)ai_temp_data_generate[1];
-            
-
-            loadSpriteDatas();
-
+            rotationShipView.Fill = rotateSprites[2];
+            rotationButton.Fill = rotateSprites[0];
+            p1_frig.Foreground = Brushes.Green;
             setCustomPointerSprite(0);
-
-            drawAiShips();*/
 
             setAiRandomName();
 
-            playerTable.generateRandomShips();
-            aiTable.printTable();
             aiTable.printTable();
             drawAiShips();
+            drawSelectedGrid();
         }
 
         void OnMouseMoveHandler(object sender, MouseEventArgs e)
         {
-            setCustomPointerSprite(0);
             Point p = e.GetPosition(canvas);
-            double pX = p.X-15;
-            double pY = p.Y-10;
+            double pX = p.X - 15;
+            double pY = p.Y - 10;
             Canvas.SetTop(customPointer, pY);
             Canvas.SetLeft(customPointer, pX);
 
-            if (p.X >= MARGINLEFT2 - GRIDSIZE)
+            if (p.X >= MARGINLEFT2 - CELLSIZE)
             {
-                mouseX = Convert.ToInt32(Math.Floor((p.X - MARGINLEFT2) / GRIDSIZE)) + 1;
+                mouseX = Convert.ToInt32(Math.Floor((p.X - MARGINLEFT2) / CELLSIZE)) + 1;
                 mouseSide = 1;
             }
             else
             {
-                mouseX = Convert.ToInt32(Math.Floor((p.X - MARGINLEFT1) / GRIDSIZE)) + 1;
+                mouseX = Convert.ToInt32(Math.Floor((p.X - MARGINLEFT1) / CELLSIZE)) + 1;
                 mouseSide = 0;
             }
-            mouseY = Convert.ToInt32(Math.Floor((p.Y - MARGINTOP) / GRIDSIZE))+1;
+            mouseY = Convert.ToInt32(Math.Floor((p.Y - MARGINTOP) / CELLSIZE)) + 1;
             if (mouseX < 0) mouseX = -1;
             if (mouseY < 0) mouseY = -1;
             if (mouseX > 8) mouseX = 9;
             if (mouseY > 8) mouseY = 9;
 
-            curr_turn.Text = "X: " + mouseX + " - Y: " + mouseY;
             drawSelectedGrid();
+            locatePressableElements(p.X, p.Y);
         }
 
         private void canvas_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             if (STATE == States.PLAYING)
             {
-                if (mouseX > 0 && mouseX < 9 && mouseY > 0 && mouseY < 9)
+                if (mouseSide == 1 && mouseX > 0 && mouseX < 9 && mouseY > 0 && mouseY < 9)
                 {
                     if (aiTable.getCoordinate(mouseY, mouseX).Value == 0 || aiTable.getCoordinate(mouseY, mouseX).Value >= 2 && aiTable.getCoordinate(mouseY, mouseX).Value <= 4)
                     {
-                        aiTable.makeAShot(mouseY, mouseX);
+                        bool isScored = aiTable.isScored(mouseY, mouseX);
+                        bool shot_result = aiTable.makeAShot(mouseY, mouseX);
+                        createMarker(mouseX, mouseY, isScored);
+                        if (isScored)
+                        {
+                            if (shot_result)
+                            {
+                                aiTable.getShipByCoordinate(mouseY, mouseX).shipBody.Visibility = Visibility.Visible;
+                                aiTable.getShipByCoordinate(mouseY, mouseX).shipBody.Fill = shipSprites[aiTable.getShipByCoordinate(mouseY, mouseX).SpriteIndex];
+                                currAiShips[aiTable.getShipByCoordinate(mouseY, mouseX).Type - 2]--;
+                                ai_frig.Text = currAiShips[2] + "/" + maxPlaceableShips[2];
+                                ai_brig.Text = currAiShips[1] + "/" + maxPlaceableShips[1];
+                                ai_gunboat.Text = currAiShips[0] + "/" + maxPlaceableShips[0];
+                            }
+                        }
+                        drawSelectedGrid();
                     }
+
                 }
+            }
+            else if (STATE == States.PREP)
+            {
+                Point p = e.GetPosition(canvas);
+                if (placeable)
+                {
+                    playerTable.placeShip(mouseY, mouseX, rotation, selectedShipType);
+                    playerTable.getShipByCoordinate(mouseY, mouseX).shipBody.Fill = shipSprites[playerTable.getShipByCoordinate(mouseY, mouseX).SpriteIndex];
+                    canvas.Children.Add(playerTable.getShipByCoordinate(mouseY, mouseX).shipBody);
+                    Canvas.SetTop(playerTable.getShipByCoordinate(mouseY, mouseX).shipBody, MARGINTOP + (mouseY - 1) * CELLSIZE - (playerTable.getShipByCoordinate(mouseY, mouseX).Rotation == 0 ? (playerTable.getShipByCoordinate(mouseY, mouseX).Type == 2 ? -10 : playerTable.getShipByCoordinate(mouseY, mouseX).Type == 3 ? 13 : 25) : -playerTable.getShipByCoordinate(mouseY, mouseX).shipBody.Width));
+                    Canvas.SetLeft(playerTable.getShipByCoordinate(mouseY, mouseX).shipBody, MARGINLEFT1 + (mouseX - 1) * CELLSIZE - (playerTable.getShipByCoordinate(mouseY, mouseX).Rotation == 0 ? (playerTable.getShipByCoordinate(mouseY, mouseX).Type == 4 ? 15 : 0) : (playerTable.getShipByCoordinate(mouseY, mouseX).Type == 2 ? -10 : playerTable.getShipByCoordinate(mouseY, mouseX).Type == 3 ? 13 : 25)));
+                    currPlayerShips[selectedShipType - 2]++;
+
+                    p1_gunboat.Text = currPlayerShips[0] + "/" + maxPlaceableShips[0];
+                    p1_brig.Text = currPlayerShips[1] + "/" + maxPlaceableShips[1];
+                    p1_frig.Text = currPlayerShips[2] + "/" + maxPlaceableShips[2];
+
+                    if (currPlayerShips[selectedShipType - 2] >= maxPlaceableShips[selectedShipType - 2])
+                    {
+                        selectedShipType--;
+                        p1_gunboat.Foreground = bc.ConvertFrom("#3a76a9") as Brush;
+                        p1_brig.Foreground = bc.ConvertFrom("#3a76a9") as Brush;
+                        p1_frig.Foreground = bc.ConvertFrom("#3a76a9") as Brush;
+                        if (selectedShipType == 3)
+                        {
+                            p1_brig.Foreground = Brushes.Green;
+                        }
+                        else if (selectedShipType == 2)
+                        {
+                            p1_gunboat.Foreground = Brushes.Green;
+                        }
+                    }
+                    if (currPlayerShips.SequenceEqual(maxPlaceableShips))
+                    {
+                        STATE = States.PLAYING;
+                        game_curr_turn = Turn.PLAYER;
+                        curr_turn.Text = p1_name.Text + "'s Turn";
+                        playerTable.removeNines();
+                    }
+                    placeable = false;
+                    drawSelectedGrid();
+                }
+                if (p.X > 615 && p.X < 670 && p.Y > 330 && p.Y < 380)
+                {
+                    rotation = (rotation == 0) ? 1 : 0;
+                }
+                rotationShipView.Fill = (rotation == 0 ? rotateSprites[2] : rotateSprites[3]);
             }
         }
 
-            private void Window_KeyDown(object sender, KeyEventArgs e)
+        private void canvas_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
         {
-            
+            if (STATE == States.PREP)
+            {
+                selectedShipType = 0;
+                p1_gunboat.Foreground = bc.ConvertFrom("#3a76a9") as Brush;
+                p1_brig.Foreground = bc.ConvertFrom("#3a76a9") as Brush;
+                p1_frig.Foreground = bc.ConvertFrom("#3a76a9") as Brush;
+                drawSelectedGrid();
+            }
+        }
+
+        private void Window_KeyDown(object sender, KeyEventArgs e)
+        {
+
             if (Keyboard.IsKeyDown(Key.LeftCtrl) && e.Key == Key.P)
             {
                 foreach (Ships ship in aiTable.ships)
@@ -209,19 +249,12 @@ namespace Pirate_War_v1
 
             if (Keyboard.IsKeyDown(Key.LeftCtrl) && e.Key == Key.R)
             {
-                playerTable = new GameTable(playerTable.Name);
-                playerTable.generateRandomShips();
                 playerTable.printTable();
             }
 
-            if (e.Key == Key.R) rotation = (rotation == 0 ? 1 : 0);
-
-            if (e.Key == Key.F1) selectedShipType = 0;
-            if (e.Key == Key.F2) selectedShipType = 2;
-            if (e.Key == Key.F3) selectedShipType = 3;
-            if (e.Key == Key.F4) selectedShipType = 4;
         }
-        
+
+
         void setAiRandomName()
         {
             String[] ai_name_first = File.ReadAllLines(Directory.GetCurrentDirectory() + "\\ai_names\\first.txt");
@@ -245,15 +278,46 @@ namespace Pirate_War_v1
 
         }
 
+        void createMarker(int XX, int YY, bool scored)
+        {
+            Rectangle markerRect = new Rectangle
+            {
+                Width = CELLSIZE,
+                Height = CELLSIZE,
+                Opacity = 0.6,
+                Fill = (scored ? markerSprites[0] : markerSprites[1])
+            };
+            canvas.Children.Add(markerRect);
+            Canvas.SetTop(markerRect, MARGINTOP + (YY - 1) * CELLSIZE);
+            Canvas.SetLeft(markerRect, (mouseSide == 0 ? MARGINLEFT1 : MARGINLEFT2) + (XX - 1) * CELLSIZE);
+        }
+
+        void locatePressableElements(double pX, double pY)
+        {
+            if (STATE == States.PREP)
+            {
+                if (pX > 615 && pX < 670 && pY > 330 && pY < 380)
+                {
+                    setCustomPointerSprite(1);
+                    rotationButton.Fill = rotateSprites[1];
+                }
+                else
+                {
+                    rotationButton.Fill = rotateSprites[0];
+                }
+            }
+        }
+
         void drawAiShips()
         {
             foreach (Ships element in aiTable.ships)
             {
                 element.shipBody.Fill = shipSprites[element.SpriteIndex];
+                element.shipBody.Visibility = Visibility.Hidden;
 
                 canvas.Children.Add(element.shipBody);
-                Canvas.SetTop(element.shipBody, MARGINTOP + (element.StartingCoordinates.X - 1) * GRIDSIZE - (element.Rotation == 0 ? (element.Type == 2 ? -10 : element.Type == 3 ? 13 : 25) : -element.shipBody.Width));
-                Canvas.SetLeft(element.shipBody, MARGINLEFT2 + (element.StartingCoordinates.Y - 1) * GRIDSIZE - (element.Rotation == 0 ? (element.Type == 4 ? 15 : 0) : (element.Type == 2 ? -10 : element.Type == 3 ? 13 : 25)));
+                Canvas.SetTop(element.shipBody, MARGINTOP + (element.StartingCoordinates.X - 1) * CELLSIZE - (element.Rotation == 0 ? (element.Type == 2 ? -10 : element.Type == 3 ? 13 : 25) : -element.shipBody.Width));
+                Canvas.SetLeft(element.shipBody, MARGINLEFT2 + (element.StartingCoordinates.Y - 1) * CELLSIZE - (element.Rotation == 0 ? (element.Type == 4 ? 15 : 0) : (element.Type == 2 ? -10 : element.Type == 3 ? 13 : 25)));
 
             }
         }
@@ -262,75 +326,122 @@ namespace Pirate_War_v1
         {
             if (STATE == States.PLAYING)
             {
+                placingShipRect[0].Visibility = Visibility.Hidden;
+                placingShipRect[1].Visibility = Visibility.Hidden;
+                placingShipRect[2].Visibility = Visibility.Hidden;
+                placingShipRect[3].Visibility = Visibility.Hidden;
+
+                rotationButton.Visibility = Visibility.Hidden;
+                rotationShipView.Visibility = Visibility.Hidden;
+
                 if (mouseX > 0 && mouseX < 9 && mouseY > 0 && mouseY < 9)
                 {
                     selectedRectangle.Visibility = Visibility.Visible;
                     selected_index_name.Visibility = Visibility.Visible;
-                    Canvas.SetTop(selectedRectangle, MARGINTOP + (mouseY - 1) * GRIDSIZE);
-                    Canvas.SetLeft(selectedRectangle, (mouseSide == 0 ? MARGINLEFT1 : MARGINLEFT2) + (mouseX - 1) * GRIDSIZE);
+                    Canvas.SetTop(selectedRectangle, MARGINTOP + (mouseY - 1) * CELLSIZE);
+                    Canvas.SetLeft(selectedRectangle, (mouseSide == 0 ? MARGINLEFT1 : MARGINLEFT2) + (mouseX - 1) * CELLSIZE);
 
                     if (mouseSide == 1)
                     {
                         if (aiTable.getCoordinate(mouseY, mouseX).Value > 4 || aiTable.getCoordinate(mouseY, mouseX).Value == 1)
                         {
+                            setCustomPointerSprite(0);
                             selected_index_name.Foreground = Brushes.Red;
                             selectedRectangle.Fill = Brushes.Red;
                         }
                         else
                         {
+                            setCustomPointerSprite(1);
                             selected_index_name.Foreground = Brushes.Lime;
                             selectedRectangle.Fill = bc.ConvertFrom("#3a76a9") as Brush;
                         }
                     }
                     else
                     {
+                        setCustomPointerSprite(1);
                         selected_index_name.Foreground = Brushes.Lime;
                         selectedRectangle.Fill = bc.ConvertFrom("#3a76a9") as Brush;
                     }
-                    
-                    selected_index_name.Text = columnName[mouseX-1] + (mouseY);
-                    
-                    
-                    Canvas.SetTop(selected_index_name, MARGINTOP + (mouseY - 1) * GRIDSIZE);
-                    Canvas.SetLeft(selected_index_name, (mouseSide == 0 ? MARGINLEFT1 : MARGINLEFT2) + (mouseX - 1) * GRIDSIZE);
+
+                    selected_index_name.Text = columnName[mouseX - 1] + (mouseY);
+
+
+                    Canvas.SetTop(selected_index_name, MARGINTOP + (mouseY - 1) * CELLSIZE);
+                    Canvas.SetLeft(selected_index_name, (mouseSide == 0 ? MARGINLEFT1 : MARGINLEFT2) + (mouseX - 1) * CELLSIZE);
                 }
                 else
                 {
                     selectedRectangle.Visibility = Visibility.Hidden;
                     selected_index_name.Visibility = Visibility.Hidden;
+                    setCustomPointerSprite(0);
                 }
-            }else if(STATE == States.PREP)
+            }
+            else if (STATE == States.PREP)
             {
                 selectedRectangle.Visibility = Visibility.Hidden;
                 selected_index_name.Visibility = Visibility.Hidden;
+
+                rotationButton.Visibility = Visibility.Visible;
+                rotationShipView.Visibility = Visibility.Visible;
+
                 if (selectedShipType >= 2 && mouseSide == 0 & mouseX > 0 && mouseX < 9 && mouseY > 0 && mouseY < 9)
                 {
 
                     placingShipRect[0].Visibility = Visibility.Visible;
 
-                    placingShipRect[1].Visibility = (selectedShipType >= 2 ? Visibility.Visible : Visibility.Hidden);
-                    placingShipRect[2].Visibility = (selectedShipType >= 3 ? Visibility.Visible : Visibility.Hidden);
-                    placingShipRect[3].Visibility = (selectedShipType >= 4 ? Visibility.Visible : Visibility.Hidden);
-                    
 
-                    Canvas.SetTop(placingShipRect[0], MARGINTOP + (mouseY - 1) * GRIDSIZE);
-                    Canvas.SetLeft(placingShipRect[0], MARGINLEFT1 + (mouseX - 1) * GRIDSIZE);
+                    if (rotation == 0)
+                    {
+                        placingShipRect[1].Visibility = (mouseX > 7 || selectedShipType < 2 ? Visibility.Hidden : Visibility.Visible);
+                        placingShipRect[2].Visibility = (mouseX > 6 || selectedShipType < 3 ? Visibility.Hidden : Visibility.Visible);
+                        placingShipRect[3].Visibility = (mouseX > 5 || selectedShipType < 4 ? Visibility.Hidden : Visibility.Visible);
+                    }
+                    else
+                    {
+                        placingShipRect[1].Visibility = (mouseY > 7 || selectedShipType < 2 ? Visibility.Hidden : Visibility.Visible);
+                        placingShipRect[2].Visibility = (mouseY > 6 || selectedShipType < 3 ? Visibility.Hidden : Visibility.Visible);
+                        placingShipRect[3].Visibility = (mouseY > 5 || selectedShipType < 4 ? Visibility.Hidden : Visibility.Visible);
+                    }
 
-                    Canvas.SetTop(placingShipRect[1], MARGINTOP + (mouseY - (rotation == 0 ? 1 : 0)) * GRIDSIZE);
-                    Canvas.SetLeft(placingShipRect[1], MARGINLEFT1 + (mouseX - (rotation == 1 ? 1 : 0)) * GRIDSIZE);
+                    placeable = playerTable.isShipPlaceable(mouseY, mouseX, rotation, selectedShipType);
+                    if (placeable)
+                    {
+                        setCustomPointerSprite(1);
+                        placingShipRect[0].Fill = Brushes.Lime;
+                        placingShipRect[1].Fill = Brushes.Lime;
+                        placingShipRect[2].Fill = Brushes.Lime;
+                        placingShipRect[3].Fill = Brushes.Lime;
+                    }
+                    else
+                    {
+                        setCustomPointerSprite(0);
+                        placingShipRect[0].Fill = Brushes.Red;
+                        placingShipRect[1].Fill = Brushes.Red;
+                        placingShipRect[2].Fill = Brushes.Red;
+                        placingShipRect[3].Fill = Brushes.Red;
+                    }
 
-                    Canvas.SetTop(placingShipRect[2], MARGINTOP + (mouseY - (rotation == 0 ? 1 : -1)) * GRIDSIZE);
-                    Canvas.SetLeft(placingShipRect[2], MARGINLEFT1 + (mouseX - (rotation == 1 ? 1 : -1)) * GRIDSIZE);
 
-                    Canvas.SetTop(placingShipRect[3], MARGINTOP + (mouseY - (rotation == 0 ? 1 : -2)) * GRIDSIZE);
-                    Canvas.SetLeft(placingShipRect[3], MARGINLEFT1 + (mouseX - (rotation == 1 ? 1 : -2)) * GRIDSIZE);
+                    Canvas.SetTop(placingShipRect[0], MARGINTOP + (mouseY - 1) * CELLSIZE);
+                    Canvas.SetLeft(placingShipRect[0], MARGINLEFT1 + (mouseX - 1) * CELLSIZE);
+
+                    Canvas.SetTop(placingShipRect[1], MARGINTOP + (mouseY - (rotation == 0 ? 1 : 0)) * CELLSIZE);
+                    Canvas.SetLeft(placingShipRect[1], MARGINLEFT1 + (mouseX - (rotation == 1 ? 1 : 0)) * CELLSIZE);
+
+                    Canvas.SetTop(placingShipRect[2], MARGINTOP + (mouseY - (rotation == 0 ? 1 : -1)) * CELLSIZE);
+                    Canvas.SetLeft(placingShipRect[2], MARGINLEFT1 + (mouseX - (rotation == 1 ? 1 : -1)) * CELLSIZE);
+
+                    Canvas.SetTop(placingShipRect[3], MARGINTOP + (mouseY - (rotation == 0 ? 1 : -2)) * CELLSIZE);
+                    Canvas.SetLeft(placingShipRect[3], MARGINLEFT1 + (mouseX - (rotation == 1 ? 1 : -2)) * CELLSIZE);
                 }
                 else
                 {
+                    setCustomPointerSprite(0);
                     placingShipRect[0].Visibility = Visibility.Hidden;
                     placingShipRect[1].Visibility = Visibility.Hidden;
                     placingShipRect[2].Visibility = Visibility.Hidden;
                     placingShipRect[3].Visibility = Visibility.Hidden;
+                    placeable = false;
                 }
             }
         }
@@ -398,511 +509,17 @@ namespace Pirate_War_v1
             {
                 ImageSource = new BitmapImage(new Uri(Directory.GetCurrentDirectory() + "\\sources\\spr_ship_frigate_damaged.png", UriKind.Absolute))
             });
+
+            //Shot Marker Sprites
+            markerSprites.Add(new ImageBrush
+            {
+                ImageSource = new BitmapImage(new Uri(Directory.GetCurrentDirectory() + "\\sources\\spr_flatblack_bone_femur.png", UriKind.Absolute))
+            });
+            markerSprites.Add(new ImageBrush
+            {
+                ImageSource = new BitmapImage(new Uri(Directory.GetCurrentDirectory() + "\\sources\\spr_circle.png", UriKind.Absolute))
+            });
         }
 
-        /*
-
-            int[] matrix1 = { Convert.ToInt32(Math.Floor((p.X - 172) / 50)), Convert.ToInt32(Math.Floor((p.Y - 160) / 50)) };
-            matrix1[0] = (matrix1[0] < 0 ? -1 : matrix1[0] > 8 ? 8 : matrix1[0]);
-            matrix1[1] = (matrix1[1] < 0 ? -1 : matrix1[1] > 8 ? 8 : matrix1[1]);
-            int[] matrix2 = { Convert.ToInt32(Math.Floor((p.X - 708) / 50)), Convert.ToInt32(Math.Floor((p.Y - 160) / 50)) };
-            matrix2[0] = (matrix2[0] < 0 ? -1 : matrix2[0] > 8 ? 8 : matrix2[0]);
-            matrix2[1] = (matrix2[1] < 0 ? -1 : matrix2[1] > 8 ? 8 : matrix2[1]);
-            selectedGridPlayerIndex[0] = matrix1[0]+1;
-            selectedGridPlayerIndex[1] = matrix1[1]+1;
-            selectedGridAiIndex[0] = matrix2[0]+1;
-            selectedGridAiIndex[1] = matrix2[1]+1;
-            p1_name.Text = selectedGridPlayerIndex[0] + " : " + selectedGridPlayerIndex[1];
-            ai_name.Text = selectedGridAiIndex[0] + " : " + selectedGridAiIndex[1];
-
-            ai_hit.Text = ai_zone[selectedGridAiIndex[0], selectedGridAiIndex[1]].ToString();
-
-            locatePressableItems(p.X, p.Y);
-
-            drawSelectedMatrixIndex(matrix1, matrix2);
-            */
-
-
-            
-            /*
-            Point p = e.GetPosition(canvas);
-            if (p.X > 60 && p.X < 145)
-            {
-                if (p.Y > 60 && p.Y < 240 && currPlayerShips[2] < maxPlaceableShips[2])
-                {
-                    var bc = new BrushConverter();
-                    p1_gunboat.Foreground = bc.ConvertFrom("#3a76a9") as Brush;
-                    p1_brig.Foreground = bc.ConvertFrom("#3a76a9") as Brush;
-                    p1_frig.Foreground = Brushes.Green;
-                    selectedShip = 4;
-                    selectionMode = 1;
-                }
-                else if (p.Y > 280 && p.Y < 415 && currPlayerShips[1] < maxPlaceableShips[1])
-                {
-                    var bc = new BrushConverter();
-                    p1_gunboat.Foreground = bc.ConvertFrom("#3a76a9") as Brush;
-                    p1_frig.Foreground = bc.ConvertFrom("#3a76a9") as Brush;
-                    p1_brig.Foreground = Brushes.Green;
-                    selectedShip = 3;
-                    selectionMode = 1;
-                }
-                else if (p.Y > 480 && p.Y < 572 && currPlayerShips[0] < maxPlaceableShips[0])
-                {
-                    var bc = new BrushConverter();
-                    p1_brig.Foreground = bc.ConvertFrom("#3a76a9") as Brush;
-                    p1_frig.Foreground = bc.ConvertFrom("#3a76a9") as Brush;
-                    p1_gunboat.Foreground = Brushes.Green;
-                    selectedShip = 2;
-                    selectionMode = 1;
-                }
-                int[] tmp = { -1, -1 };
-                drawSelectedMatrixIndex(tmp, tmp);
-            }
-
-            if (placeable)
-            {
-                placeShip(rotationMode, selectedShip, selectedGridPlayerIndex[0] - 1, selectedGridPlayerIndex[1] - 1);
-            }
-            if (selectionMode == 1)
-            {
-                if (selectionMode == 1 && p.X > 615 && p.X < 670 && p.Y > 330 && p.Y < 380)
-                {
-                    rotationMode = (rotationMode == 0) ? 1 : 0;
-                }
-                rotationShipView.Fill = (rotationMode == 0 ? rotateSprites[2] : rotateSprites[3]);
-            }
-            else
-            {
-                if (ai_zone[selectedGridAiIndex[0], selectedGridAiIndex[1]] != 1 && ai_zone[selectedGridAiIndex[0], selectedGridAiIndex[1]] != -1 && ai_zone[selectedGridAiIndex[0], selectedGridAiIndex[1]] <= 4)
-                {
-                    int selectedShipType = ai_zone[selectedGridAiIndex[0], selectedGridAiIndex[1]];
-                    TextBlock[] ai_ship_values = new TextBlock[3];
-                    ai_ship_values[0] = ai_gunboat;
-                    ai_ship_values[1] = ai_brig;
-                    ai_ship_values[2] = ai_frig;
-                    TextBlock[] player_names = new TextBlock[2];
-                    player_names[0] = p1_name;
-                    player_names[1] = ai_name;
-                    List<int[]> aiShipLocations_list = new List<int[]>();
-                    foreach (int[] keyValues in aiShips_dict.Keys)
-                    {
-                        aiShipLocations_list.Add(keyValues);
-                    }
-                    int[] destroyedIndex = new int[] { 0, 0};
-                    ai_zone = Torpedo_v_ai_matrix_movement.p1MakeAMove(ai_zone, selectedGridAiIndex[0], selectedGridAiIndex[1], ref currentGameTurn,
-                        maxPlaceableShips,ref currAiShips, ai_ship_values,curr_turn,player_names, aiShipLocations_list, ref playerCurrHit_Miss, ref destroyedIndex);
-                    if (destroyedIndex[0] != 0 && destroyedIndex[1] != 0)
-                    {
-                        aiShips_dict[destroyedIndex].Fill = (selectedShipType == 2 ? shipSprites[1] : selectedShipType == 3 ? shipSprites[3] : shipSprites[5]);
-                    }
-                }
-            }
-            
-            */
-
-
-        private void canvas_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
-        {
-            /*
-            if (selectionMode != 0)
-            {
-                selectionMode = 0;
-                selectedShip = 0;
-                var bc = new BrushConverter();
-                p1_gunboat.Foreground = bc.ConvertFrom("#3a76a9") as Brush;
-                p1_brig.Foreground = bc.ConvertFrom("#3a76a9") as Brush;
-                p1_frig.Foreground = bc.ConvertFrom("#3a76a9") as Brush;
-                int[] tmp = { -1, -1 };
-                drawSelectedMatrixIndex(tmp, tmp);
-            }
-
-
-            var entries = aiShips_dict.Select(d =>
-            string.Format("\"{0}:{1}\": [{2}]", d.Key[0], d.Key[1], string.Join(",", d.Value)));
-            string messageBoxText = "{" + string.Join(",", entries) + "}";
-            string caption = "Player Ships Dict";
-            MessageBoxButton button = MessageBoxButton.YesNoCancel;
-            MessageBoxImage icon = MessageBoxImage.Warning;
-            MessageBoxResult result;
-
-            result = MessageBox.Show(messageBoxText, caption, button, icon, MessageBoxResult.Yes);
-            */
-        }
-
-
-        /*
-
-        //---------------CUSTOM POINTER---------------
-
-        //---------------LOCATE ITEMS---------------
-        void locatePressableItems(double pX, double pY)
-        {
-            if(pX > 60 && pX < 145)
-            {
-                if((pY > 60 && pY < 240) && currPlayerShips[2] < maxPlaceableShips[2] || (pY > 280 && pY < 415) && currPlayerShips[1] < maxPlaceableShips[1]
-                    || (pY > 480 && pY < 572) && currPlayerShips[0] < maxPlaceableShips[0])
-                {
-                    setCustomPointerSprite(1);
-                }
-            }
-            if(selectionMode == 1 && pX > 615 && pX < 670 && pY > 330 && pY < 380)
-            {
-                setCustomPointerSprite(1);
-                rotationButton.Fill = rotateSprites[1];
-            }
-            else
-            {
-                rotationButton.Fill = rotateSprites[0];
-            }
-        }*/
-
-        //---------------MOUSE MOVEMENT---------------
-
-
-        //---------------MOUSE LEFT PRESSED---------------
-
-
-        /*
-        //---------------PLACE SHIP---------------
-        void placeShip(int rotation, int shipType, int XX, int YY)
-        {
-            Rectangle tmpRect = new Rectangle
-            {
-                Width = (shipType == 2 ? 100 : shipType == 3 ? 150 : 215),
-                Height = (shipType == 2 ? 30 : shipType == 3 ? 75 : 100),
-                Opacity = 1,
-                RenderTransform = (rotation == 1 ? new RotateTransform(-90) : new RotateTransform(0)),
-                Visibility = Visibility.Visible,
-                Fill = (shipType == 2 ? shipSprites[0] : shipType == 3 ? shipSprites[2] : shipSprites[4])
-            };
-            int[] tmpindx = { XX + 1, YY + 1 };
-            playerShips_dict.Add(tmpindx, tmpRect);
-
-            canvas.Children.Add(playerShips_dict[tmpindx]);
-            Canvas.SetTop(playerShips_dict[tmpindx], 160+YY*50 - (rotation == 0 ? (shipType == 2 ? -10 : shipType == 3 ? 13 : 25) : - playerShips_dict[tmpindx].Width));
-            Canvas.SetLeft(playerShips_dict[tmpindx], 172+XX*50 - (rotation == 0 ? (shipType == 4 ? 15 : 0) : (shipType == 2 ? -10 : shipType == 3 ? 13 : 25)));
-            
-            player_zone = Torpedo_v_ai_matrix_movement.updateMatrix(selectedGridPlayerIndex[0], selectedGridPlayerIndex[1], shipType, player_zone, rotation);
-            
-            currPlayerShips[shipType - 2]++;
-            placeable = false;
-
-            p1_gunboat.Text = currPlayerShips[0] + "/" + maxPlaceableShips[0];
-            p1_brig.Text = currPlayerShips[1] + "/" + maxPlaceableShips[1];
-            p1_frig.Text = currPlayerShips[2] + "/" + maxPlaceableShips[2];
-
-            int[] tmp = { -1, -1 };
-            drawSelectedMatrixIndex(tmp, tmp);
-            if(currPlayerShips[shipType - 2] >= maxPlaceableShips[shipType - 2])
-            {
-                selectionMode = 0;
-                selectedShip = 0;
-                var bc = new BrushConverter();
-                p1_gunboat.Foreground = bc.ConvertFrom("#3a76a9") as Brush;
-                p1_brig.Foreground = bc.ConvertFrom("#3a76a9") as Brush;
-                p1_frig.Foreground = bc.ConvertFrom("#3a76a9") as Brush;
-            }
-            if(currPlayerShips == maxPlaceableShips)
-            {
-                state = "GAMEON";
-                currentGameTurn = 1;
-            }
-        }*/
-
-        //---------------MOUSE RIGHT PRESSED---------------
-
-
-
-        /*
-        //---------------DRAW AI SHIPS---------------
-        void drawAiShips()
-        {
-            foreach (int[] element in aiShips_list)
-            {
-                Rectangle tmpRect = new Rectangle
-                {
-                    Width = (element[3] == 2 ? 100 : element[3] == 3 ? 150 : 215),
-                    Height = (element[3] == 2 ? 30 : element[3] == 3 ? 75 : 100),
-                    Opacity = 1,
-                    RenderTransform = (element[2] == 1 ? new RotateTransform(270) : new RotateTransform(0)),
-                    Visibility = Visibility.Hidden,
-                    Fill = (element[3] == 2 ? shipSprites[0] : element[3] == 3 ? shipSprites[2] : shipSprites[4])
-                };
-                int[] tmpindx = new int[] { element[0], element[1] };
-                aiShips_dict.Add(tmpindx,tmpRect);
-
-                canvas.Children.Add(aiShips_dict[tmpindx]);
-                Canvas.SetTop(aiShips_dict[tmpindx], 160 + (element[1]-1) * 50 - (element[2] == 0 ? (element[3] == 2 ? -10 : element[3] == 3 ? 13 : 25) : -aiShips_dict[tmpindx].Width));
-                Canvas.SetLeft(aiShips_dict[tmpindx], 708 + (element[0]-1) * 50 - (element[2] == 0 ? (element[3] == 4 ? 15 : 0) : (element[3] == 2 ? -10 : element[3] == 3 ? 13 : 25)));
-                
-            }
-
-            ai_gunboat.Text = currAiShips[0] + "/" + maxPlaceableShips[0];
-            ai_brig.Text = currAiShips[1] + "/" + maxPlaceableShips[1];
-            ai_frig.Text = currAiShips[2] + "/" + maxPlaceableShips[2];
-
-        }
-
-        //---------------SPRITE DATAS---------------
-
-        //---------------DRAW GAME ELEMENTS---------------
-        void drawSelectedMatrixIndex(int[] matrix1, int[] matrix2)
-        {
-            if (selectionMode == 0)
-            {
-                rotationButton.Visibility = Visibility.Hidden;
-                rotationShipView.Visibility = Visibility.Hidden;
-                foreach (Rectangle x in placingShipRect)
-                {
-                    x.Visibility = Visibility.Hidden;
-                }
-                if (player_zone[matrix1[0] + 1, matrix1[1] + 1] == 0)
-                {
-                    selectedRectangle.Visibility = Visibility.Visible;
-                    Canvas.SetLeft(selectedRectangle, 172 + matrix1[0] * 50);
-                    Canvas.SetTop(selectedRectangle, 160 + matrix1[1] * 50);
-                    setCustomPointerSprite(1);
-
-                }
-                else if (ai_zone[matrix2[0] + 1, matrix2[1] + 1] != 1 && ai_zone[matrix2[0] + 1, matrix2[1] + 1] != -1 && ai_zone[matrix2[0] + 1, matrix2[1] + 1] <= 4)
-                {
-                    selectedRectangle.Visibility = Visibility.Visible;
-                    Canvas.SetLeft(selectedRectangle, 708 + matrix2[0] * 50);
-                    Canvas.SetTop(selectedRectangle, 160 + matrix2[1] * 50);
-                    setCustomPointerSprite(1);
-                }
-                else
-                {
-                    selectedRectangle.Visibility = Visibility.Hidden;
-                }
-            }
-            else
-            {
-
-                placeable = false;
-                selectedRectangle.Visibility = Visibility.Hidden;
-                rotationButton.Visibility = Visibility.Visible;
-                rotationShipView.Visibility = Visibility.Visible;
-
-                if (player_zone[matrix1[0] + 1, matrix1[1] + 1] == 0)
-                {
-                    placeable = true;
-                    placingShipRect[0].Visibility = Visibility.Visible;
-                    Canvas.SetLeft(placingShipRect[0], 172 + matrix1[0] * 50);
-                    Canvas.SetTop(placingShipRect[0], 160 + matrix1[1] * 50);
-                    if (selectedShip == 2)
-                    {
-                        if (rotationMode == 0)
-                        {
-                            if (matrix1[0] < 7)
-                            {
-                                placingShipRect[1].Visibility = Visibility.Visible;
-                                Canvas.SetLeft(placingShipRect[1], 172 + (matrix1[0] + 1) * 50);
-                                Canvas.SetTop(placingShipRect[1], 160 + matrix1[1] * 50);
-                                placeable = Torpedo_v_ai_matrix_movement.is_ship_placeable(selectedGridPlayerIndex[0], selectedGridPlayerIndex[1],2,player_zone,0);
-                            }
-                            else
-                            {
-                                placeable = false;
-                                placingShipRect[0].Fill = Brushes.Red;
-                                placingShipRect[1].Visibility = Visibility.Hidden;
-                            }
-                        }
-                        else
-                        {
-                            if (matrix1[1] < 7)
-                            {
-                                placingShipRect[1].Visibility = Visibility.Visible;
-                                Canvas.SetLeft(placingShipRect[1], 172 + matrix1[0] * 50);
-                                Canvas.SetTop(placingShipRect[1], 160 + (matrix1[1] + 1) * 50);
-                                placeable = Torpedo_v_ai_matrix_movement.is_ship_placeable(selectedGridPlayerIndex[0], selectedGridPlayerIndex[1], 2, player_zone, 1);
-                            }
-                            else
-                            {
-                                placeable = false;
-                                placingShipRect[0].Fill = Brushes.Red;
-                                placingShipRect[1].Visibility = Visibility.Hidden;
-                            }
-                        }
-
-                    }
-                    else if (selectedShip == 3)
-                    {
-                        if (rotationMode == 0)
-                        {
-                            if (matrix1[0] < 6)
-                            {
-                                placingShipRect[1].Visibility = Visibility.Visible;
-                                placingShipRect[2].Visibility = Visibility.Visible;
-                                Canvas.SetLeft(placingShipRect[1], 172 + (matrix1[0] + 1) * 50);
-                                Canvas.SetTop(placingShipRect[1], 160 + matrix1[1] * 50);
-                                Canvas.SetLeft(placingShipRect[2], 172 + (matrix1[0] + 2) * 50);
-                                Canvas.SetTop(placingShipRect[2], 160 + matrix1[1] * 50);
-                                placeable = Torpedo_v_ai_matrix_movement.is_ship_placeable(selectedGridPlayerIndex[0], selectedGridPlayerIndex[1], 3, player_zone, 0);
-                            }
-                            else if(matrix1[0] < 7)
-                            {
-                                placeable = false;
-                                placingShipRect[1].Visibility = Visibility.Visible;
-                                placingShipRect[2].Visibility = Visibility.Hidden;
-                                Canvas.SetLeft(placingShipRect[1], 172 + (matrix1[0]+1) * 50);
-                                Canvas.SetTop(placingShipRect[1], 160 + matrix1[1] * 50);
-                            }
-                            else
-                            {
-                                placeable = false;
-                                placingShipRect[0].Fill = Brushes.Red;
-                                placingShipRect[1].Visibility = Visibility.Hidden;
-                                placingShipRect[2].Visibility = Visibility.Hidden;
-                            }
-                        }
-                        else
-                        {
-                            if (matrix1[1] < 6)
-                            {
-                                placingShipRect[1].Visibility = Visibility.Visible;
-                                placingShipRect[2].Visibility = Visibility.Visible;
-                                Canvas.SetLeft(placingShipRect[1], 172 + matrix1[0] * 50);
-                                Canvas.SetTop(placingShipRect[1], 160 + (matrix1[1] + 1) * 50);
-                                Canvas.SetLeft(placingShipRect[2], 172 + matrix1[0] * 50);
-                                Canvas.SetTop(placingShipRect[2], 160 + (matrix1[1] + 2) * 50);
-                                placeable = Torpedo_v_ai_matrix_movement.is_ship_placeable(selectedGridPlayerIndex[0], selectedGridPlayerIndex[1], 3, player_zone, 1);
-                            }
-                            else if (matrix1[1] < 7)
-                            {
-                                placeable = false;
-                                placingShipRect[1].Visibility = Visibility.Visible;
-                                placingShipRect[2].Visibility = Visibility.Hidden;
-                                Canvas.SetLeft(placingShipRect[1], 172 + matrix1[0] * 50);
-                                Canvas.SetTop(placingShipRect[1], 160 + (matrix1[1]+1) * 50);
-                            }
-                            else
-                            {
-                                placeable = false;
-                                placingShipRect[0].Fill = Brushes.Red;
-                                placingShipRect[1].Visibility = Visibility.Hidden;
-                                placingShipRect[2].Visibility = Visibility.Hidden;
-                            }
-                        }
-
-                    }
-                    else if (selectedShip == 4)
-                    {
-                        if (rotationMode == 0)
-                        {
-                            if (matrix1[0] < 5)
-                            {
-                                placingShipRect[1].Visibility = Visibility.Visible;
-                                placingShipRect[2].Visibility = Visibility.Visible;
-                                placingShipRect[3].Visibility = Visibility.Visible;
-                                Canvas.SetLeft(placingShipRect[1], 172 + (matrix1[0] + 1) * 50);
-                                Canvas.SetTop(placingShipRect[1], 160 + matrix1[1] * 50);
-                                Canvas.SetLeft(placingShipRect[2], 172 + (matrix1[0] + 2) * 50);
-                                Canvas.SetTop(placingShipRect[2], 160 + matrix1[1] * 50);
-                                Canvas.SetLeft(placingShipRect[3], 172 + (matrix1[0] + 3) * 50);
-                                Canvas.SetTop(placingShipRect[3], 160 + matrix1[1] * 50);
-                                placeable = Torpedo_v_ai_matrix_movement.is_ship_placeable(selectedGridPlayerIndex[0], selectedGridPlayerIndex[1], 4, player_zone, 0);
-                            }
-                            else if (matrix1[0] < 6)
-                            {
-                                placeable = false;
-                                placingShipRect[1].Visibility = Visibility.Visible;
-                                placingShipRect[2].Visibility = Visibility.Visible;
-                                placingShipRect[3].Visibility = Visibility.Hidden;
-                                Canvas.SetLeft(placingShipRect[1], 172 + (matrix1[0] + 1) * 50);
-                                Canvas.SetTop(placingShipRect[1], 160 + matrix1[1] * 50);
-                                Canvas.SetLeft(placingShipRect[2], 172 + (matrix1[0] + 2) * 50);
-                                Canvas.SetTop(placingShipRect[2], 160 + matrix1[1] * 50);
-                            }
-                            else if (matrix1[0] < 7)
-                            {
-                                placeable = false;
-                                placingShipRect[1].Visibility = Visibility.Visible;
-                                placingShipRect[2].Visibility = Visibility.Hidden;
-                                placingShipRect[3].Visibility = Visibility.Hidden;
-                                Canvas.SetLeft(placingShipRect[1], 172 + (matrix1[0] + 1) * 50);
-                                Canvas.SetTop(placingShipRect[1], 160 + matrix1[1] * 50);
-                            }
-                            else
-                            {
-                                placeable = false;
-                                placingShipRect[1].Visibility = Visibility.Hidden;
-                                placingShipRect[2].Visibility = Visibility.Hidden;
-                                placingShipRect[3].Visibility = Visibility.Hidden;
-                            }
-                        }
-                        else
-                        {
-                            if (matrix1[1] < 5)
-                            {
-                                placingShipRect[1].Visibility = Visibility.Visible;
-                                placingShipRect[2].Visibility = Visibility.Visible;
-                                placingShipRect[3].Visibility = Visibility.Visible;
-                                Canvas.SetLeft(placingShipRect[1], 172 + matrix1[0] * 50);
-                                Canvas.SetTop(placingShipRect[1], 160 + (matrix1[1] + 1) * 50);
-                                Canvas.SetLeft(placingShipRect[2], 172 + matrix1[0] * 50);
-                                Canvas.SetTop(placingShipRect[2], 160 + (matrix1[1] + 2) * 50);
-                                Canvas.SetLeft(placingShipRect[3], 172 + matrix1[0] * 50);
-                                Canvas.SetTop(placingShipRect[3], 160 + (matrix1[1] + 3) * 50);
-                                placeable = Torpedo_v_ai_matrix_movement.is_ship_placeable(selectedGridPlayerIndex[0], selectedGridPlayerIndex[1], 4, player_zone, 1);
-                            }
-                            else if (matrix1[1] < 6)
-                            {
-                                placeable = false;
-                                placingShipRect[1].Visibility = Visibility.Visible;
-                                placingShipRect[2].Visibility = Visibility.Visible;
-                                placingShipRect[3].Visibility = Visibility.Hidden;
-                                Canvas.SetLeft(placingShipRect[1], 172 + matrix1[0] * 50);
-                                Canvas.SetTop(placingShipRect[1], 160 + (matrix1[1] + 1) * 50);
-                                Canvas.SetLeft(placingShipRect[2], 172 + matrix1[0] * 50);
-                                Canvas.SetTop(placingShipRect[2], 160 + (matrix1[1] + 2) * 50);
-                            }
-                            else if (matrix1[1] < 7)
-                            {
-                                placeable = false;
-                                placingShipRect[1].Visibility = Visibility.Visible;
-                                placingShipRect[2].Visibility = Visibility.Hidden;
-                                placingShipRect[3].Visibility = Visibility.Hidden;
-                                Canvas.SetLeft(placingShipRect[1], 172 + matrix1[0] * 50);
-                                Canvas.SetTop(placingShipRect[1], 160 + (matrix1[1] + 1) * 50);
-                            }
-                            else
-                            {
-                                placeable = false;
-                                placingShipRect[1].Visibility = Visibility.Hidden;
-                                placingShipRect[2].Visibility = Visibility.Hidden;
-                                placingShipRect[3].Visibility = Visibility.Hidden;
-                            }
-                        }
-
-                    }
-                    setCustomPointerSprite(1);
-                }
-                else
-                {
-                    placingShipRect[0].Visibility = Visibility.Hidden;
-                    placingShipRect[1].Visibility = Visibility.Hidden;
-                    placingShipRect[2].Visibility = Visibility.Hidden;
-                    placingShipRect[3].Visibility = Visibility.Hidden;
-                }
-
-                if (placeable)
-                {
-                    placingShipRect[0].Fill = Brushes.Green;
-                    placingShipRect[1].Fill = Brushes.Green;
-                    placingShipRect[2].Fill = Brushes.Green;
-                    placingShipRect[3].Fill = Brushes.Green;
-                }
-                else
-                {
-                    placingShipRect[0].Fill = Brushes.Red;
-                    placingShipRect[1].Fill = Brushes.Red;
-                    placingShipRect[2].Fill = Brushes.Red;
-                    placingShipRect[3].Fill = Brushes.Red;
-                }
-            }
-        }*/
-
-        //---------------BUTTON COMBINATION---------------
     }
 }
