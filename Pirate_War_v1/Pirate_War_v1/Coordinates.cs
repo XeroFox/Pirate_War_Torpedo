@@ -23,5 +23,17 @@ namespace Pirate_War_v1
         {
             return "X: " + X + " - Y:" + Y + " = " + Value;
         }
+
+        public bool compareCoord(Coordinates c1)
+        {
+            bool result = false;
+
+            if(c1.X == this.X && c1.Y == this.Y)
+            {
+                return true;
+            }
+
+            return result;
+        }
     }
 }

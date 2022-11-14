@@ -233,6 +233,67 @@ namespace Pirate_War_v1
             }
         }
 
+
+        public List<Coordinates> aiGeneratePossibleMoves()
+        {
+            List<Coordinates> possibleMoves = new List<Coordinates>();
+            for (int i = 1; i < 9; i++)
+            {
+                for (int j = 1; j < 9; j++)
+                {
+                    Coordinates newCoordinate = new Coordinates(i, j);
+                    newCoordinate.Value = getCoordinate(i, j).Value;
+                    possibleMoves.Add(newCoordinate);
+                }
+            }
+            return possibleMoves;
+        }
+
+        public List<Coordinates> aiGetNextTips(int XX, int YY, List<Coordinates> currentMoves)
+        {
+            List<Coordinates> possibleTips = new List<Coordinates>();
+            foreach(Coordinates coord in currentMoves)
+            {
+                if(coord.compareCoord(new Coordinates(XX+1, YY)) || coord.compareCoord(new Coordinates(XX - 1, YY)) ||
+                    coord.compareCoord(new Coordinates(XX, YY + 1)) || coord.compareCoord(new Coordinates(XX, YY - 1)))
+                {
+                    possibleTips.Add(coord);
+                }
+            }
+
+            return possibleTips;
+        }
+
+        public void aiFillDestroyedSides(Ships selectedShip)
+        {
+            foreach (Coordinates ship in selectedShip.PlacedCoordinates)
+            {
+                if (getCoordinate(ship.X + 1, ship.Y).Value == 0) getCoordinate(ship.X + 1, ship.Y).Value = 9;
+                if (getCoordinate(ship.X - 1, ship.Y).Value == 0) getCoordinate(ship.X - 1, ship.Y).Value = 9;
+                if (getCoordinate(ship.X, ship.Y + 1).Value == 0) getCoordinate(ship.X, ship.Y + 1).Value = 9;
+                if (getCoordinate(ship.X, ship.Y - 1).Value == 0) getCoordinate(ship.X, ship.Y - 1).Value = 9;
+            }
+        }
+
+        public List<Coordinates> aiCleanPossibleMoves(List<Coordinates> moves)
+        {
+            List<int> movesIndex = new List<int>();
+            List<Coordinates> newMoves = moves;
+            for(int i = 0; i < newMoves.Count(); i++)
+            {
+                if (getCoordinate(newMoves[i].X, newMoves[i].Y).Value == 9 || getCoordinate(newMoves[i].X, newMoves[i].Y).Value == 1)
+                {
+                    movesIndex.Add(i);
+                }
+            }
+            for(int i = movesIndex.Count-1; i >= 0 ; i--)
+            {
+                newMoves.RemoveAt(movesIndex[i]);
+            }
+            return newMoves;
+        }
+
+
         public void printTable()
         {
             Debug.WriteLine(Name);

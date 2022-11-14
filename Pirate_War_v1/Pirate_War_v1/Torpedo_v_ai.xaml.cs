@@ -80,9 +80,11 @@ namespace Pirate_War_v1
 
         Turn game_curr_turn = Turn.PLAYER;
 
+        List<Coordinates> aiPossibleShots = new List<Coordinates>();
+        List<Coordinates> aiNextTip = new List<Coordinates>();
+        bool aiHitSomething = false;
 
-
-        //---------------MAIN---------------
+        // MAIN
         public Torpedo_v_ai()
         {
             InitializeComponent();
@@ -123,6 +125,7 @@ namespace Pirate_War_v1
             drawSelectedGrid();
         }
 
+        // XAML EVENT START
         void OnMouseMoveHandler(object sender, MouseEventArgs e)
         {
             Point p = e.GetPosition(canvas);
@@ -155,7 +158,7 @@ namespace Pirate_War_v1
         {
             if (STATE == States.PLAYING)
             {
-                if (mouseSide == 1 && mouseX > 0 && mouseX < 9 && mouseY > 0 && mouseY < 9)
+                if (game_curr_turn == Turn.PLAYER && mouseSide == 1 && mouseX > 0 && mouseX < 9 && mouseY > 0 && mouseY < 9)
                 {
                     if (aiTable.getCoordinate(mouseY, mouseX).Value == 0 || aiTable.getCoordinate(mouseY, mouseX).Value >= 2 && aiTable.getCoordinate(mouseY, mouseX).Value <= 4)
                     {
@@ -178,12 +181,17 @@ namespace Pirate_War_v1
                         else
                         {
                             gameData.P1_MISS++;
+                            game_curr_turn = Turn.AI;
                         }
                         gameData.saveMove(mouseX-1, mouseY, isScored,playerTable.Name);
                         drawSelectedGrid();
                         refreshScores();
                     }
 
+                }
+                if (game_curr_turn == Turn.AI)
+                {
+                    aiMakeAMove();
                 }
             }
             else if (STATE == States.PREP)
@@ -223,6 +231,7 @@ namespace Pirate_War_v1
                         game_curr_turn = Turn.PLAYER;
                         playerTable.removeNines();
                         refreshScores();
+                        aiPossibleShots = playerTable.aiGeneratePossibleMoves();
                     }
                     placeable = false;
                     drawSelectedGrid();
@@ -261,7 +270,7 @@ namespace Pirate_War_v1
             }
 
         }
-
+        // XAML EVENT END
 
         void setAiRandomName()
         {
@@ -297,7 +306,7 @@ namespace Pirate_War_v1
             };
             canvas.Children.Add(markerRect);
             Canvas.SetTop(markerRect, MARGINTOP + (YY - 1) * CELLSIZE);
-            Canvas.SetLeft(markerRect, (mouseSide == 0 ? MARGINLEFT1 : MARGINLEFT2) + (XX - 1) * CELLSIZE);
+            Canvas.SetLeft(markerRect, MARGINLEFT2 + (XX - 1) * CELLSIZE);
         }
 
         void locatePressableElements(double pX, double pY)
@@ -471,6 +480,90 @@ namespace Pirate_War_v1
         }
 
 
+        // AI
+        void aiMakeAMove()
+        {
+            Random random = new Random();
+
+            if (aiNextTip.Count() <= 0)
+            {
+                int targetIndex = random.Next(0, aiPossibleShots.Count());
+                Coordinates targetCoord = aiPossibleShots[targetIndex];
+                aiPossibleShots.RemoveAt(targetIndex);
+
+                if (targetCoord.Value == 0)
+                {
+                    aiCreateMarker(targetCoord.X-1, targetCoord.Y-1, false);
+                    playerTable.makeAShot(targetCoord.Y, targetCoord.X);
+                    game_curr_turn = Turn.PLAYER;
+                }
+                else
+                {
+                    bool is_destroyed = playerTable.makeAShot(targetCoord.Y, targetCoord.X);
+                    aiCreateMarker(targetCoord.X-1, targetCoord.Y-1, true);
+                    if (is_destroyed)
+                    {
+                        playerTable.aiFillDestroyedSides(playerTable.getShipByCoordinate(targetCoord.Y,targetCoord.X));
+                        aiPossibleShots = playerTable.aiCleanPossibleMoves(aiPossibleShots);
+                    }
+                    else
+                    {
+                        aiNextTip = playerTable.aiGetNextTips(targetCoord.Y, targetCoord.X, aiPossibleShots);
+                    }
+                }
+            }
+            else
+            {
+                int targetIndex = random.Next(0, aiNextTip.Count());
+                Coordinates targetCoord = aiNextTip[targetIndex];
+                aiNextTip.RemoveAt(targetIndex);
+
+                if (targetCoord.Value == 0)
+                {
+                    aiCreateMarker(targetCoord.X-1, targetCoord.Y-1, false);
+                    playerTable.makeAShot(targetCoord.Y, targetCoord.X);
+                    game_curr_turn = Turn.PLAYER;
+                }
+                else
+                {
+                    bool is_destroyed = playerTable.makeAShot(targetCoord.Y, targetCoord.X);
+                    aiCreateMarker(targetCoord.X-1, targetCoord.Y-1, true);
+                    if (is_destroyed)
+                    {
+                        playerTable.aiFillDestroyedSides(playerTable.getShipByCoordinate(targetCoord.Y, targetCoord.X));
+                        foreach(Coordinates coordinates in aiNextTip)
+                        {
+                            if(coordinates.Value == 0)
+                            {
+                                playerTable.getCoordinate(coordinates.Y, coordinates.X).Value = 9;
+                            }
+                        }
+                        aiPossibleShots = playerTable.aiCleanPossibleMoves(aiPossibleShots);
+                        aiNextTip.Clear();
+                    }
+                    else
+                    {
+                        aiNextTip = playerTable.aiGetNextTips(targetCoord.Y, targetCoord.X, aiPossibleShots);
+                    }
+                }
+            }
+
+            if (game_curr_turn == Turn.AI) aiMakeAMove();
+        }
+
+        void aiCreateMarker(int XX, int YY, bool scored)
+        {
+            Rectangle markerRect = new Rectangle
+            {
+                Width = CELLSIZE,
+                Height = CELLSIZE,
+                Opacity = 0.6,
+                Fill = (scored ? markerSprites[0] : markerSprites[1])
+            };
+            canvas.Children.Add(markerRect);
+            Canvas.SetTop(markerRect, MARGINTOP + (YY - 1) * CELLSIZE);
+            Canvas.SetLeft(markerRect, MARGINLEFT1 + (XX - 1) * CELLSIZE);
+        }
 
 
 
@@ -479,7 +572,7 @@ namespace Pirate_War_v1
         {
             Cursor = Cursors.None;
 
-            //Rotation Sprites
+            // Rotation Sprites
             rotateSprites.Add(new ImageBrush
             {
                 ImageSource = new BitmapImage(new Uri(Directory.GetCurrentDirectory() + "\\sources\\spr_rotate_btn.png", UriKind.Absolute))
@@ -498,7 +591,7 @@ namespace Pirate_War_v1
             });
 
 
-            //Cursor Sprites
+            // Cursor Sprites
             cursorSprites.Add(new ImageBrush
             {
                 ImageSource = new BitmapImage(new Uri(Directory.GetCurrentDirectory() + "\\sources\\spr_hand.png", UriKind.Absolute))
@@ -508,7 +601,7 @@ namespace Pirate_War_v1
                 ImageSource = new BitmapImage(new Uri(Directory.GetCurrentDirectory() + "\\sources\\spr_stroked_hand.png", UriKind.Absolute))
             });
 
-            //Ship Sprites
+            // Ship Sprites
             shipSprites.Add(new ImageBrush
             {
                 ImageSource = new BitmapImage(new Uri(Directory.GetCurrentDirectory() + "\\sources\\spr_ship_gunboat.png", UriKind.Absolute))
@@ -534,7 +627,7 @@ namespace Pirate_War_v1
                 ImageSource = new BitmapImage(new Uri(Directory.GetCurrentDirectory() + "\\sources\\spr_ship_frigate_damaged.png", UriKind.Absolute))
             });
 
-            //Shot Marker Sprites
+            // Shot Marker Sprites
             markerSprites.Add(new ImageBrush
             {
                 ImageSource = new BitmapImage(new Uri(Directory.GetCurrentDirectory() + "\\sources\\spr_flatblack_bone_femur.png", UriKind.Absolute))
