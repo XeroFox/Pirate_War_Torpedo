@@ -281,7 +281,7 @@ namespace Pirate_War_v1
             List<Coordinates> newMoves = moves;
             for(int i = 0; i < newMoves.Count(); i++)
             {
-                if (getCoordinate(newMoves[i].X, newMoves[i].Y).Value == 9 || getCoordinate(newMoves[i].X, newMoves[i].Y).Value == 1)
+                if (getCoordinate(newMoves[i].X, newMoves[i].Y).Value >= 9 || getCoordinate(newMoves[i].X, newMoves[i].Y).Value == 1)
                 {
                     movesIndex.Add(i);
                 }

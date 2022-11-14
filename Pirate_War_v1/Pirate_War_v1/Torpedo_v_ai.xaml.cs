@@ -493,22 +493,29 @@ namespace Pirate_War_v1
 
                 if (targetCoord.Value == 0)
                 {
-                    aiCreateMarker(targetCoord.X-1, targetCoord.Y-1, false);
-                    playerTable.makeAShot(targetCoord.Y, targetCoord.X);
+                    aiCreateMarker(targetCoord.Y, targetCoord.X, false);
+                    playerTable.makeAShot(targetCoord.X, targetCoord.Y);
                     game_curr_turn = Turn.PLAYER;
                 }
                 else
                 {
-                    bool is_destroyed = playerTable.makeAShot(targetCoord.Y, targetCoord.X);
-                    aiCreateMarker(targetCoord.X-1, targetCoord.Y-1, true);
+                    bool is_destroyed = playerTable.makeAShot(targetCoord.X, targetCoord.Y);
+                    aiCreateMarker(targetCoord.Y, targetCoord.X, true);
                     if (is_destroyed)
                     {
-                        playerTable.aiFillDestroyedSides(playerTable.getShipByCoordinate(targetCoord.Y,targetCoord.X));
+                        playerTable.aiFillDestroyedSides(playerTable.getShipByCoordinate(targetCoord.X,targetCoord.Y));
                         aiPossibleShots = playerTable.aiCleanPossibleMoves(aiPossibleShots);
+
+                        playerTable.getShipByCoordinate(targetCoord.X, targetCoord.Y).shipBody.Visibility = Visibility.Visible;
+                        playerTable.getShipByCoordinate(targetCoord.X, targetCoord.Y).shipBody.Fill = shipSprites[playerTable.getShipByCoordinate(targetCoord.X, targetCoord.Y).SpriteIndex];
+                        currPlayerShips[playerTable.getShipByCoordinate(targetCoord.X, targetCoord.Y).Type - 2]--;
+                        p1_frig.Text = currPlayerShips[2] + "/" + maxPlaceableShips[2];
+                        p1_brig.Text = currPlayerShips[1] + "/" + maxPlaceableShips[1];
+                        p1_gunboat.Text = currPlayerShips[0] + "/" + maxPlaceableShips[0];
                     }
                     else
                     {
-                        aiNextTip = playerTable.aiGetNextTips(targetCoord.Y, targetCoord.X, aiPossibleShots);
+                        aiNextTip = playerTable.aiGetNextTips(targetCoord.X, targetCoord.Y, aiPossibleShots);
                     }
                 }
             }
@@ -520,14 +527,14 @@ namespace Pirate_War_v1
 
                 if (targetCoord.Value == 0)
                 {
-                    aiCreateMarker(targetCoord.X-1, targetCoord.Y-1, false);
-                    playerTable.makeAShot(targetCoord.Y, targetCoord.X);
+                    aiCreateMarker(targetCoord.Y, targetCoord.X, false);
+                    playerTable.makeAShot(targetCoord.X, targetCoord.Y);
                     game_curr_turn = Turn.PLAYER;
                 }
                 else
                 {
-                    bool is_destroyed = playerTable.makeAShot(targetCoord.Y, targetCoord.X);
-                    aiCreateMarker(targetCoord.X-1, targetCoord.Y-1, true);
+                    bool is_destroyed = playerTable.makeAShot(targetCoord.X, targetCoord.Y);
+                    aiCreateMarker(targetCoord.Y, targetCoord.X, true);
                     if (is_destroyed)
                     {
                         playerTable.aiFillDestroyedSides(playerTable.getShipByCoordinate(targetCoord.Y, targetCoord.X));
@@ -535,20 +542,28 @@ namespace Pirate_War_v1
                         {
                             if(coordinates.Value == 0)
                             {
-                                playerTable.getCoordinate(coordinates.Y, coordinates.X).Value = 9;
+                                playerTable.getCoordinate(coordinates.X, coordinates.Y).Value = 9;
                             }
                         }
                         aiPossibleShots = playerTable.aiCleanPossibleMoves(aiPossibleShots);
                         aiNextTip.Clear();
+
+                        playerTable.getShipByCoordinate(targetCoord.X, targetCoord.Y).shipBody.Visibility = Visibility.Visible;
+                        playerTable.getShipByCoordinate(targetCoord.X, targetCoord.Y).shipBody.Fill = shipSprites[playerTable.getShipByCoordinate(targetCoord.X, targetCoord.Y).SpriteIndex];
+                        currPlayerShips[playerTable.getShipByCoordinate(targetCoord.X, targetCoord.Y).Type - 2]--;
+                        p1_frig.Text = currPlayerShips[2] + "/" + maxPlaceableShips[2];
+                        p1_brig.Text = currPlayerShips[1] + "/" + maxPlaceableShips[1];
+                        p1_gunboat.Text = currPlayerShips[0] + "/" + maxPlaceableShips[0];
                     }
                     else
                     {
-                        aiNextTip = playerTable.aiGetNextTips(targetCoord.Y, targetCoord.X, aiPossibleShots);
+                        aiNextTip = playerTable.aiGetNextTips(targetCoord.X, targetCoord.Y, aiPossibleShots);
                     }
                 }
             }
 
             if (game_curr_turn == Turn.AI) aiMakeAMove();
+            refreshScores();
         }
 
         void aiCreateMarker(int XX, int YY, bool scored)
