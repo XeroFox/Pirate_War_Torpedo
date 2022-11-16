@@ -1,0 +1,23 @@
+{
+  "runtimeTarget": {
+    "name": ".NETCoreApp,Version=v6.0",
+    "signature": ""
+  },
+  "compilationOptions": {},
+  "targets": {
+    ".NETCoreApp,Version=v6.0": {
+      "Pirate_War_v1/1.0.0": {
+        "runtime": {
+          "Pirate_War_v1.dll": {}
+        }
+      }
+    }
+  },
+  "libraries": {
+    "Pirate_War_v1/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    }
+  }
+}
