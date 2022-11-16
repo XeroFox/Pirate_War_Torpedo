@@ -24,7 +24,6 @@ namespace Pirate_War_v1
         String player2 = "";
         String playeraiellen = "";
         String empty = "";
-        Char[] specialchar = {'@', '#', '$', '%', '!', '~' };
         public game_select()
         {
             InitializeComponent();
@@ -50,34 +49,57 @@ namespace Pirate_War_v1
 
         private void Start_Click(object sender, RoutedEventArgs e)
         {
-           if (Player1Box.Visibility == Visibility.Visible && Player2Box.Visibility == Visibility.Visible)
+            if (Player1Box.Visibility == Visibility.Visible && Player2Box.Visibility == Visibility.Visible)
             {
+                char[] one = Player1Box.Text.ToCharArray();
+                char[] two = Player2Box.Text.ToCharArray();
                 if (Player1Box.Text.Length == 0 || Player2Box.Text.Length == 0)
                 {
                     MessageBox.Show("PLayer name can not be empty!");
-                }else for(int i = 0; i < specialchar.Length; i++)
+                }
+                else if (true)
+                {
+                    for (int i = 0; i < Player1Box.Text.Length; i++)
                     {
-                        if(Player1Box.Text.Contains(specialchar[i]) || Player2Box.Text.Contains(specialchar[i]))
+                        if (!Char.IsLetterOrDigit(one[i]))
                         {
                             MessageBox.Show("PLayer name can not contain special character!");
                             break;
                         }
-                    } //megcsinalni az elset hogy megnyitsa a game-t
+
+                    }
+                    for (int i = 0; i < Player2Box.Text.Length; i++)
+                    {
+                        if (!Char.IsLetterOrDigit(two[i]))
+                        {
+                            MessageBox.Show("PLayer name can not contain special character!");
+                            break;
+                        }
+                        if (Player1Box.Text.Length - 1 == i)
+                            break;
+                    }
+                }//else gamebe lép
             }
             if (PlayerAiEllen.Visibility == Visibility.Visible)
             {
+                char[] three = PlayerAiEllen.Text.ToCharArray();
                 if (PlayerAiEllen.Text.Length == 0)
                 {
                     MessageBox.Show("PLayer name can not be empty!");
                 }
-                else for (int i = 0; i < specialchar.Length; i++)
+                else if (true)
+                {
+                    for (int i = 0; i < PlayerAiEllen.Text.Length; i++)
                     {
-                        if (PlayerAiEllen.Text.Contains(specialchar[i]))
+                        if (!Char.IsLetterOrDigit(three[i]))
                         {
                             MessageBox.Show("PLayer name can not contain special character!");
                             break;
                         }
-                    } //megcsinalni az elset hogy megnyitsa a game-t
+                        if (Player1Box.Text.Length - 1 == i)
+                            break;
+                    }
+                }//else gamebe lép
             }
 
         }
@@ -91,11 +113,11 @@ namespace Pirate_War_v1
             PlayerAiEllen.Text = empty;
             playeraiellen = empty;
 
-            if (PlayerAiEllen.IsVisible && LabelAiEllen.IsVisible) 
+            if (PlayerAiEllen.IsVisible && LabelAiEllen.IsVisible)
             {
                 LabelAiEllen.Visibility = Visibility.Hidden;
                 PlayerAiEllen.Visibility = Visibility.Hidden;
-                
+
             }
         }
 
@@ -132,3 +154,4 @@ namespace Pirate_War_v1
         }
     }
 }
+    
