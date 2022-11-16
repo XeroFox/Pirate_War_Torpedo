@@ -84,6 +84,8 @@ namespace Pirate_War_v1
         List<Coordinates> aiPossibleShots = new List<Coordinates>();
         List<Coordinates> aiNextTip = new List<Coordinates>();
 
+        private readonly DispatcherTimer _timer = new DispatcherTimer(DispatcherPriority.Send);
+        private const double RefreshTimeSec = 0.2;
 
         // MAIN
         public Torpedo_v_ai()
@@ -100,6 +102,10 @@ namespace Pirate_War_v1
             ai_name.Text = aiTable.Name;
             refreshScores();
             curr_turn.Text = playerTable.Name + " Placing Ships";
+
+            _timer.Interval = TimeSpan.FromSeconds(RefreshTimeSec);
+            _timer.Tick += TimerTick;
+            _timer.Start();
 
 
             for (int i = 0; i < 4; i++)
@@ -494,7 +500,7 @@ namespace Pirate_War_v1
         {
             refreshScores();
 
-            System.Threading.Thread.Sleep(1000);
+            //System.Threading.Thread.Sleep(1000);
             Random random = new Random();
 
             if (aiNextTip.Count() <= 0)
