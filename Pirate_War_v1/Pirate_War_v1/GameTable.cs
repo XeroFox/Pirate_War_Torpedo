@@ -241,9 +241,8 @@ namespace Pirate_War_v1
             {
                 for (int j = 1; j < 9; j++)
                 {
-                    Coordinates newCoordinate = new Coordinates(i, j);
-                    newCoordinate.Value = getCoordinate(i, j).Value;
-                    possibleMoves.Add(newCoordinate);
+                    if(getCoordinate(i, j).Value == 0 || (getCoordinate(i, j).Value <= 4 && getCoordinate(i, j).Value >= 2))
+                    possibleMoves.Add(getCoordinate(i,j));
                 }
             }
             return possibleMoves;
@@ -254,8 +253,10 @@ namespace Pirate_War_v1
             List<Coordinates> possibleTips = new List<Coordinates>();
             foreach(Coordinates coord in currentMoves)
             {
-                if(coord.compareCoord(new Coordinates(XX+1, YY)) || coord.compareCoord(new Coordinates(XX - 1, YY)) ||
-                    coord.compareCoord(new Coordinates(XX, YY + 1)) || coord.compareCoord(new Coordinates(XX, YY - 1)))
+                if((getCoordinate(coord.X, coord.Y).Value <= 4 && getCoordinate(coord.X, coord.Y).Value != 1 && getCoordinate(coord.X, coord.Y).Value != -1) &&
+                    (coord.compareCoord(new Coordinates(XX+1, YY))
+                    || coord.compareCoord(new Coordinates(XX - 1, YY)) || coord.compareCoord(new Coordinates(XX, YY + 1))
+                    || coord.compareCoord(new Coordinates(XX, YY - 1))))
                 {
                     possibleTips.Add(coord);
                 }
@@ -264,33 +265,22 @@ namespace Pirate_War_v1
             return possibleTips;
         }
 
-        public void aiFillDestroyedSides(Ships selectedShip)
+        public void aiReplaceDestroyedShipSides()
         {
-            foreach (Coordinates ship in selectedShip.PlacedCoordinates)
+            foreach (Ships ship in ships)
             {
-                if (getCoordinate(ship.X + 1, ship.Y).Value == 0) getCoordinate(ship.X + 1, ship.Y).Value = 9;
-                if (getCoordinate(ship.X - 1, ship.Y).Value == 0) getCoordinate(ship.X - 1, ship.Y).Value = 9;
-                if (getCoordinate(ship.X, ship.Y + 1).Value == 0) getCoordinate(ship.X, ship.Y + 1).Value = 9;
-                if (getCoordinate(ship.X, ship.Y - 1).Value == 0) getCoordinate(ship.X, ship.Y - 1).Value = 9;
-            }
-        }
-
-        public List<Coordinates> aiCleanPossibleMoves(List<Coordinates> moves)
-        {
-            List<int> movesIndex = new List<int>();
-            List<Coordinates> newMoves = moves;
-            for(int i = 0; i < newMoves.Count(); i++)
-            {
-                if (getCoordinate(newMoves[i].X, newMoves[i].Y).Value >= 9 || getCoordinate(newMoves[i].X, newMoves[i].Y).Value == 1)
+                
+                foreach(Coordinates coordinates in ship.PlacedCoordinates)
                 {
-                    movesIndex.Add(i);
+                    if (ship.Destroyed)
+                    {
+                        getCoordinate(coordinates.X + 1, coordinates.Y).Value = getCoordinate(coordinates.X + 1, coordinates.Y).Value == 0 ? 9 : getCoordinate(coordinates.X + 1, coordinates.Y).Value;
+                        getCoordinate(coordinates.X - 1, coordinates.Y).Value = getCoordinate(coordinates.X - 1, coordinates.Y).Value == 0 ? 9 : getCoordinate(coordinates.X - 1, coordinates.Y).Value;
+                        getCoordinate(coordinates.X, coordinates.Y + 1).Value = getCoordinate(coordinates.X, coordinates.Y + 1).Value == 0 ? 9 : getCoordinate(coordinates.X, coordinates.Y + 1).Value;
+                        getCoordinate(coordinates.X, coordinates.Y - 1).Value = getCoordinate(coordinates.X, coordinates.Y - 1).Value == 0 ? 9 : getCoordinate(coordinates.X, coordinates.Y - 1).Value;
+                    }
                 }
             }
-            for(int i = movesIndex.Count-1; i >= 0 ; i--)
-            {
-                newMoves.RemoveAt(movesIndex[i]);
-            }
-            return newMoves;
         }
 
 
@@ -300,7 +290,7 @@ namespace Pirate_War_v1
             var i = 1;
             foreach(Coordinates cord in Table)
             {
-                Debug.Write(cord.Value + " ");
+                Debug.Write((cord.Value < 10 && cord.Value >= 0 ? "0"+cord.Value : cord.Value ) + " ");
                 if(i % 10 == 0)
                 {
                     Debug.Write("\n");
