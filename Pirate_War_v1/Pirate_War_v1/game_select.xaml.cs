@@ -23,6 +23,7 @@ namespace Pirate_War_v1
         String player2 = "";
         String playeraiellen = "";
         String empty = "";
+        Char[] specialchar = {'@', '#', '$', '%', '!', '~' };
         public game_select()
         {
             InitializeComponent();
@@ -44,7 +45,17 @@ namespace Pirate_War_v1
 
         private void Start_Click(object sender, RoutedEventArgs e)
         {
-           
+           if (Player1Box.Visibility == Visibility.Visible && Player2Box.Visibility == Visibility.Visible)
+            {
+                if (Player1Box.Text.Length == 0 || Player2Box.Text.Length == 0)
+                {
+                    MessageBox.Show("PLayer name can not be empty!");
+                }else for(int i = 0; i < specialchar.Length; i++)
+                    {
+
+                    }
+            }
+
         }
 
         private void Ember_ellen_Click(object sender, RoutedEventArgs e)
