@@ -15,6 +15,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Media.Media3D;
 using System.Windows.Shapes;
+using System.Windows.Threading;
 
 namespace Pirate_War_v1
 {
@@ -82,7 +83,7 @@ namespace Pirate_War_v1
 
         List<Coordinates> aiPossibleShots = new List<Coordinates>();
         List<Coordinates> aiNextTip = new List<Coordinates>();
-        bool aiHitSomething = false;
+
 
         // MAIN
         public Torpedo_v_ai()
@@ -99,7 +100,7 @@ namespace Pirate_War_v1
             ai_name.Text = aiTable.Name;
             refreshScores();
             curr_turn.Text = playerTable.Name + " Placing Ships";
-            
+
 
             for (int i = 0; i < 4; i++)
             {
@@ -479,10 +480,21 @@ namespace Pirate_War_v1
             }
         }
 
+        private void TimerTick(object sender, EventArgs e)
+        {
+            if (game_curr_turn == Turn.AI)
+            {
+                aiMakeAMove();
+            }
+        }
+
 
         // AI
         void aiMakeAMove()
         {
+            refreshScores();
+
+            System.Threading.Thread.Sleep(1000);
             Random random = new Random();
 
             if (aiNextTip.Count() <= 0)
