@@ -7,24 +7,39 @@
         mc:Ignorable="d"
         Title="Torpedo_1v1" Height="720" Width="1280"
         ResizeMode="NoResize"
-        WindowStartupLocation="CenterScreen">
-    <Canvas x:Name="PlayCanvas">
-        <Canvas.Background>
-            <ImageBrush ImageSource="C:\Users\Kiss Szabolcs\Documents\GitHub\Pirate_War_Torpedo\Pirate_War_v1\Pirate_War_v1\sources\csharp_torpedo.png"></ImageBrush>
-        </Canvas.Background>
-        <Label Content="1/1" FontFamily="./sources/Font/#Bauhaus 93" HorizontalAlignment="Center" VerticalAlignment="Top" FontSize="36"  Foreground="#3a76a9" Canvas.Left="74" Canvas.Top="218" x:Name="P1negyhajoLabel" Height="50"/>
-        <Label Content="4/4" FontFamily="./sources/Font/#Bauhaus 93" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="36"  Foreground="#3a76a9" Canvas.Left="1145" Canvas.Top="548" x:Name="P2kethajoLabel" Height="52"/>
-        <Label Content="2/2" FontFamily="./sources/Font/#Bauhaus 93" HorizontalAlignment="Center" VerticalAlignment="Top" FontSize="36"  Foreground="#3a76a9" Canvas.Left="1145" Canvas.Top="396" x:Name="P2haromhajoLabel" Height="48" />
-        <Label Content="64" FontFamily="./sources/Font/#Bauhaus 93" VerticalAlignment="Center" FontSize="36"  Foreground="#3a76a9" Canvas.Left="614" Canvas.Top="187" Width="52" HorizontalAlignment="Left" x:Name="TurnNumbers"/>
-        <Label Content="4/4" FontFamily="./sources/Font/#Bauhaus 93" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="36"  Foreground="#3a76a9" Canvas.Left="74" Canvas.Top="550" x:Name="P1kethajoLabel" Height="50"/>
-        <Label Content="2/2" FontFamily="./sources/Font/#Bauhaus 93" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="36"  Foreground="#3a76a9" Canvas.Left="74" Canvas.Top="396" x:Name="P1haromhajoLabel" Height="48"/>
-        <Label Content="1/1" FontFamily="./sources/Font/#Bauhaus 93" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="36"  Foreground="#3a76a9" Canvas.Left="1145" Canvas.Top="218" x:Name="P2negyhajoLabel" Height="50"/>
-        <Label Content="Player2" HorizontalAlignment="Center" VerticalAlignment="Top" FontSize="36"  Foreground="#3a76a9" Width="395" HorizontalContentAlignment="Center" Canvas.Left="712" Canvas.Top="94" FontFamily="./sources/Font/#Bauhaus 93" x:Name="P2Name" />
-        <Label Content="Playeradsa1 Turn" FontSize="56" FontFamily="./sources/Font/#Bauhaus 93" Foreground="#3a76a9" Width="930" HorizontalContentAlignment="Center" HorizontalAlignment="Left" Canvas.Left="177" Canvas.Top="15" VerticalAlignment="Center" x:Name="WhosTurnLabel"/>
-        <Label Content="Player1" FontSize="36" FontFamily="./sources/Font/#Bauhaus 93" Foreground="#3a76a9" Width="395" HorizontalContentAlignment="Center" Canvas.Left="177" Canvas.Top="94" HorizontalAlignment="Left" VerticalAlignment="Top" x:Name="P1NameLabel"/>
-        <Label Content="64" FontFamily="./sources/Font/#Bauhaus 93" FontSize="36"  Foreground="#3a76a9" Width="78" HorizontalAlignment="Left" Canvas.Left="792" Canvas.Top="555" VerticalAlignment="Top" x:Name="P2HitLabel" />
-        <Label Content="64" FontFamily="./sources/Font/#Bauhaus 93" FontSize="36"  Foreground="#3a76a9" Width="78" Canvas.Left="259" Canvas.Top="555" HorizontalAlignment="Left" VerticalAlignment="Center" x:Name="P1HitLabel" />
-        <Label Content="64" FontFamily="./sources/Font/#Bauhaus 93" FontSize="36"  Foreground="#3a76a9" Width="78" Canvas.Left="259" Canvas.Top="593" HorizontalAlignment="Center" VerticalAlignment="Top" Height="63" x:Name="P1MissLabel" />
-        <Label Content="64" FontFamily="./sources/Font/#Bauhaus 93" FontSize="36"  Foreground="#3a76a9" Width="78" Canvas.Left="792" Canvas.Top="593" HorizontalAlignment="Center" VerticalAlignment="Top" x:Name="P2MissLabel" />
-    </Canvas>
+        WindowStartupLocation="CenterScreen"
+        KeyDown="Window_KeyDown">
+    <Grid>
+        <Canvas x:Name="canvas"  MouseMove="canvas_MouseMove" MouseLeftButtonDown="canvas_MouseLeftButtonDown" MouseRightButtonDown="canvas_MouseRightButtonDown">
+            <Rectangle x:Name="game_bg" Height="720" Width="1280"/>
+            <TextBlock x:Name="p1_frig" Text="0/1" TextWrapping="Wrap" FontSize="36" FontFamily="Bauhaus 93" Foreground="#3a76a9" Canvas.Left="79" Canvas.Top="229"/>
+            <TextBlock x:Name="p1_brig" Text="0/2" TextWrapping="Wrap" FontSize="36" FontFamily="Bauhaus 93" Foreground="#3a76a9" Canvas.Left="79" Canvas.Top="410"/>
+            <TextBlock x:Name="p1_gunboat" Text="0/4" TextWrapping="Wrap" FontSize="36" FontFamily="Bauhaus 93" Foreground="#3a76a9" Canvas.Left="79" Canvas.Top="566"/>
+
+            <TextBlock x:Name="p1_hit" Text="64" TextWrapping="Wrap" FontSize="36" FontFamily="Bauhaus 93" Foreground="#3a76a9" Canvas.Left="263" Canvas.Top="571"/>
+            <TextBlock x:Name="p1_miss" Text="64" TextWrapping="Wrap" FontSize="36" FontFamily="Bauhaus 93" Foreground="#3a76a9" Canvas.Left="263" Canvas.Top="615"/>
+
+            <TextBlock x:Name="p2_frig" Text="0/1" TextWrapping="Wrap" FontSize="36" FontFamily="Bauhaus 93" Foreground="#3a76a9" Canvas.Left="1149" Canvas.Top="229"/>
+            <TextBlock x:Name="p2_brig" Text="0/2" TextWrapping="Wrap" FontSize="36" FontFamily="Bauhaus 93" Foreground="#3a76a9" Canvas.Left="1149" Canvas.Top="410"/>
+            <TextBlock x:Name="p2_gunboat" Text="0/4" TextWrapping="Wrap" FontSize="36" FontFamily="Bauhaus 93" Foreground="#3a76a9" Canvas.Left="1149" Canvas.Top="566"/>
+
+            <TextBlock x:Name="p2_hit" Text="64" TextWrapping="Wrap" FontSize="36" FontFamily="Bauhaus 93" Foreground="#3a76a9" Canvas.Left="800" Canvas.Top="571"/>
+            <TextBlock x:Name="p2_miss" Text="64" TextWrapping="Wrap" FontSize="36" FontFamily="Bauhaus 93" Foreground="#3a76a9" Canvas.Left="800" Canvas.Top="615"/>
+
+            <TextBlock x:Name="game_turn" Text="64" TextWrapping="Wrap" FontSize="36" FontFamily="Bauhaus 93" Foreground="#3a76a9" Canvas.Left="620" Canvas.Top="200"/>
+
+            <TextBlock x:Name="curr_turn" Text="Player 1's Turn" TextAlignment="Center" FontSize="56" FontFamily="Bauhaus 93" Foreground="#3a76a9" Canvas.Left="106" HorizontalAlignment="Left" VerticalAlignment="Center" Canvas.Top="16" Width="1070"/>
+
+            <TextBlock x:Name="p1_name" Text="Player 1" TextWrapping="Wrap" FontSize="36" FontFamily="Bauhaus 93" Foreground="#3a76a9" Canvas.Left="172" Canvas.Top="108"/>
+            <TextBlock x:Name="p2_name" Text="Stancliff 'Mechanized' Garfield" TextWrapping="Wrap" FontSize="29" FontFamily="Bauhaus 93" Foreground="#3a76a9" Canvas.Left="708" Canvas.Top="118"/>
+
+            <TextBlock x:Name="selected_index_name" Panel.ZIndex="100" Text="A1" TextWrapping="Wrap" FontSize="35" TextAlignment="Center" FontFamily="Bauhaus 93" Foreground="Lime" Canvas.Left="609" Canvas.Top="571" HorizontalAlignment="Left" VerticalAlignment="Top" Width="50" Height="50"/>
+
+            <Rectangle Visibility="Hidden" Name="rotationButton" Width="50" Height="50" Canvas.Left="615" Canvas.Top="327"/>
+            <Rectangle Visibility="Hidden" Name="rotationShipView" Width="74" Height="75" Canvas.Left="604" Canvas.Top="400"/>
+
+            <Ellipse Name="customPointer" Width="50" Height="50" Panel.ZIndex="1000"/>
+
+        </Canvas>
+    </Grid>
 </Window>
