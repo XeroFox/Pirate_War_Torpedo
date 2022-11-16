@@ -1,0 +1,30 @@
+﻿<Window x:Class="Pirate_War_v1.Torpedo_1v1"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Pirate_War_v1"
+        mc:Ignorable="d"
+        Title="Torpedo_1v1" Height="720" Width="1280"
+        ResizeMode="NoResize"
+        WindowStartupLocation="CenterScreen">
+    <Canvas x:Name="PlayCanvas">
+        <Canvas.Background>
+            <ImageBrush ImageSource="C:\Users\Kiss Szabolcs\Documents\GitHub\Pirate_War_Torpedo\Pirate_War_v1\Pirate_War_v1\sources\csharp_torpedo.png"></ImageBrush>
+        </Canvas.Background>
+        <Label Content="1/1" FontFamily="./sources/Font/#Bauhaus 93" HorizontalAlignment="Center" VerticalAlignment="Top" FontSize="36"  Foreground="#3a76a9" Canvas.Left="74" Canvas.Top="218" x:Name="P1negyhajoLabel" Height="50"/>
+        <Label Content="4/4" FontFamily="./sources/Font/#Bauhaus 93" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="36"  Foreground="#3a76a9" Canvas.Left="1145" Canvas.Top="548" x:Name="P2kethajoLabel" Height="52"/>
+        <Label Content="2/2" FontFamily="./sources/Font/#Bauhaus 93" HorizontalAlignment="Center" VerticalAlignment="Top" FontSize="36"  Foreground="#3a76a9" Canvas.Left="1145" Canvas.Top="396" x:Name="P2haromhajoLabel" Height="48" />
+        <Label Content="64" FontFamily="./sources/Font/#Bauhaus 93" VerticalAlignment="Center" FontSize="36"  Foreground="#3a76a9" Canvas.Left="614" Canvas.Top="187" Width="52" HorizontalAlignment="Left" x:Name="TurnNumbers"/>
+        <Label Content="4/4" FontFamily="./sources/Font/#Bauhaus 93" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="36"  Foreground="#3a76a9" Canvas.Left="74" Canvas.Top="550" x:Name="P1kethajoLabel" Height="50"/>
+        <Label Content="2/2" FontFamily="./sources/Font/#Bauhaus 93" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="36"  Foreground="#3a76a9" Canvas.Left="74" Canvas.Top="396" x:Name="P1haromhajoLabel" Height="48"/>
+        <Label Content="1/1" FontFamily="./sources/Font/#Bauhaus 93" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="36"  Foreground="#3a76a9" Canvas.Left="1145" Canvas.Top="218" x:Name="P2negyhajoLabel" Height="50"/>
+        <Label Content="Player2" HorizontalAlignment="Center" VerticalAlignment="Top" FontSize="36"  Foreground="#3a76a9" Width="395" HorizontalContentAlignment="Center" Canvas.Left="712" Canvas.Top="94" FontFamily="./sources/Font/#Bauhaus 93" x:Name="P2Name" />
+        <Label Content="Playeradsa1 Turn" FontSize="56" FontFamily="./sources/Font/#Bauhaus 93" Foreground="#3a76a9" Width="930" HorizontalContentAlignment="Center" HorizontalAlignment="Left" Canvas.Left="177" Canvas.Top="15" VerticalAlignment="Center" x:Name="WhosTurnLabel"/>
+        <Label Content="Player1" FontSize="36" FontFamily="./sources/Font/#Bauhaus 93" Foreground="#3a76a9" Width="395" HorizontalContentAlignment="Center" Canvas.Left="177" Canvas.Top="94" HorizontalAlignment="Left" VerticalAlignment="Top" x:Name="P1NameLabel"/>
+        <Label Content="64" FontFamily="./sources/Font/#Bauhaus 93" FontSize="36"  Foreground="#3a76a9" Width="78" HorizontalAlignment="Left" Canvas.Left="792" Canvas.Top="555" VerticalAlignment="Top" x:Name="P2HitLabel" />
+        <Label Content="64" FontFamily="./sources/Font/#Bauhaus 93" FontSize="36"  Foreground="#3a76a9" Width="78" Canvas.Left="259" Canvas.Top="555" HorizontalAlignment="Left" VerticalAlignment="Center" x:Name="P1HitLabel" />
+        <Label Content="64" FontFamily="./sources/Font/#Bauhaus 93" FontSize="36"  Foreground="#3a76a9" Width="78" Canvas.Left="259" Canvas.Top="593" HorizontalAlignment="Center" VerticalAlignment="Top" Height="63" x:Name="P1MissLabel" />
+        <Label Content="64" FontFamily="./sources/Font/#Bauhaus 93" FontSize="36"  Foreground="#3a76a9" Width="78" Canvas.Left="792" Canvas.Top="593" HorizontalAlignment="Center" VerticalAlignment="Top" x:Name="P2MissLabel" />
+    </Canvas>
+</Window>
