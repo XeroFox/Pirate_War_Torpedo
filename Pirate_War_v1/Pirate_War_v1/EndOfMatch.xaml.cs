@@ -22,6 +22,8 @@ namespace Pirate_War_v1
     public partial class EndOfMatch : Window
     {
         public String WINNER;
+        public static int P1Wins;
+        public static int P2Wins;
         public EndOfMatch()
         {
             InitializeComponent();
@@ -39,11 +41,11 @@ namespace Pirate_War_v1
             
             if (WINNER == "1")
             {
-                
+                P1Wins = P1Wins + 1;
             }
             else
             {
-                
+                P2Wins = P2Wins + 1;
             }
         }
 

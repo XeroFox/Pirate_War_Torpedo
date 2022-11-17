@@ -39,6 +39,8 @@
 
             <Ellipse Name="customPointer" Width="50" Height="50" Panel.ZIndex="1000"/>
             <TextBlock x:Name="p2_name" Text="Player 1" TextWrapping="Wrap" FontSize="36" FontFamily="Bauhaus 93" Foreground="#3a76a9" Canvas.Left="709" Canvas.Top="108" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+            <TextBlock x:Name="p2_Scores" TextWrapping="Wrap" FontSize="36" FontFamily="Bauhaus 93" Foreground="#3a76a9" Canvas.Left="1111" Canvas.Top="19" HorizontalAlignment="Center" VerticalAlignment="Top"><Run Language="hu-hu" Text="Score: 0"/></TextBlock>
+            <TextBlock x:Name="p1_Scores" TextWrapping="Wrap" FontSize="36" FontFamily="Bauhaus 93" Foreground="#3a76a9" Canvas.Left="41" Canvas.Top="19" HorizontalAlignment="Center" VerticalAlignment="Top"><Run Language="hu-hu" Text="Score: 0"/></TextBlock>
 
         </Canvas>
     </Grid>

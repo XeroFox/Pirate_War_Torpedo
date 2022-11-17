@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Pirate_War_v1"
         mc:Ignorable="d"
-        Title="MainWindow" Height="501" Width="1141"
+        Title="MainWindow" Height="720" Width="1280"
         ResizeMode="NoResize"
         WindowStyle="None"
         WindowStartupLocation="CenterScreen">
