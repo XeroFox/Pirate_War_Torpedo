@@ -30,8 +30,7 @@
 
             <TextBlock x:Name="curr_turn" Text="Player 1's Turn" TextAlignment="Center" FontSize="56" FontFamily="Bauhaus 93" Foreground="#3a76a9" Canvas.Left="106" HorizontalAlignment="Left" VerticalAlignment="Center" Canvas.Top="16" Width="1070"/>
 
-            <TextBlock x:Name="p1_name" Text="Player 1" TextWrapping="Wrap" FontSize="36" FontFamily="Bauhaus 93" Foreground="#3a76a9" Canvas.Left="172" Canvas.Top="108"/>
-            <TextBlock x:Name="p2_name" Text="Stancliff 'Mechanized' Garfield" TextWrapping="Wrap" FontSize="29" FontFamily="Bauhaus 93" Foreground="#3a76a9" Canvas.Left="708" Canvas.Top="118"/>
+            <TextBlock x:Name="p1_name" Text="Player 1" TextWrapping="Wrap" FontSize="36" FontFamily="Bauhaus 93" Foreground="#3a76a9" Canvas.Left="172" Canvas.Top="108" HorizontalAlignment="Center" VerticalAlignment="Center"/>
 
             <TextBlock x:Name="selected_index_name" Panel.ZIndex="100" Text="A1" TextWrapping="Wrap" FontSize="35" TextAlignment="Center" FontFamily="Bauhaus 93" Foreground="Lime" Canvas.Left="609" Canvas.Top="571" HorizontalAlignment="Left" VerticalAlignment="Top" Width="50" Height="50"/>
 
@@ -39,6 +38,7 @@
             <Rectangle Visibility="Hidden" Name="rotationShipView" Width="74" Height="75" Canvas.Left="604" Canvas.Top="400"/>
 
             <Ellipse Name="customPointer" Width="50" Height="50" Panel.ZIndex="1000"/>
+            <TextBlock x:Name="p2_name" Text="Player 1" TextWrapping="Wrap" FontSize="36" FontFamily="Bauhaus 93" Foreground="#3a76a9" Canvas.Left="709" Canvas.Top="108" HorizontalAlignment="Left" VerticalAlignment="Center"/>
 
         </Canvas>
     </Grid>
