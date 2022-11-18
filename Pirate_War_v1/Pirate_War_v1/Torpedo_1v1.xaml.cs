@@ -29,7 +29,8 @@
                     PLAYING,
                     SCORING,
                     INFO1,
-                    INFO2
+                    INFO2,
+                    INFOINGAME
                 }
                 enum Turn
                 {
@@ -83,7 +84,8 @@
                 int[] currP2Ships = { 0, 0, 0 };
 
                 bool placeable = false;
-                bool prepsReady = false;    
+                bool p1shipVisible = false;  
+                bool p2shipVisible = false;
 
                 Turn game_curr_turn = Turn.P1;
 
@@ -165,7 +167,7 @@
                     }
                     else if (STATE == States.INFO1)
                     {
-                        InfoText.Content = "Turn around while " + p1Table.Name + Environment.NewLine + " places own ships.";
+                        InfoText.Content = "Turn around while " + p1Table.Name + Environment.NewLine + " places own ships!";
                         P_name.Content = p2Table.Name;
                         P_name.Content = p1Table.Name;
                         P_name.Visibility = Visibility.Visible;
@@ -175,12 +177,32 @@
                     }
                     else if (STATE == States.INFO2)
                     {
-                        InfoText.Content = "Turn around while " + p2Table.Name + Environment.NewLine + " places own ships.";
+                        InfoText.Content = "Turn around while " + p2Table.Name + Environment.NewLine + " places own ships!";
                         P_name.Content = p1Table.Name;
                         P_name.Visibility = Visibility.Visible;
                         InfoText.Visibility = Visibility.Visible;
                         OkButton.Visibility = Visibility.Visible;
                         Bg.Visibility = Visibility.Visible;
+                    }
+                    else if(STATE == States.INFOINGAME)
+                    {
+                        if (game_curr_turn == Turn.P1) {
+                            InfoText.Content = "Turn around while " + p1Table.Name + Environment.NewLine + " check own ships!";
+                            P_name.Content = p2Table.Name;
+                            P_name.Visibility = Visibility.Visible;
+                            InfoText.Visibility = Visibility.Visible;
+                            OkButton.Visibility = Visibility.Visible;
+                            Bg.Visibility = Visibility.Visible;
+                        }
+                        else
+                        {
+                            InfoText.Content = "Turn around while " + p2Table.Name + Environment.NewLine + " check own ships!";
+                            P_name.Content = p1Table.Name;
+                            P_name.Visibility = Visibility.Visible;
+                            InfoText.Visibility = Visibility.Visible;
+                            OkButton.Visibility = Visibility.Visible;
+                            Bg.Visibility = Visibility.Visible;
+                        }
                     }
         }
 
@@ -319,32 +341,41 @@
                 {
                     Debug.WriteLine(gameData.toJSON());
                 }
-            // ------------------------- GOMB NYOMÁS ESEMÉNY -------------------
+        // ------------------------- GOMB NYOMÁS ESEMÉNY -------------------
                 private void Window_KeyDown(object sender, KeyEventArgs e)
                 {
 
                     if (Keyboard.IsKeyDown(Key.LeftCtrl) && e.Key == Key.P)
                     {
-                        foreach (Ships ship in p2Table.ships)
+                        if (game_curr_turn == Turn.P2)
                         {
-                            if (!ship.Destroyed)
-                            {
-                                ship.shipBody.Visibility = (ship.shipBody.Visibility == Visibility.Visible ? Visibility.Hidden : Visibility.Visible);
-                            }
+                            if (!p2shipVisible) STATE = States.INFOINGAME;
+                            else ShowAndHideShips(p2Table);
+                            p2shipVisible = false;
                         }
                     }
 
                     if (Keyboard.IsKeyDown(Key.LeftCtrl) && e.Key == Key.Q)
                     {
-                        foreach (Ships ship in p1Table.ships)
+                        if (game_curr_turn == Turn.P1)
                         {
-                            if (!ship.Destroyed)
-                            {
-                                ship.shipBody.Visibility = (ship.shipBody.Visibility == Visibility.Visible ? Visibility.Hidden : Visibility.Visible);
-                            }
+                            if (!p1shipVisible) STATE = States.INFOINGAME;
+                            else ShowAndHideShips(p1Table);
+                            p1shipVisible = false;
+                        }
+
+                    }
+                }
+
+                private void ShowAndHideShips(GameTable gametable)
+                {
+                    foreach (Ships ship in gametable.ships)
+                    {
+                        if (!ship.Destroyed)
+                        {
+                            ship.shipBody.Visibility = (ship.shipBody.Visibility == Visibility.Visible ? Visibility.Hidden : Visibility.Visible);
                         }
                     }
-
                 }
             //------------------------------------- BAL KLIKK ESEMÉNYEK ---------------------------------
 
@@ -428,15 +459,7 @@
                     else if (STATE == States.INFO1)
                     {
                         Point p = e.GetPosition(canvas);
-                        /*InfoText.Content = "Turn around while " + p1Table.Name + Environment.NewLine + " places own ships.";
-                        P_name.Content = p2Table.Name;
-                        P_name.Content = p1Table.Name;
-                        P_name.Visibility = Visibility.Visible;
-                        InfoText.Visibility = Visibility.Visible;
-                        OkButton.Visibility = Visibility.Visible;
-                        Bg.Visibility = Visibility.Visible;*/
-
-                    if (p.X > 484 && p.X < 831 && p.Y > 360 && p.Y < 460)
+                        if (p.X > 484 && p.X < 831 && p.Y > 360 && p.Y < 460)
                         {
                             P_name.Visibility = Visibility.Hidden;
                             InfoText.Visibility = Visibility.Hidden;
@@ -448,13 +471,6 @@
                     else if (STATE == States.INFO2)
                     {
                         Point p = e.GetPosition(canvas);
-                       /* InfoText.Content = "Turn around while " + p2Table.Name + Environment.NewLine + " places own ships.";
-                        P_name.Content = p1Table.Name;
-                        P_name.Visibility = Visibility.Visible;
-                        InfoText.Visibility = Visibility.Visible;
-                        OkButton.Visibility = Visibility.Visible;
-                        Bg.Visibility = Visibility.Visible;*/
-
                         if (p.X > 484 && p.X < 831 && p.Y > 360 && p.Y < 460)
                                 {
                             P_name.Visibility = Visibility.Hidden;
@@ -462,6 +478,37 @@
                             OkButton.Visibility = Visibility.Hidden;
                             Bg.Visibility = Visibility.Hidden;
                             STATE = States.PREP2;
+                        }
+                    }
+                    else if (STATE == States.INFOINGAME)
+                    {
+                        if (game_curr_turn == Turn.P1)
+                        {
+                            Point p = e.GetPosition(canvas);
+                            if (p.X > 484 && p.X < 831 && p.Y > 360 && p.Y < 460)
+                            {
+                                P_name.Visibility = Visibility.Hidden;
+                                InfoText.Visibility = Visibility.Hidden;
+                                OkButton.Visibility = Visibility.Hidden;
+                                Bg.Visibility = Visibility.Hidden;
+                                STATE = States.PLAYING;
+                                ShowAndHideShips(p1Table);
+                            }
+                            p1shipVisible= true;
+                        }
+                        else
+                        {
+                            Point p = e.GetPosition(canvas);
+                            if (p.X > 484 && p.X < 831 && p.Y > 360 && p.Y < 460)
+                            {
+                                P_name.Visibility = Visibility.Hidden;
+                                InfoText.Visibility = Visibility.Hidden;
+                                OkButton.Visibility = Visibility.Hidden;
+                                Bg.Visibility = Visibility.Hidden;
+                                STATE = States.PLAYING;
+                                ShowAndHideShips(p2Table);
+                            }
+                            p2shipVisible= true;
                         }
                     }
                 }
@@ -740,10 +787,6 @@
                         if (pX > 595 && pX <300 && pY >366 && pY < 460)
                         {
                             setCustomPointerSprite(1);
-                            /* P_name.Visibility = Visibility.Hidden;
-                             InfoText.Visibility = Visibility.Hidden;
-                             OkButton.Visibility = Visibility.Hidden;
-                             Bg.Visibility = Visibility.Hidden; */
                         }   
                     }
                 }
@@ -759,10 +802,10 @@
                 private void infoCanvas_MouseMove(object sender, MouseEventArgs e)
                 {
                     Point p = e.GetPosition(infoCanvas);
-            Debug.WriteLine("Poz: " + p.X + " : " + p.Y);
+                    Debug.WriteLine("Poz: " + p.X + " : " + p.Y);
                     locatePressableElements(p.X, p.Y);
 
-        }
-    }
+                }
+            }
         }
 
