@@ -27,7 +27,9 @@
                     PREP1,
                     PREP2,
                     PLAYING,
-                    SCORING
+                    SCORING,
+                    INFO1,
+                    INFO2
                 }
                 enum Turn
                 {
@@ -65,7 +67,9 @@
                     Fill = new SolidColorBrush(Color.FromRgb(0, 0, 255))
                 };
 
-                States STATE = States.PREP1;
+                States STATE = States.INFO1;
+
+            
 
                 int rotation = 0;
                 int selectedShipType = 4;
@@ -79,6 +83,7 @@
                 int[] currP2Ships = { 0, 0, 0 };
 
                 bool placeable = false;
+                bool prepsReady = false;    
 
                 Turn game_curr_turn = Turn.P1;
 
@@ -91,11 +96,18 @@
                     {
                         ImageSource = new BitmapImage(new Uri(Directory.GetCurrentDirectory() + "\\sources\\csharp_torpedo.png", UriKind.Absolute))
                     };
+                    Bg.Fill = new ImageBrush
+                    {
+                        ImageSource = new BitmapImage(new Uri(Directory.GetCurrentDirectory() + "\\sources\\spr_underwater_bg.png", UriKind.Absolute))
+                    };
                     refreshScores();
                     canvas.Children.Add(selectedRectangle);
                     p1_name.Text = p1Table.Name;
                     p2_name.Text = p2Table.Name;
+                    P_name.Content = p2Table.Name;
                     
+                    
+
                     curr_turn.Text = p1Table.Name + " Placing Ships";
 
                     for (int i = 0; i < 4; i++)
@@ -151,7 +163,26 @@
                     {
                         DrawPreps(1, p2Table, MARGINLEFT2);
                     }
-                }
+                    else if (STATE == States.INFO1)
+                    {
+                        InfoText.Content = "Turn around while " + p1Table.Name + Environment.NewLine + " places own ships.";
+                        P_name.Content = p2Table.Name;
+                        P_name.Content = p1Table.Name;
+                        P_name.Visibility = Visibility.Visible;
+                        InfoText.Visibility = Visibility.Visible;
+                        OkButton.Visibility = Visibility.Visible;
+                        Bg.Visibility = Visibility.Visible;
+                    }
+                    else if (STATE == States.INFO2)
+                    {
+                        InfoText.Content = "Turn around while " + p2Table.Name + Environment.NewLine + " places own ships.";
+                        P_name.Content = p1Table.Name;
+                        P_name.Visibility = Visibility.Visible;
+                        InfoText.Visibility = Visibility.Visible;
+                        OkButton.Visibility = Visibility.Visible;
+                        Bg.Visibility = Visibility.Visible;
+                    }
+        }
 
                 void DrawPlaying(GameTable gametable)
                 {
@@ -394,6 +425,45 @@
                             Point p = e.GetPosition(canvas);
                             LeftButtonDownPreps(p2Table, p, p2_gunboat, p2_brig, p2_frig, currP2Ships, MARGINLEFT2);
                     }
+                    else if (STATE == States.INFO1)
+                    {
+                        Point p = e.GetPosition(canvas);
+                        /*InfoText.Content = "Turn around while " + p1Table.Name + Environment.NewLine + " places own ships.";
+                        P_name.Content = p2Table.Name;
+                        P_name.Content = p1Table.Name;
+                        P_name.Visibility = Visibility.Visible;
+                        InfoText.Visibility = Visibility.Visible;
+                        OkButton.Visibility = Visibility.Visible;
+                        Bg.Visibility = Visibility.Visible;*/
+
+                    if (p.X > 484 && p.X < 831 && p.Y > 360 && p.Y < 460)
+                        {
+                            P_name.Visibility = Visibility.Hidden;
+                            InfoText.Visibility = Visibility.Hidden;
+                            OkButton.Visibility = Visibility.Hidden;
+                            Bg.Visibility = Visibility.Hidden;
+                            STATE = States.PREP1;
+                        }
+                    }
+                    else if (STATE == States.INFO2)
+                    {
+                        Point p = e.GetPosition(canvas);
+                       /* InfoText.Content = "Turn around while " + p2Table.Name + Environment.NewLine + " places own ships.";
+                        P_name.Content = p1Table.Name;
+                        P_name.Visibility = Visibility.Visible;
+                        InfoText.Visibility = Visibility.Visible;
+                        OkButton.Visibility = Visibility.Visible;
+                        Bg.Visibility = Visibility.Visible;*/
+
+                        if (p.X > 484 && p.X < 831 && p.Y > 360 && p.Y < 460)
+                                {
+                            P_name.Visibility = Visibility.Hidden;
+                            InfoText.Visibility = Visibility.Hidden;
+                            OkButton.Visibility = Visibility.Hidden;
+                            Bg.Visibility = Visibility.Hidden;
+                            STATE = States.PREP2;
+                        }
+                    }
                 }
 
                 void LeftButtonDownPreps (GameTable pTable, Point p, TextBlock p_gunboat, TextBlock p_brig, TextBlock p_frig, int[] currPShips, int MARGINLEFT)
@@ -430,8 +500,9 @@
                         {
                             if (STATE == States.PREP1)
                             {
-                                STATE = States.PREP2;
+                                STATE = States.INFO2;
                                 game_curr_turn = Turn.P2;
+
                                 p2_frig.Foreground = Brushes.Green;
                                 selectedShipType = 4;
                                 p1Table.removeNines();
@@ -652,7 +723,6 @@
 
                     drawSelectedGrid();
                     locatePressableElements(p.X, p.Y);
-                    Debug.WriteLine(mouseX + " " + mouseY);
                 }
                 void locatePressableElements(double pX, double pY)
                 {
@@ -667,8 +737,32 @@
                         {
                             rotationButton.Fill = rotateSprites[0];
                         }
+                        if (pX > 595 && pX <300 && pY >366 && pY < 460)
+                        {
+                            setCustomPointerSprite(1);
+                            /* P_name.Visibility = Visibility.Hidden;
+                             InfoText.Visibility = Visibility.Hidden;
+                             OkButton.Visibility = Visibility.Hidden;
+                             Bg.Visibility = Visibility.Hidden; */
+                        }   
                     }
                 }
-            }
+                private void PopupOkButtonPressed(object sender, RoutedEventArgs e)
+                {
+                    P_name.Visibility = Visibility.Hidden;
+                    InfoText.Visibility = Visibility.Hidden;
+                    OkButton.Visibility = Visibility.Hidden;
+                    Bg.Visibility = Visibility.Hidden;
+
+                }
+
+                private void infoCanvas_MouseMove(object sender, MouseEventArgs e)
+                {
+                    Point p = e.GetPosition(infoCanvas);
+            Debug.WriteLine("Poz: " + p.X + " : " + p.Y);
+                    locatePressableElements(p.X, p.Y);
+
+        }
+    }
         }
 

@@ -15,6 +15,7 @@ using System.Windows.Shapes;
 
 namespace Pirate_War_v1
 {
+    
     /// <summary>
     /// Interaction logic for HitAndSunk.xaml
     /// </summary>
@@ -31,6 +32,8 @@ namespace Pirate_War_v1
         private void OkButtonPressed(object sender, RoutedEventArgs e)
         {
             this.Close();
+            P_name.Content = "";
+            InfoText.Content = "Hit and Sunk";
 
         }
     }

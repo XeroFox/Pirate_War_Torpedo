@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Pirate_War_v1"
         mc:Ignorable="d"
-        Title="MainWindow" Height="200" Width="400"
+        Title="MainWindow" Height="230" Width="600"
         ResizeMode="NoResize"
         WindowStyle="None"
         WindowStartupLocation="CenterScreen">
@@ -66,9 +66,11 @@
             </Setter>
         </Style>
     </Window.Resources>
-    <Grid Margin="0,0,10,0">
-        <Rectangle x:Name="Bg" Margin="0,0,-20,0"/>
-        <Button x:Name="OkButton" Content="Ok" HorizontalAlignment="Center" Margin="0,100,0,0" VerticalAlignment="Top" FontSize="48" Width="280" Background="#FF3DBF98" FontFamily="Bauhaus 93" Click="OkButtonPressed" />
-        <Label Content="Hit and Sunk!" HorizontalAlignment="Center" VerticalAlignment="Top" FontSize="36" FontFamily="Bauhaus 93" Foreground="#FFAF1818" x:Name="HitandSunkText" Margin="0,37,0,0"/>
-    </Grid>
+
+        <Grid Margin="0,0,10,0">
+            <Rectangle x:Name="Bg" Margin="0,0,-20,0"/>
+            <Button x:Name="OkButton" Content="Ok" HorizontalAlignment="Left" Margin="151,151,0,0" VerticalAlignment="Top" FontSize="48" Width="280" Background="#FF3DBF98" FontFamily="Bauhaus 93" Click="OkButtonPressed" />
+            <Label Content="Turn around while Player1 placing&#xD;&#xA; own ships." HorizontalAlignment="Center" VerticalAlignment="Top" FontSize="36" FontFamily="Bauhaus 93" Foreground="#FFAF1818" x:Name="InfoText" Margin="0,42,0,0" HorizontalContentAlignment="Center" Width="604"/>
+            <Label Content="P_name" HorizontalAlignment="Center" VerticalAlignment="Top" FontSize="36" FontFamily="Bauhaus 93" Foreground="#FFAF1818" x:Name="P_name"/>
+        </Grid>
 </Window>

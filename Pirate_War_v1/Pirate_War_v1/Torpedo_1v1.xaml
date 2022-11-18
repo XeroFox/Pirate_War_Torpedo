@@ -32,16 +32,22 @@
 
             <TextBlock x:Name="p1_name" Text="Player 1" TextWrapping="Wrap" FontSize="36" FontFamily="Bauhaus 93" Foreground="#3a76a9" Canvas.Left="172" Canvas.Top="108" HorizontalAlignment="Center" VerticalAlignment="Center"/>
 
-            <TextBlock x:Name="selected_index_name" Panel.ZIndex="100" Text="A1" TextWrapping="Wrap" FontSize="35" TextAlignment="Center" FontFamily="Bauhaus 93" Foreground="Lime" Canvas.Left="609" Canvas.Top="571" HorizontalAlignment="Left" VerticalAlignment="Top" Width="50" Height="50"/>
+            <TextBlock x:Name="selected_index_name" Panel.ZIndex="100" Text="A1" TextWrapping="Wrap" FontSize="35" TextAlignment="Center" FontFamily="Bauhaus 93" Foreground="Lime" Canvas.Left="604" Canvas.Top="334" HorizontalAlignment="Left" VerticalAlignment="Top" Width="50" Height="50"/>
 
             <Rectangle Visibility="Hidden" Name="rotationButton" Width="50" Height="50" Canvas.Left="615" Canvas.Top="327"/>
             <Rectangle Visibility="Hidden" Name="rotationShipView" Width="74" Height="75" Canvas.Left="604" Canvas.Top="400"/>
 
-            <Ellipse Name="customPointer" Width="50" Height="50" Panel.ZIndex="1000"/>
+            <Ellipse Name="customPointer" Width="50" Height="50" Panel.ZIndex="1000" Canvas.Left="493" Canvas.Top="255"/>
             <TextBlock x:Name="p2_name" Text="Player 1" TextWrapping="Wrap" FontSize="36" FontFamily="Bauhaus 93" Foreground="#3a76a9" Canvas.Left="709" Canvas.Top="108" HorizontalAlignment="Left" VerticalAlignment="Center"/>
             <TextBlock x:Name="p2_Scores" TextWrapping="Wrap" FontSize="36" FontFamily="Bauhaus 93" Foreground="#3a76a9" Canvas.Left="1111" Canvas.Top="19" HorizontalAlignment="Center" VerticalAlignment="Top"><Run Language="hu-hu" Text="Score: 0"/></TextBlock>
             <TextBlock x:Name="p1_Scores" TextWrapping="Wrap" FontSize="36" FontFamily="Bauhaus 93" Foreground="#3a76a9" Canvas.Left="41" Canvas.Top="19" HorizontalAlignment="Center" VerticalAlignment="Top"><Run Language="hu-hu" Text="Score: 0"/></TextBlock>
+            <Canvas  Panel.ZIndex="500" x:Name="infoCanvas" MouseMove="infoCanvas_MouseMove">
 
+                <Rectangle x:Name="Bg" Height="283" Canvas.Left="342" Canvas.Top="230" Width="634" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+                <Button x:Name="OkButton" Content="Ok" HorizontalAlignment="Left" VerticalAlignment="Top" FontSize="48" Width="280" Background="#FF3DBF98" FontFamily="Bauhaus 93" Click="PopupOkButtonPressed" Canvas.Left="494" Canvas.Top="401" />
+                <Label Content="Turn around while Player1 placing&#xD;&#xA; own ships." HorizontalAlignment="Left" VerticalAlignment="Top" FontSize="36" FontFamily="Bauhaus 93" Foreground="#FFAF1818" x:Name="InfoText" HorizontalContentAlignment="Center" Width="604" Canvas.Left="332" Canvas.Top="281"/>
+                <Label Content="P_name" HorizontalAlignment="Left" VerticalAlignment="Top" FontSize="36" FontFamily="Bauhaus 93" Foreground="#FFAF1818" x:Name="P_name" Canvas.Left="575" Canvas.Top="230"/>
+            </Canvas>
         </Canvas>
     </Grid>
 </Window>

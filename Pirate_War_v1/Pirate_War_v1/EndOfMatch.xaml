@@ -68,17 +68,18 @@
     </Window.Resources>
     <Grid Margin="0,0,10,0">
         <Rectangle x:Name="Bg" Margin="0,0,-20,0"/>
-        <Button x:Name="PlayAgain" Content="Play Again" HorizontalAlignment="Center" Margin="0,232,0,0" VerticalAlignment="Top" FontSize="48" Width="280" Background="#FF3DBF98" FontFamily="Bauhaus 93" Click="PlayAgain_Click" />
-        <Button x:Name="Start" Content="Exit" HorizontalAlignment="Center" Margin="0,328,0,0" VerticalAlignment="Top" FontSize="48" Width="280" Background="#FF3DBF98" FontFamily="Bauhaus 93" Click="Exit_Click" />
-        <TextBlock x:Name="Player1Box" HorizontalAlignment="Left" Margin="30,157,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="468" Height="63" Background="#FF3DBF98" FontSize="48" FontFamily="Bauhaus 93" TextAlignment="Center" />
-        <TextBlock x:Name="Player2Box" HorizontalAlignment="Right" Margin="0,157,30,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="468" Height="63" Background="#FF3DBF98" FontSize="48" FontFamily="Bauhaus 93" TextAlignment="Center"/>
-        <Label x:Name="Label1" Content="First player name" HorizontalAlignment="Left" Margin="30,100,0,0" VerticalAlignment="Top" FontSize="32" FontFamily="Bauhaus 93"/>
-        <Label x:Name="Label2" Content="Second player name" HorizontalAlignment="Left" Margin="633,100,0,0" VerticalAlignment="Top" FontSize="32" FontFamily="Bauhaus 93"/>
-        <Label Content="Do you want to play again?" HorizontalAlignment="Center" Margin="0,53,0,0" VerticalAlignment="Top" FontSize="36" FontFamily="Bauhaus 93" Foreground="#FFAF1818"/>
-        <Label Content="Won the match" HorizontalAlignment="Left" VerticalAlignment="Top" FontSize="72" FontFamily="Bauhaus 93" Foreground="#FF35FF98"  x:Name="winnerText" Margin="324,-24,0,0"/>
-        <Label x:Name="P2Miss" Content="Miss:" HorizontalAlignment="Left" Margin="847,289,0,0" VerticalAlignment="Top" FontSize="32" FontFamily="Bauhaus 93"/>
-        <Label x:Name="P2Hit" Content="Hit:" HorizontalAlignment="Left" Margin="847,232,0,0" VerticalAlignment="Top" FontSize="32" FontFamily="Bauhaus 93"/>
-        <Label x:Name="P1Miss" Content="Miss:" HorizontalAlignment="Left" Margin="30,289,0,0" VerticalAlignment="Top" FontSize="32" FontFamily="Bauhaus 93"/>
-        <Label x:Name="P1Hit" Content="Hit:" HorizontalAlignment="Left" Margin="30,232,0,0" VerticalAlignment="Top" FontSize="32" FontFamily="Bauhaus 93"/>
+        <Rectangle x:Name="Ship" Margin ="503,136,503,10"/>
+        <Button x:Name="PlayAgain" Content="Play Again" HorizontalAlignment="Left" Margin="124,526,0,0" VerticalAlignment="Top" FontSize="48" Width="280" Background="#FF3DBF98" FontFamily="Bauhaus 93" Click="PlayAgain_Click" />
+        <Button x:Name="Start" Content="Exit" HorizontalAlignment="Left" Margin="878,526,0,0" VerticalAlignment="Top" FontSize="48" Width="280" Background="#FF3DBF98" FontFamily="Bauhaus 93" Click="Exit_Click" />
+        <TextBlock x:Name="Player1Box" HorizontalAlignment="Left" Margin="30,285,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="468" Height="63" Background="#FF3DBF98" FontSize="48" FontFamily="Bauhaus 93" TextAlignment="Center" />
+        <TextBlock x:Name="Player2Box" HorizontalAlignment="Right" Margin="0,285,30,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="468" Height="63" Background="#FF3DBF98" FontSize="48" FontFamily="Bauhaus 93" TextAlignment="Center"/>
+        <Label x:Name="Label1" Content="First player name" HorizontalAlignment="Left" Margin="124,199,0,0" VerticalAlignment="Top" FontSize="32" FontFamily="Bauhaus 93"/>
+        <Label x:Name="Label2" Content="Second player name" HorizontalAlignment="Left" Margin="857,199,0,0" VerticalAlignment="Top" FontSize="32" FontFamily="Bauhaus 93"/>
+        <Label Content="Do you want to play again?" HorizontalAlignment="Center" Margin="0,131,0,0" VerticalAlignment="Top" FontSize="36" FontFamily="Bauhaus 93" Foreground="#FFAF1818"/>
+        <Label Content="Won the match" HorizontalAlignment="Center" VerticalAlignment="Top" FontSize="72" FontFamily="Bauhaus 93" Foreground="#FF35FF98"  x:Name="winnerText" Margin="0,16,0,0"/>
+        <Label x:Name="P2Miss" Content="Miss:" HorizontalAlignment="Left" Margin="1047,360,0,0" VerticalAlignment="Top" FontSize="32" FontFamily="Bauhaus 93"/>
+        <Label x:Name="P2Hit" Content="Hit:" HorizontalAlignment="Left" Margin="913,360,0,0" VerticalAlignment="Top" FontSize="32" FontFamily="Bauhaus 93"/>
+        <Label x:Name="P1Miss" Content="Miss:" HorizontalAlignment="Left" Margin="284,360,0,0" VerticalAlignment="Top" FontSize="32" FontFamily="Bauhaus 93"/>
+        <Label x:Name="P1Hit" Content="Hit:" HorizontalAlignment="Left" Margin="157,360,0,0" VerticalAlignment="Top" FontSize="32" FontFamily="Bauhaus 93"/>
     </Grid>
 </Window>

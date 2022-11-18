@@ -31,6 +31,10 @@ namespace Pirate_War_v1
             {
                 ImageSource = new BitmapImage(new Uri(Directory.GetCurrentDirectory() + "\\sources\\spr_underwater_bg.png", UriKind.Absolute))
             };
+            Ship.Fill = new ImageBrush
+            {
+                ImageSource = new BitmapImage(new Uri(Directory.GetCurrentDirectory() + "\\sources\\spr_ship_frigate_damaged_rotated.png", UriKind.Absolute))
+            };
         }
 
         private void PlayAgain_Click(object sender, RoutedEventArgs e)
