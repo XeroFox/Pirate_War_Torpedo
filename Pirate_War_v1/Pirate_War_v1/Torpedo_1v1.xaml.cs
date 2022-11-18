@@ -46,6 +46,7 @@
 
                 List<ImageBrush> cursorSprites = new List<ImageBrush>();
                 List<ImageBrush> rotateSprites = new List<ImageBrush>();
+                List<ImageBrush> eyeSprites = new List<ImageBrush>();
                 List<ImageBrush> shipSprites = new List<ImageBrush>();
                 List<ImageBrush> markerSprites = new List<ImageBrush>();
 
@@ -126,6 +127,8 @@
                     }
                     rotationShipView.Fill = rotateSprites[2];
                     rotationButton.Fill = rotateSprites[0];
+                    P1_eyeButton.Fill = eyeSprites[1];
+                    P2_eyeButton.Fill = eyeSprites[1];
                     p1_frig.Foreground = Brushes.Green;
                     setCustomPointerSprite(0);
 
@@ -142,6 +145,8 @@
                         placingShipRect[3].Visibility = Visibility.Hidden;
                         rotationButton.Visibility = Visibility.Hidden;
                         rotationShipView.Visibility = Visibility.Hidden;
+                        P1_eyeButton.Visibility = Visibility.Visible;
+                        P1_eyeButton.Visibility = Visibility.Visible;
 
 
                         if (game_curr_turn == Turn.P1)
@@ -349,8 +354,8 @@
                     {
                         if (game_curr_turn == Turn.P2)
                         {
-                            if (!p2shipVisible) STATE = States.INFOINGAME;
-                            else ShowAndHideShips(p2Table);
+                    if (!p2shipVisible) { STATE = States.INFOINGAME; } 
+                    else ShowAndHideShips(p2Table);
                             p2shipVisible = false;
                         }
                     }
@@ -369,6 +374,14 @@
 
                 private void ShowAndHideShips(GameTable gametable)
                 {
+                    if(gametable == p1Table)
+                    {
+                        P1_eyeButton.Fill = (P1_eyeButton.Fill == eyeSprites[0] ? eyeSprites[1] : eyeSprites[0]);
+                    }
+                    else
+                    {
+                        P2_eyeButton.Fill = (P2_eyeButton.Fill == eyeSprites[0] ? eyeSprites[1] : eyeSprites[0]);
+                    }
                     foreach (Ships ship in gametable.ships)
                     {
                         if (!ship.Destroyed)
@@ -383,6 +396,47 @@
                 {
                     if (STATE == States.PLAYING)
                     {
+                        Point p = e.GetPosition(canvas);
+                        if (game_curr_turn == Turn.P1)
+                        {
+                            
+                            if (p.X > 162 && p.X < 203 && p.Y > 118 && p.Y < 150)
+                            {
+                                if (!p1shipVisible)
+                                {
+                                    STATE = States.INFOINGAME;
+                                    //P1_eyeButton.Fill = eyeSprites[1];
+                                }
+                                else
+                                {
+                                    ShowAndHideShips(p1Table);
+                                    //P1_eyeButton.Fill = eyeSprites[0];
+                                }
+                                p1shipVisible = false;
+                            }
+                        }
+                        else
+                        {
+                            if (p.X > 703 && p.X < 744 && p.Y > 116 && p.Y < 156)
+                            {
+                                if (!p2shipVisible)
+                                {
+                                    STATE = States.INFOINGAME;
+                                    //P2_eyeButton.Fill = eyeSprites[1];
+                                }
+                                else
+                                {
+                                    ShowAndHideShips(p2Table);
+                                    //P2_eyeButton.Fill = eyeSprites[0];
+                                }
+                                p2shipVisible = false;
+                            }
+                        }
+
+                        rotationShipView.Fill = (rotation == 0 ? rotateSprites[2] : rotateSprites[3]);
+                        rotationShipView.Fill = (rotation == 0 ? rotateSprites[2] : rotateSprites[3]);
+                        //P1_eyeButton.Fill = (p1shipVisible ? eyeSprites[1] : eyeSprites[0]);
+                        //P2_eyeButton.Fill = (p2shipVisible ? eyeSprites[1] : eyeSprites[0]);
                         if (game_curr_turn == Turn.P1 && mouseSide == 1 && mouseX > 0 && mouseX < 9 && mouseY > 0 && mouseY < 9)
                         {
                             if (p2Table.getCoordinate(mouseY, mouseX).Value == 0 || p2Table.getCoordinate(mouseY, mouseX).Value >= 2 && p2Table.getCoordinate(mouseY, mouseX).Value <= 4)
@@ -412,9 +466,7 @@
                                 drawSelectedGrid();
                                 refreshScores();
                             }
-
                         }
-
                         if (game_curr_turn == Turn.P2 && mouseSide == 0 && mouseX > 0 && mouseX < 9 && mouseY > 0 && mouseY < 9)
                         {
                             if (p1Table.getCoordinate(mouseY, mouseX).Value == 0 || p1Table.getCoordinate(mouseY, mouseX).Value >= 2 && p1Table.getCoordinate(mouseY, mouseX).Value <= 4)
@@ -658,7 +710,19 @@
                     {
                         ImageSource = new BitmapImage(new Uri(Directory.GetCurrentDirectory() + "\\sources\\spr_circle.png", UriKind.Absolute))
                     });
-                }
+
+                    // Eyes Sprites
+                    eyeSprites.Add(new ImageBrush
+                    {
+                        ImageSource = new BitmapImage(new Uri(Directory.GetCurrentDirectory() + "\\sources\\szem_nyitott.png", UriKind.Absolute))
+                    }); 
+                    eyeSprites.Add(new ImageBrush
+                    {
+                        ImageSource = new BitmapImage(new Uri(Directory.GetCurrentDirectory() + "\\sources\\szem_lehuzva.png", UriKind.Absolute))
+                    });
+
+
+        }
                 void createMarker(int XX, int YY, bool scored, int MARGINLEFT)
                 {
                     Rectangle markerRect = new Rectangle
@@ -749,6 +813,7 @@
                     Point p = e.GetPosition(canvas);
                     double pX = p.X - 15;
                     double pY = p.Y - 10;
+                    
                     Canvas.SetTop(customPointer, pY);
                     Canvas.SetLeft(customPointer, pX);
 
@@ -789,15 +854,34 @@
                             setCustomPointerSprite(1);
                         }   
                     }
+                    if(STATE == States.PLAYING)
+                    {
+                        if (game_curr_turn == Turn.P1)
+                        {
+                            if (pX > 162 && pX < 203 && pY > 118 && pY < 150)
+                            {
+                                setCustomPointerSprite(1);
+                                //P1_eyeButton.Fill = eyeSprites[1];
+                            }
+                        }
+                        else
+                        {
+                            if (pX > 703 && pX < 744 && pY > 116 && pY < 156)
+                            {
+                                setCustomPointerSprite(1);
+                                //P1_eyeButton.Fill = eyeSprites[1];
+                            }
+                        }
+                    }
                 }
-                private void PopupOkButtonPressed(object sender, RoutedEventArgs e)
+                /*private void PopupOkButtonPressed(object sender, RoutedEventArgs e)
                 {
                     P_name.Visibility = Visibility.Hidden;
                     InfoText.Visibility = Visibility.Hidden;
                     OkButton.Visibility = Visibility.Hidden;
                     Bg.Visibility = Visibility.Hidden;
 
-                }
+                }*/
 
                 private void infoCanvas_MouseMove(object sender, MouseEventArgs e)
                 {
