@@ -197,13 +197,6 @@ namespace Pirate_War_v1
 
             if(count == shipType)
             {
-                string messageBoxText = "ANYUKAAAA";
-                string caption = "Player Ships Dict";
-                MessageBoxButton button = MessageBoxButton.YesNoCancel;
-                MessageBoxImage icon = MessageBoxImage.Warning;
-                MessageBoxResult alerbox;
-
-                alerbox = MessageBox.Show(messageBoxText, caption, button, icon, MessageBoxResult.Yes);
                 foreach (Coordinates coordinates in getShipByCoordinate(XX, YY).PlacedCoordinates)
                 {
                     if (getCoordinate(coordinates.X, coordinates.Y).Value == shipType + shipType * 10)
@@ -241,12 +234,25 @@ namespace Pirate_War_v1
             {
                 for (int j = 1; j < 9; j++)
                 {
-                    Coordinates newCoordinate = new Coordinates(i, j);
-                    newCoordinate.Value = getCoordinate(i, j).Value;
-                    possibleMoves.Add(newCoordinate);
+                    if(getCoordinate(i, j).Value == 0 || (getCoordinate(i, j).Value <= 4 && getCoordinate(i, j).Value >= 2))
+                    possibleMoves.Add(getCoordinate(i,j));
                 }
             }
             return possibleMoves;
+        }
+
+        public List<Coordinates> aiAllDeadZones()
+        {
+            List<Coordinates> deadZones = new List<Coordinates>();
+            for (int i = 1; i < 9; i++)
+            {
+                for (int j = 1; j < 9; j++)
+                {
+                    if (getCoordinate(i, j).Value == 1 || getCoordinate(i, j).Value > 4 || getCoordinate(i, j).Value == -1)
+                        deadZones.Add(getCoordinate(i, j));
+                }
+            }
+            return deadZones;
         }
 
         public List<Coordinates> aiGetNextTips(int XX, int YY, List<Coordinates> currentMoves)
@@ -254,8 +260,10 @@ namespace Pirate_War_v1
             List<Coordinates> possibleTips = new List<Coordinates>();
             foreach(Coordinates coord in currentMoves)
             {
-                if(coord.compareCoord(new Coordinates(XX+1, YY)) || coord.compareCoord(new Coordinates(XX - 1, YY)) ||
-                    coord.compareCoord(new Coordinates(XX, YY + 1)) || coord.compareCoord(new Coordinates(XX, YY - 1)))
+                if((getCoordinate(coord.X, coord.Y).Value <= 4 && getCoordinate(coord.X, coord.Y).Value != 1 && getCoordinate(coord.X, coord.Y).Value != -1) &&
+                    (coord.compareCoord(new Coordinates(XX+1, YY))
+                    || coord.compareCoord(new Coordinates(XX - 1, YY)) || coord.compareCoord(new Coordinates(XX, YY + 1))
+                    || coord.compareCoord(new Coordinates(XX, YY - 1))))
                 {
                     possibleTips.Add(coord);
                 }
@@ -264,33 +272,80 @@ namespace Pirate_War_v1
             return possibleTips;
         }
 
-        public void aiFillDestroyedSides(Ships selectedShip)
+        public List<Coordinates> aiGetNextShipShot(Coordinates first, Coordinates Last, List<Coordinates> allShots)
         {
-            foreach (Coordinates ship in selectedShip.PlacedCoordinates)
+            List<Coordinates> newShots = new List<Coordinates>();
+            int rotation = this.getShipByCoordinate(first.X, first.Y).Rotation;
+            if (rotation == 0)
             {
-                if (getCoordinate(ship.X + 1, ship.Y).Value == 0) getCoordinate(ship.X + 1, ship.Y).Value = 9;
-                if (getCoordinate(ship.X - 1, ship.Y).Value == 0) getCoordinate(ship.X - 1, ship.Y).Value = 9;
-                if (getCoordinate(ship.X, ship.Y + 1).Value == 0) getCoordinate(ship.X, ship.Y + 1).Value = 9;
-                if (getCoordinate(ship.X, ship.Y - 1).Value == 0) getCoordinate(ship.X, ship.Y - 1).Value = 9;
-            }
-        }
-
-        public List<Coordinates> aiCleanPossibleMoves(List<Coordinates> moves)
-        {
-            List<int> movesIndex = new List<int>();
-            List<Coordinates> newMoves = moves;
-            for(int i = 0; i < newMoves.Count(); i++)
-            {
-                if (getCoordinate(newMoves[i].X, newMoves[i].Y).Value >= 9 || getCoordinate(newMoves[i].X, newMoves[i].Y).Value == 1)
+                if (first.Y - 1 > 0 && first.Y - 1 != Last.Y) {
+                    newShots.Add(new Coordinates(first.X, first.Y - 1));
+                }
+                if (first.Y + 1 < 9 && first.Y + 1 != Last.Y)
                 {
-                    movesIndex.Add(i);
+                    newShots.Add(new Coordinates(first.X, first.Y + 1));
+                }
+                if (Last.Y - 1 > 0 && first.Y != Last.Y - 1)
+                {
+                    newShots.Add(new Coordinates(Last.X, Last.Y - 1));
+                }
+                if (Last.Y + 1 < 9 && first.Y != Last.Y + 1)
+                {
+                    newShots.Add(new Coordinates(Last.X, Last.Y + 1));
                 }
             }
-            for(int i = movesIndex.Count-1; i >= 0 ; i--)
+            else
             {
-                newMoves.RemoveAt(movesIndex[i]);
+                if (first.X - 1 > 0 && first.X - 1 != Last.X)
+                {
+                    newShots.Add(new Coordinates(first.X - 1, first.Y));
+                }
+                if (first.X + 1 > 0 && first.X + 1 != Last.X)
+                {
+                    newShots.Add(new Coordinates(first.X + 1, first.Y));
+                }
+                if (Last.X - 1 > 0 && first.X != Last.X - 1)
+                {
+                    newShots.Add(new Coordinates(Last.X - 1, Last.Y));
+                }
+                if (Last.X + 1 > 0 && first.X != Last.X + 1)
+                {
+                    newShots.Add(new Coordinates(Last.X + 1, Last.Y));
+                }
             }
-            return newMoves;
+
+            foreach(Coordinates coordinates in newShots)
+            {
+                coordinates.Value = this.getCoordinate(coordinates.X,coordinates.Y).Value;
+            }
+            List<Coordinates> actualShots = new List<Coordinates>();
+            foreach (Coordinates coordinates1 in newShots)
+            {
+                if((coordinates1.Value <= 4 && coordinates1.Value >= 2) || coordinates1.Value == 0)
+                {
+                    actualShots.Add(coordinates1);
+                }
+            }
+
+            return actualShots;
+        }
+
+        public void aiReplaceDestroyedShipSides()
+        {
+            foreach (Ships ship in ships)
+            {
+                
+                foreach(Coordinates coordinates in ship.PlacedCoordinates)
+                {
+                    if (ship.Destroyed)
+                    {
+                        getCoordinate(coordinates.X + 1, coordinates.Y).Value = getCoordinate(coordinates.X + 1, coordinates.Y).Value == 0 ? 9 : getCoordinate(coordinates.X + 1, coordinates.Y).Value;
+                        getCoordinate(coordinates.X - 1, coordinates.Y).Value = getCoordinate(coordinates.X - 1, coordinates.Y).Value == 0 ? 9 : getCoordinate(coordinates.X - 1, coordinates.Y).Value;
+                        getCoordinate(coordinates.X, coordinates.Y + 1).Value = getCoordinate(coordinates.X, coordinates.Y + 1).Value == 0 ? 9 : getCoordinate(coordinates.X, coordinates.Y + 1).Value;
+                        getCoordinate(coordinates.X, coordinates.Y - 1).Value = getCoordinate(coordinates.X, coordinates.Y - 1).Value == 0 ? 9 : getCoordinate(coordinates.X, coordinates.Y - 1).Value;
+                    }
+                }
+            }
         }
 
 
@@ -300,7 +355,7 @@ namespace Pirate_War_v1
             var i = 1;
             foreach(Coordinates cord in Table)
             {
-                Debug.Write(cord.Value + " ");
+                Debug.Write((cord.Value < 10 && cord.Value >= 0 ? "0"+cord.Value : cord.Value ) + " ");
                 if(i % 10 == 0)
                 {
                     Debug.Write("\n");
