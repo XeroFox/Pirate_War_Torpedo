@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -23,6 +24,35 @@ namespace Pirate_War_v1
         public MainWindow()
         {
             InitializeComponent();
+            Bg.Fill = new ImageBrush
+            {
+                ImageSource = new BitmapImage(new Uri(Directory.GetCurrentDirectory() + "\\sources\\spr_underwater_bg.png", UriKind.Absolute))
+            };
         }
+        private void PlayClicked(object sender, RoutedEventArgs e)
+        {
+            game_select objgame_select = new game_select();
+            this.Close();
+            objgame_select.Show();
+        }
+        private void ScoreboardClicked(object sender, RoutedEventArgs e)
+        {
+
+        }
+        private void HowToPlayClicked(object sender, RoutedEventArgs e)
+        {
+
+        }
+        private void CreditsClicked(object sender, RoutedEventArgs e)
+        {
+            Credits objCredits = new Credits();
+            objCredits.Show();
+
+        }
+        private void ExitClicked(object sender, RoutedEventArgs e)
+        {
+            System.Environment.Exit(0);
+        }
+
     }
 }
