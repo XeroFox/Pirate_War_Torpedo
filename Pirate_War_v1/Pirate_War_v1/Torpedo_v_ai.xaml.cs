@@ -28,7 +28,7 @@ namespace Pirate_War_v1
         {
             PREP,
             PLAYING,
-            SCORING
+            GAMEEND
         }
         enum Turn
         {
@@ -87,7 +87,6 @@ namespace Pirate_War_v1
         Coordinates aiFirstHit;
         Coordinates aiLastHit;
 
-        int aiTargetedShip = 0;
 
 
         private readonly DispatcherTimer _timer = new DispatcherTimer(DispatcherPriority.Send);
@@ -498,107 +497,113 @@ namespace Pirate_War_v1
             }
         }
 
+        private void checkIfGameEnded()
+        {
+            if ((currAiShips[0] == 0 && currAiShips[1] == 0 && currAiShips[2] == 0)
+                || (currPlayerShips[0] == 0 && currPlayerShips[1] == 0 && currPlayerShips[2] == 0))
+            {
+                STATE = States.GAMEEND;
+            }
+        }
+
 
         // AI
         void aiMakeAMove()
         {
-
-            aiPossibleShots = playerTable.aiGeneratePossibleMoves();
-            aiAllShots = playerTable.aiAllDeadZones();
-
-            refreshScores();
-
-
-            //System.Threading.Thread.Sleep(1000);
-            Random random = new Random();
-
-            if (aiNextTip.Count() <= 0)
+            if (STATE == States.PLAYING)
             {
-                int targetIndex = random.Next(0, aiPossibleShots.Count());
-                Coordinates targetCoord = aiPossibleShots[targetIndex];
-                aiPossibleShots.RemoveAt(targetIndex);
+                aiPossibleShots = playerTable.aiGeneratePossibleMoves();
 
-                if (targetCoord.Value == 0)
+                refreshScores();
+
+
+                //System.Threading.Thread.Sleep(1000);
+                Random random = new Random();
+
+                if (aiNextTip.Count() <= 0)
                 {
-                    aiCreateMarker(targetCoord.Y, targetCoord.X, false);
-                    playerTable.makeAShot(targetCoord.X, targetCoord.Y);
-                    game_curr_turn = Turn.PLAYER;
-                    aiTargetedShip = 0;
-                }
-                else
-                {
-                    bool is_destroyed = playerTable.makeAShot(targetCoord.X, targetCoord.Y);
-                    aiCreateMarker(targetCoord.Y, targetCoord.X, true);
-                    aiNextTip = playerTable.aiGetNextTips(targetCoord.X, targetCoord.Y, aiPossibleShots);
-                    aiFirstHit = targetCoord;
-                    aiTargetedShip = playerTable.getShipByCoordinate(targetCoord.X, targetCoord.Y).Type;
-                    if (is_destroyed)
+                    int targetIndex = random.Next(0, aiPossibleShots.Count());
+                    Coordinates targetCoord = aiPossibleShots[targetIndex];
+                    aiPossibleShots.RemoveAt(targetIndex);
+
+                    if (targetCoord.Value == 0)
                     {
-                        playerTable.getShipByCoordinate(targetCoord.X, targetCoord.Y).shipBody.Visibility = Visibility.Visible;
-                        playerTable.getShipByCoordinate(targetCoord.X, targetCoord.Y).shipBody.Fill = shipSprites[playerTable.getShipByCoordinate(targetCoord.X, targetCoord.Y).SpriteIndex];
-                        currPlayerShips[playerTable.getShipByCoordinate(targetCoord.X, targetCoord.Y).Type - 2]--;
-                        p1_frig.Text = currPlayerShips[2] + "/" + maxPlaceableShips[2];
-                        p1_brig.Text = currPlayerShips[1] + "/" + maxPlaceableShips[1];
-                        p1_gunboat.Text = currPlayerShips[0] + "/" + maxPlaceableShips[0];
-                    }
-                }
-            }
-            else
-            {
-                int targetIndex = random.Next(0, aiNextTip.Count());
-                Coordinates targetCoord = aiNextTip[targetIndex];
-                aiNextTip.RemoveAt(targetIndex);
-
-                if (targetCoord.Value == 0)
-                {
-                    aiCreateMarker(targetCoord.Y, targetCoord.X, false);
-                    playerTable.makeAShot(targetCoord.X, targetCoord.Y);
-                    game_curr_turn = Turn.PLAYER;
-                }
-                else
-                {
-
-                    bool is_destroyed = playerTable.makeAShot(targetCoord.X, targetCoord.Y);
-                    aiCreateMarker(targetCoord.Y, targetCoord.X, true);
-                    if (is_destroyed)
-                    {
-                        playerTable.aiReplaceDestroyedShipSides();
-                        foreach (Coordinates coordinates in aiNextTip)
-                        {
-                            if (coordinates.Value == 0)
-                            {
-                                playerTable.getCoordinate(coordinates.X, coordinates.Y).Value = 9;
-                            }
-                        }
-                        aiNextTip.Clear();
-
-                        playerTable.getShipByCoordinate(targetCoord.X, targetCoord.Y).shipBody.Visibility = Visibility.Visible;
-                        playerTable.getShipByCoordinate(targetCoord.X, targetCoord.Y).shipBody.Fill = shipSprites[playerTable.getShipByCoordinate(targetCoord.X, targetCoord.Y).SpriteIndex];
-                        currPlayerShips[playerTable.getShipByCoordinate(targetCoord.X, targetCoord.Y).Type - 2]--;
-                        p1_frig.Text = currPlayerShips[2] + "/" + maxPlaceableShips[2];
-                        p1_brig.Text = currPlayerShips[1] + "/" + maxPlaceableShips[1];
-                        p1_gunboat.Text = currPlayerShips[0] + "/" + maxPlaceableShips[0];
-
-                        playerTable.printTable();
-                        
+                        aiCreateMarker(targetCoord.Y, targetCoord.X, false);
+                        playerTable.makeAShot(targetCoord.X, targetCoord.Y);
+                        game_curr_turn = Turn.PLAYER;
                     }
                     else
                     {
-                        aiLastHit = targetCoord;
-                        aiNextTip = playerTable.aiGetNextShipShot(aiFirstHit, aiLastHit, aiAllShots);
+                        bool is_destroyed = playerTable.makeAShot(targetCoord.X, targetCoord.Y);
+                        aiCreateMarker(targetCoord.Y, targetCoord.X, true);
+                        aiNextTip = playerTable.aiGetNextTips(targetCoord.X, targetCoord.Y, aiPossibleShots);
+                        aiFirstHit = targetCoord;
+                        if (is_destroyed)
+                        {
+                            playerTable.getShipByCoordinate(targetCoord.X, targetCoord.Y).shipBody.Visibility = Visibility.Visible;
+                            playerTable.getShipByCoordinate(targetCoord.X, targetCoord.Y).shipBody.Fill = shipSprites[playerTable.getShipByCoordinate(targetCoord.X, targetCoord.Y).SpriteIndex];
+                            currPlayerShips[playerTable.getShipByCoordinate(targetCoord.X, targetCoord.Y).Type - 2]--;
+                            p1_frig.Text = currPlayerShips[2] + "/" + maxPlaceableShips[2];
+                            p1_brig.Text = currPlayerShips[1] + "/" + maxPlaceableShips[1];
+                            p1_gunboat.Text = currPlayerShips[0] + "/" + maxPlaceableShips[0];
+                        }
                     }
                 }
-            }
+                else
+                {
+                    int targetIndex = random.Next(0, aiNextTip.Count());
+                    Coordinates targetCoord = aiNextTip[targetIndex];
+                    aiNextTip.RemoveAt(targetIndex);
 
-            if (game_curr_turn == Turn.AI)
-            {
-                _timer.Stop();
-                _timer.Start();
-                //aiMakeAMove();
-            }
+                    if (targetCoord.Value == 0)
+                    {
+                        aiCreateMarker(targetCoord.Y, targetCoord.X, false);
+                        playerTable.makeAShot(targetCoord.X, targetCoord.Y);
+                        game_curr_turn = Turn.PLAYER;
+                    }
+                    else
+                    {
+
+                        bool is_destroyed = playerTable.makeAShot(targetCoord.X, targetCoord.Y);
+                        aiCreateMarker(targetCoord.Y, targetCoord.X, true);
+                        if (is_destroyed)
+                        {
+                            playerTable.aiReplaceDestroyedShipSides();
+                            foreach (Coordinates coordinates in aiNextTip)
+                            {
+                                if (coordinates.Value == 0)
+                                {
+                                    playerTable.getCoordinate(coordinates.X, coordinates.Y).Value = 9;
+                                }
+                            }
+                            aiNextTip.Clear();
+
+                            playerTable.getShipByCoordinate(targetCoord.X, targetCoord.Y).shipBody.Visibility = Visibility.Visible;
+                            playerTable.getShipByCoordinate(targetCoord.X, targetCoord.Y).shipBody.Fill = shipSprites[playerTable.getShipByCoordinate(targetCoord.X, targetCoord.Y).SpriteIndex];
+                            currPlayerShips[playerTable.getShipByCoordinate(targetCoord.X, targetCoord.Y).Type - 2]--;
+                            p1_frig.Text = currPlayerShips[2] + "/" + maxPlaceableShips[2];
+                            p1_brig.Text = currPlayerShips[1] + "/" + maxPlaceableShips[1];
+                            p1_gunboat.Text = currPlayerShips[0] + "/" + maxPlaceableShips[0];
+
+                        }
+                        else
+                        {
+                            aiLastHit = targetCoord;
+                            aiNextTip = playerTable.aiGetNextShipShot(aiFirstHit, aiLastHit, aiAllShots);
+                        }
+                    }
+                }
+
+                if (game_curr_turn == Turn.AI)
+                {
+                    _timer.Stop();
+                    _timer.Start();
+                    //aiMakeAMove();
+                }
 
             refreshScores();
-
+            checkIfGameEnded();
+            }
         }
 
         void aiCreateMarker(int XX, int YY, bool scored)
