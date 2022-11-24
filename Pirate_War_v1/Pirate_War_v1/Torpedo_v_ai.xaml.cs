@@ -35,8 +35,8 @@ namespace Pirate_War_v1
             PLAYER,
             AI
         }
-
-        GameTable playerTable = new GameTable("Player");
+        public static Torpedo_v_ai instance;
+        GameTable playerTable = new GameTable(game_select.instance.PlayerAiEllen.Text);
         GameTable aiTable = new GameTable("AI");
 
         GameData gameData = new GameData();
@@ -97,6 +97,7 @@ namespace Pirate_War_v1
         public Torpedo_v_ai()
         {
             InitializeComponent();
+            instance = this;
             loadSpriteDatas();
             ai_game_bg.Fill = new ImageBrush
             {

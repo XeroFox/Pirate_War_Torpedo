@@ -15,18 +15,21 @@ using System.Windows.Shapes;
 
 namespace Pirate_War_v1
 {
-    /// <summary>
-    /// Interaction logic for game_select.xaml
-    /// </summary>
+
     public partial class game_select : Window
     {
-        String player1 = "";
-        String player2 = "";
-        String playeraiellen = "";
-        String empty = "";
+        string player1 = "";
+        string player2 = "";
+        string playeraiellen = "";
+        string empty = "";
+        int szamlaloai = 0;
+        int szamlalo1 = 0;
+        int szamlalo2 = 0;
+        public static game_select instance;
         public game_select()
         {
             InitializeComponent();
+            instance = this;
             Bg.Fill = new ImageBrush
             {
                 ImageSource = new BitmapImage(new Uri(Directory.GetCurrentDirectory() + "\\sources\\spr_underwater_bg.png", UriKind.Absolute))
@@ -49,6 +52,7 @@ namespace Pirate_War_v1
 
         private void Start_Click(object sender, RoutedEventArgs e)
         {
+
             if (Player1Box.Visibility == Visibility.Visible && Player2Box.Visibility == Visibility.Visible)
             {
                 char[] one = Player1Box.Text.ToCharArray();
@@ -56,29 +60,36 @@ namespace Pirate_War_v1
                 if (Player1Box.Text.Length == 0 || Player2Box.Text.Length == 0)
                 {
                     MessageBox.Show("PLayer name can not be empty!");
+                    if (Player1Box.Text.Length == 0)
+                        szamlalo1++;
+                    if (Player2Box.Text.Length == 0)
+                        szamlalo2++;
                 }
-                else if (true)
+                for (int i = 0; i < Player1Box.Text.Length; i++)
                 {
-                    for (int i = 0; i < Player1Box.Text.Length; i++)
+                    if (!Char.IsLetterOrDigit(one[i]))
                     {
-                        if (!Char.IsLetterOrDigit(one[i]))
-                        {
-                            MessageBox.Show("PLayer name can not contain special character!");
-                            break;
-                        }
+                        MessageBox.Show("PLayer name can not contain special character!");
+                        szamlalo1++;
+                        break;
+                    }
 
-                    }
-                    for (int i = 0; i < Player2Box.Text.Length; i++)
+                }
+                for (int i = 0; i < Player2Box.Text.Length; i++)
+                {
+                    if (!Char.IsLetterOrDigit(two[i]))
                     {
-                        if (!Char.IsLetterOrDigit(two[i]))
-                        {
-                            MessageBox.Show("PLayer name can not contain special character!");
-                            break;
-                        }
-                        if (Player1Box.Text.Length - 1 == i)
-                            break;
+                        MessageBox.Show("PLayer name can not contain special character!");
+                        szamlalo2++;
+                        break;
                     }
-                }//else gamebe lép
+                }
+                //                if (szamlalo1 == 0 && szamlalo2 == 0)
+                //                {
+                //                    Torpedo_1v1 objTorpedo_1v1 = new Torpedo_1v1();
+                //                    this.Close();
+                //                    objTorpedo_1v1.Show();
+                //                }
             }
             if (PlayerAiEllen.Visibility == Visibility.Visible)
             {
@@ -86,20 +97,26 @@ namespace Pirate_War_v1
                 if (PlayerAiEllen.Text.Length == 0)
                 {
                     MessageBox.Show("PLayer name can not be empty!");
+                    szamlaloai++;
                 }
-                else if (true)
+                for (int i = 0; i < PlayerAiEllen.Text.Length; i++)
                 {
-                    for (int i = 0; i < PlayerAiEllen.Text.Length; i++)
+                    if (!Char.IsLetterOrDigit(three[i]))
                     {
-                        if (!Char.IsLetterOrDigit(three[i]))
-                        {
-                            MessageBox.Show("PLayer name can not contain special character!");
-                            break;
-                        }
-                        if (Player1Box.Text.Length - 1 == i)
-                            break;
+                        MessageBox.Show("PLayer name can not contain special character!");
+                        szamlaloai++;
+                        break;
                     }
-                }//else gamebe lép
+                }
+                if (szamlaloai == 0)
+                {
+//                    Torpedo_v_ai objTorpedo = new Torpedo_v_ai();
+//                    this.Close();
+//                    objTorpedo.Show();
+                    Torpedo_v_ai TorpAi = new Torpedo_v_ai();
+                    TorpAi.Show();
+
+                }
             }
 
         }
@@ -141,17 +158,20 @@ namespace Pirate_War_v1
         private void Player1_TextChanged(object sender, TextChangedEventArgs e)
         {
             player1 = Player1Box.Text;
+            szamlalo1 = 0;
         }
 
         private void PlayerAiEllen_TextChanged(object sender, TextChangedEventArgs e)
         {
             playeraiellen = PlayerAiEllen.Text;
+            szamlaloai = 0;
         }
 
         private void Player2_TextChanged(object sender, TextChangedEventArgs e)
         {
             player2 = Player2Box.Text;
+            szamlalo2 = 0;
+
         }
     }
 }
-    
