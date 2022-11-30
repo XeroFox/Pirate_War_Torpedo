@@ -39,9 +39,17 @@ namespace Pirate_War_v1
 
         private void PlayAgain_Click(object sender, RoutedEventArgs e)
         {
-            Torpedo_1v1 Playagainwindow = new Torpedo_1v1();
-            this.Close();
-            Playagainwindow.Show();
+            if (Label2.Content.Equals("Second player name"))
+            {
+                Torpedo_1v1 Playagainwindow = new Torpedo_1v1();
+                this.Close();
+                Playagainwindow.Show();
+            }else if(Label2.Content.Equals("Ai name"))
+            {
+                Torpedo_v_ai Playagainwindow = new Torpedo_v_ai();
+                this.Close();
+                Playagainwindow.Show();
+            }
             
             if (WINNER == "1")
             {

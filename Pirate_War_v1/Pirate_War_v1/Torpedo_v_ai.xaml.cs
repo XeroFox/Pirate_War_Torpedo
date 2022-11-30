@@ -500,10 +500,36 @@ namespace Pirate_War_v1
 
         private void checkIfGameEnded()
         {
+            int whoWins = 0;
+            if (currAiShips[0] == 0 && currAiShips[1] == 0 && currAiShips[2] == 0)
+            {
+                whoWins = 0;
+            }
+            else if (currPlayerShips[0] == 0 && currPlayerShips[1] == 0 && currPlayerShips[2] == 0)
+            {
+                whoWins = 1;
+            }
+
             if ((currAiShips[0] == 0 && currAiShips[1] == 0 && currAiShips[2] == 0)
                 || (currPlayerShips[0] == 0 && currPlayerShips[1] == 0 && currPlayerShips[2] == 0))
             {
                 STATE = States.GAMEEND;
+                EndOfMatch eom = new EndOfMatch();
+                eom.P1Miss.Content = "Miss: " + p1_miss.Text;
+                eom.P1Hit.Content = "Hit: " + p1_hit.Text;
+                eom.P2Miss.Content = "Miss: " + ai_miss.Text;
+                eom.P2Hit.Content = "Hit: " + ai_hit.Text;
+                eom.winnerText.Content = (whoWins == 0 ? playerTable.Name : aiTable.Name) + " WINS!!";
+                eom.winnerText.FontSize = (whoWins == 0 ? 90 : 64);
+                eom.Label2.Content = "Ai name";
+                eom.WINNER = "2";
+                eom.Player1Box.Text = playerTable.Name;
+                eom.Player2Box.Foreground = Brushes.Red;
+                eom.Player2Box.Text = aiTable.Name;
+                eom.Player2Box.FontSize = 30;
+                eom.Player1Box.Foreground = Brushes.Green;
+                eom.Show();
+                this.Close();
             }
         }
 

@@ -115,6 +115,7 @@ namespace Pirate_War_v1
 //                    objTorpedo.Show();
                     Torpedo_v_ai TorpAi = new Torpedo_v_ai();
                     TorpAi.Show();
+                    this.Close();
 
                 }
             }
