@@ -462,7 +462,7 @@
                                     gameData.P1_MISS++;
                                     game_curr_turn = Turn.P2;
                                 }
-                                gameData.saveMove(mouseX - 1, mouseY, isScored, p1Table.Name);
+                                //gameData.saveMove(mouseX - 1, mouseY, isScored, p1Table.Name);
                                 drawSelectedGrid();
                                 refreshScores();
                             }
@@ -492,7 +492,7 @@
                                     gameData.P2_MISS++;
                                     game_curr_turn = Turn.P1;
                                 }
-                                gameData.saveMove(mouseX - 1, mouseY, isScored, p1Table.Name);
+                                //gameData.saveMove(mouseX - 1, mouseY, isScored, p1Table.Name);
                                 drawSelectedGrid();
                                 refreshScores();
                             }

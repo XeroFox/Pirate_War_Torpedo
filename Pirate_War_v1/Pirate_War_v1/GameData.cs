@@ -15,23 +15,23 @@ namespace Pirate_War_v1
         public int P1_MISS { get; set; }
         public int P2_MISS { get; set; }
         public int TURN { get; set; }
-        public List<string> STEPS { get; set; }
+        public List<TurnElement> Steps { get; set; }
 
         public GameData()
         {
             P1_HIT = 0;
             P2_HIT = 0;
             TURN = 1;
-            STEPS = new List<string>();
+            Steps = new List<TurnElement>();
             P1_MISS = 0;
             P2_MISS = 0;
         }
 
-        public void saveMove(int XX, int YY, bool hit, string player)
+        public void saveMove(string player, int turn, Coordinates cord)
         {
-            string[] characters = new string[] { "A", "B", "C", "D", "E", "F", "G", "H" };
-            string savingData = String.Format("{0} - {1}{2}:{3}", player, characters[XX], YY, (hit ? "X" : "O"));
-            STEPS.Add(savingData);
+            TurnElement turnElement = new TurnElement(player, turn, cord);
+            Steps.Add(turnElement);
+            GameStepsWindow.instance.listViewer.Items.Add(turnElement.ToString());
         }
 
         public string toJSON()

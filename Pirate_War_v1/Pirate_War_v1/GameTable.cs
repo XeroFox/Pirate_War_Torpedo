@@ -191,7 +191,6 @@ namespace Pirate_War_v1
                 if(getCoordinate(coordinates.X,coordinates.Y).Value == shipType + shipType * 10)
                 {
                     count++;
-                    Debug.WriteLine(count);
                 }
             }
 
