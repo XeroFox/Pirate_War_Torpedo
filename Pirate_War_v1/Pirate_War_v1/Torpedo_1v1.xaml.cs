@@ -38,8 +38,8 @@
                     P2
                 }
 
-                GameTable p1Table = new GameTable("Player1");
-                GameTable p2Table = new GameTable("Player2");
+                GameTable p1Table = new GameTable(game_select.instance.Player1Box.Text);
+                GameTable p2Table = new GameTable(game_select.instance.Player2Box.Text);
 
 
                 GameData gameData = new GameData();

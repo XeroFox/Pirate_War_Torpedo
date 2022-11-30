@@ -84,12 +84,12 @@ namespace Pirate_War_v1
                         break;
                     }
                 }
-                //                if (szamlalo1 == 0 && szamlalo2 == 0)
-                //                {
-                //                    Torpedo_1v1 objTorpedo_1v1 = new Torpedo_1v1();
-                //                    this.Close();
-                //                    objTorpedo_1v1.Show();
-                //                }
+                if (szamlalo1 == 0 && szamlalo2 == 0)
+                {
+                    Torpedo_1v1 objTorpedo_1v1 = new Torpedo_1v1();
+                    this.Close();
+                    objTorpedo_1v1.Show();
+                }
             }
             if (PlayerAiEllen.Visibility == Visibility.Visible)
             {
