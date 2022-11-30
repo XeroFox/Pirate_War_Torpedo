@@ -104,15 +104,21 @@ namespace Pirate_War_v1
             InitializeComponent();
             instance = this;
             loadSpriteDatas();
+            playMusic();
             ai_game_bg.Fill = new ImageBrush
             {
                 ImageSource = new BitmapImage(new Uri(Directory.GetCurrentDirectory() + "\\sources\\csharp_torpedo.png", UriKind.Absolute))
             };
+
             canvas.Children.Add(selectedRectangle);
             aiTable.generateRandomShips();
             p1_name.Text = playerTable.Name;
             ai_name.Text = aiTable.Name;
             refreshScores();
+            //MediaPlayer bgSound = new MediaPlayer();
+            //Uri uri = new Uri(System.IO.Directory.GetCurrentDirectory() + @"\sounds\game_bg_music.wav", UriKind.Absolute);
+            //bgSound.Open(uri);
+            //bgSound.Play();
             curr_turn.Text = playerTable.Name + " Placing Ships";
 
             _timer.Interval = TimeSpan.FromSeconds(RefreshTimeSec);
@@ -766,6 +772,23 @@ namespace Pirate_War_v1
         private void Window_Closed(object sender, EventArgs e)
         {
             gameStepsWindow.Close();
+        }
+
+        public static MediaPlayer mediaPlayer = new MediaPlayer();
+
+        public static void playMusic()
+        {
+            Uri uri = new Uri(Directory.GetCurrentDirectory() + @"\sounds\game_bg_music.wav", UriKind.Absolute);
+            mediaPlayer.Open(uri);
+            mediaPlayer.MediaEnded += new EventHandler(Media_Ended);
+            mediaPlayer.Play();
+        }
+
+        private static void Media_Ended(object? sender, EventArgs e)
+        {
+            Uri uri = new Uri(Directory.GetCurrentDirectory() + @"\sounds\game_bg_music.wav", UriKind.Absolute);
+            mediaPlayer.Open(uri);
+            mediaPlayer.Play();
         }
     }
 }

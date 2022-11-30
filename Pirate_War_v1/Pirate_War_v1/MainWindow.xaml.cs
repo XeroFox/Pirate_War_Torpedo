@@ -21,6 +21,7 @@ namespace Pirate_War_v1
     /// </summary>
     public partial class MainWindow : Window
     {
+        public static MediaPlayer menubgSound = new MediaPlayer();
         public MainWindow()
         {
             InitializeComponent();
@@ -28,9 +29,12 @@ namespace Pirate_War_v1
             {
                 ImageSource = new BitmapImage(new Uri(Directory.GetCurrentDirectory() + "\\sources\\spr_underwater_bg.png", UriKind.Absolute))
             };
+            PlayBG();
+            
         }
         private void PlayClicked(object sender, RoutedEventArgs e)
         {
+            //PlayBG();
             game_select objgame_select = new game_select();
             this.Close();
             objgame_select.Show();
@@ -52,6 +56,22 @@ namespace Pirate_War_v1
         private void ExitClicked(object sender, RoutedEventArgs e)
         {
             System.Environment.Exit(0);
+        }
+        
+
+        private void PlayBG()
+        {
+            Uri uri = new Uri(System.IO.Directory.GetCurrentDirectory() + @"\sounds\menu_bg_music.wav", UriKind.Absolute);
+            menubgSound.Open(uri);
+            menubgSound.MediaEnded += new EventHandler(Media_Ended);
+            menubgSound.Play();
+        }
+
+        private static void Media_Ended(object? sender, EventArgs e)
+        {
+            Uri uri = new Uri(Directory.GetCurrentDirectory() + @"\sounds\menu_bg_music.wav", UriKind.Absolute);
+            menubgSound.Open(uri);
+            menubgSound.Play();
         }
 
     }
