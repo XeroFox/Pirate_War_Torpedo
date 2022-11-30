@@ -52,6 +52,13 @@ namespace Pirate_War_v1
 
         private void Start_Click(object sender, RoutedEventArgs e)
         {
+            MainWindow.menubgSound.Pause();
+            MediaPlayer bgSound = new MediaPlayer();
+            Uri uri = new Uri(System.IO.Directory.GetCurrentDirectory() + @"\sounds\game_bg_music.wav", UriKind.Absolute);
+            bgSound.Open(uri);
+
+            //bgSound.Play();
+            //bgSound.Volume = 1.0f;
 
             if (Player1Box.Visibility == Visibility.Visible && Player2Box.Visibility == Visibility.Visible)
             {
@@ -174,5 +181,21 @@ namespace Pirate_War_v1
             szamlalo2 = 0;
 
         }
+        public static MediaPlayer mediaPlayer = new MediaPlayer();
+
+        public static void playMusic()
+        {
+            MainWindow.menubgSound.Stop();
+            Uri uri = new Uri(System.IO.Directory.GetCurrentDirectory() + @"\sounds\game_bg_music.wav", UriKind.Absolute);
+            mediaPlayer.Open(uri);
+            //mediaPlayer.SetValue = 1000;
+            mediaPlayer.Play();
+        }
+        //MediaPlayer bgSound = new MediaPlayer();
+        //Uri uri = new Uri(System.IO.Directory.GetCurrentDirectory() + @"\sounds\game_bg_music.wav", UriKind.Absolute);
+        //bgSound.Open(uri);
+
+        //bgSound.Play();
+        //bgSound.Volume = 0.1f;
     }
 }

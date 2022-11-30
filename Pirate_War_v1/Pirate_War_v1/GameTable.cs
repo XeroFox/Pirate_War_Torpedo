@@ -1,11 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
+using System.Media;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Media;
 using System.Windows.Shell;
 
 namespace Pirate_War_v1
@@ -173,11 +176,19 @@ namespace Pirate_War_v1
             if(getCoordinate(XX,YY).Value == 0)
             {
                 getCoordinate(XX, YY).Value = 1;
-            }else if(getCoordinate(XX, YY).Value > 1 && getCoordinate(XX, YY).Value <= 4)
+                SoundPlayer zene = new SoundPlayer(Directory.GetCurrentDirectory() + "\\sounds\\shot_miss.wav");
+                zene.Load();
+                zene.Play();
+            }
+            else if(getCoordinate(XX, YY).Value > 1 && getCoordinate(XX, YY).Value <= 4)
             {
                 shipType = getCoordinate(XX, YY).Value;
                 getCoordinate(XX, YY).Value = getCoordinate(XX, YY).Value + getCoordinate(XX, YY).Value * 10;
                 result = checkIfDestroyed(XX, YY, shipType);
+                
+                SoundPlayer zene = new SoundPlayer(Directory.GetCurrentDirectory() + "\\sounds\\shot_hit.wav");
+                zene.Load();
+                zene.Play();
             }
             return result;
         }

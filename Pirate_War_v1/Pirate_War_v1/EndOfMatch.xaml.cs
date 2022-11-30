@@ -66,6 +66,8 @@ namespace Pirate_War_v1
             MainWindow main = new MainWindow();
             this.Close();
             main.Show();
+            Torpedo_1v1.mediaPlayer.Stop();
+            Torpedo_v_ai.mediaPlayer.Stop();
             
         }
 
