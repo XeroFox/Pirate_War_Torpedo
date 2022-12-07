@@ -723,6 +723,8 @@ namespace Pirate_War_v1
         {
             resetToDefault();
             gameData.reset();
+            aiTable.setTableToDefault();
+            playerTable.setTableToDefault();
             drawTableShips(aiTable, 1);
             drawTableShips(playerTable, 0);
             TurnElement te = null;
