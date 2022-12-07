@@ -16,6 +16,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Media.Media3D;
 using System.Windows.Shapes;
 using System.Windows.Threading;
+using static System.Formats.Asn1.AsnWriter;
 
 namespace Pirate_War_v1
 {
@@ -39,7 +40,7 @@ namespace Pirate_War_v1
         GameTable playerTable = new GameTable(game_select.instance.PlayerAiEllen.Text);
         GameTable aiTable = new GameTable("AI");
 
-        GameData gameData = new GameData();
+        GameData gameData = new GameData(game_select.instance.PlayerAiEllen.Text, "AI");
 
         List<ImageBrush> cursorSprites = new List<ImageBrush>();
         List<ImageBrush> rotateSprites = new List<ImageBrush>();
@@ -98,6 +99,10 @@ namespace Pirate_War_v1
 
         Turn firstTurn = Turn.PLAYER;
 
+        List<Rectangle> placed_canvas_rectangles = new List<Rectangle>();
+        List<TurnElement> newSteps = new List<TurnElement>();
+        bool is_turn_changed = false;
+
         // MAIN
         public Torpedo_v_ai()
         {
@@ -144,7 +149,7 @@ namespace Pirate_War_v1
 
             setAiRandomName();
 
-            drawAiShips();
+            drawTableShips(aiTable,1);
             drawSelectedGrid();
         }
 
@@ -185,6 +190,12 @@ namespace Pirate_War_v1
                 {
                     if (aiTable.getCoordinate(mouseY, mouseX).Value == 0 || aiTable.getCoordinate(mouseY, mouseX).Value >= 2 && aiTable.getCoordinate(mouseY, mouseX).Value <= 4)
                     {
+                        if (is_turn_changed)
+                        {
+                            is_turn_changed = false;
+                            gameData.Steps = newSteps;
+                            gameData.refreshStepsWindow();
+                        }
                         bool isScored = aiTable.isScored(mouseY, mouseX);
                         bool shot_result = aiTable.makeAShot(mouseY, mouseX);
                         createMarker(mouseX, mouseY, isScored);
@@ -226,6 +237,7 @@ namespace Pirate_War_v1
                     playerTable.placeShip(mouseY, mouseX, rotation, selectedShipType);
                     playerTable.getShipByCoordinate(mouseY, mouseX).shipBody.Fill = shipSprites[playerTable.getShipByCoordinate(mouseY, mouseX).SpriteIndex];
                     canvas.Children.Add(playerTable.getShipByCoordinate(mouseY, mouseX).shipBody);
+                    placed_canvas_rectangles.Add(playerTable.getShipByCoordinate(mouseY, mouseX).shipBody);
                     Canvas.SetTop(playerTable.getShipByCoordinate(mouseY, mouseX).shipBody, MARGINTOP + (mouseY - 1) * CELLSIZE - (playerTable.getShipByCoordinate(mouseY, mouseX).Rotation == 0 ? (playerTable.getShipByCoordinate(mouseY, mouseX).Type == 2 ? -10 : playerTable.getShipByCoordinate(mouseY, mouseX).Type == 3 ? 13 : 25) : -playerTable.getShipByCoordinate(mouseY, mouseX).shipBody.Width));
                     Canvas.SetLeft(playerTable.getShipByCoordinate(mouseY, mouseX).shipBody, MARGINLEFT1 + (mouseX - 1) * CELLSIZE - (playerTable.getShipByCoordinate(mouseY, mouseX).Rotation == 0 ? (playerTable.getShipByCoordinate(mouseY, mouseX).Type == 4 ? 15 : 0) : (playerTable.getShipByCoordinate(mouseY, mouseX).Type == 2 ? -10 : playerTable.getShipByCoordinate(mouseY, mouseX).Type == 3 ? 13 : 25)));
                     currPlayerShips[selectedShipType - 2]++;
@@ -302,9 +314,12 @@ namespace Pirate_War_v1
                 }
             }
 
-            if(e.Key == Key.L)
+            if(Keyboard.IsKeyDown(Key.LeftCtrl) && e.Key == Key.B)
             {
-                Debug.WriteLine(selectedTurnIndex);
+                //resetToDefault();
+                newSteps = new List<TurnElement>();
+                backToSelectedTurn(selectedTurnIndex);
+                is_turn_changed = true;
             }
 
         }
@@ -343,6 +358,7 @@ namespace Pirate_War_v1
                 Fill = (scored ? markerSprites[0] : markerSprites[1])
             };
             canvas.Children.Add(markerRect);
+            placed_canvas_rectangles.Add(markerRect);
             Canvas.SetTop(markerRect, MARGINTOP + (YY - 1) * CELLSIZE);
             Canvas.SetLeft(markerRect, MARGINLEFT2 + (XX - 1) * CELLSIZE);
         }
@@ -379,20 +395,6 @@ namespace Pirate_War_v1
             ai_hit.Text = gameData.P2_HIT.ToString();
             ai_miss.Text = gameData.P2_MISS.ToString();
             game_turn.Text = currTurn.ToString();
-        }
-
-        void drawAiShips()
-        {
-            foreach (Ships element in aiTable.ships)
-            {
-                element.shipBody.Fill = shipSprites[element.SpriteIndex];
-                element.shipBody.Visibility = Visibility.Hidden;
-
-                canvas.Children.Add(element.shipBody);
-                Canvas.SetTop(element.shipBody, MARGINTOP + (element.StartingCoordinates.X - 1) * CELLSIZE - (element.Rotation == 0 ? (element.Type == 2 ? -10 : element.Type == 3 ? 13 : 25) : -element.shipBody.Width));
-                Canvas.SetLeft(element.shipBody, MARGINLEFT2 + (element.StartingCoordinates.Y - 1) * CELLSIZE - (element.Rotation == 0 ? (element.Type == 4 ? 15 : 0) : (element.Type == 2 ? -10 : element.Type == 3 ? 13 : 25)));
-
-            }
         }
 
         void drawSelectedGrid()
@@ -543,6 +545,7 @@ namespace Pirate_War_v1
                 || (currPlayerShips[0] == 0 && currPlayerShips[1] == 0 && currPlayerShips[2] == 0))
             {
                 STATE = States.GAMEEND;
+                gameData.WON = (whoWins == 0 ? playerTable.Name : aiTable.Name);
                 EndOfMatch eom = new EndOfMatch();
                 eom.P1Miss.Content = "Miss: " + p1_miss.Text;
                 eom.P1Hit.Content = "Hit: " + p1_hit.Text;
@@ -686,10 +689,49 @@ namespace Pirate_War_v1
                 Fill = (scored ? markerSprites[0] : markerSprites[1])
             };
             canvas.Children.Add(markerRect);
+            placed_canvas_rectangles.Add(markerRect);
             Canvas.SetTop(markerRect, MARGINTOP + (YY - 1) * CELLSIZE);
             Canvas.SetLeft(markerRect, MARGINLEFT1 + (XX - 1) * CELLSIZE);
         }
 
+
+        //Visszajátszás
+        void drawTableShips(GameTable gT, int PlayerIndex)
+        {
+            foreach (Ships element in gT.ships)
+            {
+                element.shipBody.Fill = shipSprites[element.SpriteIndex];
+                element.shipBody.Visibility = (PlayerIndex == 0 ? Visibility.Visible : Visibility.Visible);
+
+                canvas.Children.Add(element.shipBody);
+                placed_canvas_rectangles.Add(element.shipBody);
+                Canvas.SetTop(element.shipBody, MARGINTOP + (element.StartingCoordinates.X - 1) * CELLSIZE - (element.Rotation == 0 ? (element.Type == 2 ? -10 : element.Type == 3 ? 13 : 25) : -element.shipBody.Width));
+                Canvas.SetLeft(element.shipBody, (PlayerIndex == 0 ? MARGINLEFT1 : MARGINLEFT2) + (element.StartingCoordinates.Y - 1) * CELLSIZE - (element.Rotation == 0 ? (element.Type == 4 ? 15 : 0) : (element.Type == 2 ? -10 : element.Type == 3 ? 13 : 25)));
+
+            }
+        }
+
+        void resetToDefault()
+        {
+            foreach(Rectangle rect in placed_canvas_rectangles)
+            {
+                canvas.Children.Remove(rect);
+            }
+        }
+
+        void backToSelectedTurn(int ind)
+        {
+            resetToDefault();
+            gameData.reset();
+            drawTableShips(aiTable, 1);
+            drawTableShips(playerTable, 0);
+            TurnElement te = null;
+            //ITT KELLENE LŐNI VALAHOGY MERT NEM MENT
+            game_curr_turn = Turn.PLAYER;
+            currTurn = (te == null ? 1 : te.Round);
+
+
+        }
 
 
 

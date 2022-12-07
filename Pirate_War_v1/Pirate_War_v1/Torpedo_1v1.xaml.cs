@@ -45,7 +45,7 @@ namespace Pirate_War_v1
         GameTable p2Table = new GameTable(game_select.instance.Player2Box.Text);
 
 
-        GameData gameData = new GameData();
+        GameData gameData = new GameData(game_select.instance.Player1Box.Text, game_select.instance.Player2Box.Text);
 
         List<ImageBrush> cursorSprites = new List<ImageBrush>();
         List<ImageBrush> rotateSprites = new List<ImageBrush>();

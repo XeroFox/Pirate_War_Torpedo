@@ -18,6 +18,7 @@ namespace Pirate_War_v1
         public string Name { get; set; }
         public List<Coordinates> Table { get; set; }
         public List<Ships> ships { get; set; }
+        public List<Ships> startingShips { get; set; }
 
         public GameTable(string name)
         {
@@ -25,6 +26,7 @@ namespace Pirate_War_v1
             Table = new List<Coordinates>();
             this.clearTable();
             ships = new List<Ships>();
+            startingShips = new List<Ships>();
         }
 
         public Coordinates getCoordinate(int XX, int YY)
@@ -83,6 +85,7 @@ namespace Pirate_War_v1
             }
             Ships newShip = new Ships(shipType, coordinates, coordinates[0],(shipType == 2 ? 0 : shipType == 3 ? 2 : 4),rot);
             ships.Add(newShip);
+            startingShips.Add(newShip);
             updateTable();
         }
 
@@ -354,6 +357,21 @@ namespace Pirate_War_v1
                         getCoordinate(coordinates.X, coordinates.Y + 1).Value = getCoordinate(coordinates.X, coordinates.Y + 1).Value == 0 ? 9 : getCoordinate(coordinates.X, coordinates.Y + 1).Value;
                         getCoordinate(coordinates.X, coordinates.Y - 1).Value = getCoordinate(coordinates.X, coordinates.Y - 1).Value == 0 ? 9 : getCoordinate(coordinates.X, coordinates.Y - 1).Value;
                     }
+                }
+            }
+        }
+
+
+        public void setTableToDefault()
+        {
+            this.ships = this.startingShips;
+            this.Table = new List<Coordinates>();
+            this.clearTable();
+            foreach(Ships sh in this.ships)
+            {
+                foreach(Coordinates shcoord in sh.PlacedCoordinates)
+                {
+                    this.getCoordinate(shcoord.X, shcoord.Y).Value = shcoord.Value;
                 }
             }
         }
