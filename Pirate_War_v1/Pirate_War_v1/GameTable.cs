@@ -84,8 +84,9 @@ namespace Pirate_War_v1
                 coordinates1.Value = shipType;
             }
             Ships newShip = new Ships(shipType, coordinates, coordinates[0],(shipType == 2 ? 0 : shipType == 3 ? 2 : 4),rot);
+            Ships newShip2 = new Ships(shipType, coordinates, coordinates[0],(shipType == 2 ? 0 : shipType == 3 ? 2 : 4),rot);
             ships.Add(newShip);
-            startingShips.Add(newShip);
+            startingShips.Add(newShip2);
             updateTable();
         }
 
@@ -364,7 +365,11 @@ namespace Pirate_War_v1
 
         public void setTableToDefault()
         {
-            this.ships = this.startingShips;
+            this.ships = new List<Ships>();
+            foreach(Ships sh in this.startingShips)
+            {
+                ships.Add(new Ships(sh.Type, sh.PlacedCoordinates,sh.StartingCoordinates, sh.SpriteIndex, sh.Rotation));
+            }
             this.Table = new List<Coordinates>();
             this.clearTable();
             foreach(Ships sh in this.ships)
