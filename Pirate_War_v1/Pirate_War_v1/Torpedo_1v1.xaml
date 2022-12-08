@@ -50,6 +50,7 @@
             </Canvas>
             <Rectangle Visibility="Visible" x:Name="P1_eyeButton" Width="100" Height="100" Canvas.Left="130" Canvas.Top="84" HorizontalAlignment="Left" VerticalAlignment="Center"/>
             <Rectangle Visibility="Visible" x:Name="P2_eyeButton" Width="100" Height="100" Canvas.Left="669" Canvas.Top="84" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+            <Rectangle Visibility="Visible" x:Name="Sound_Button" Width="100" Height="100" Canvas.Left="591" Canvas.Top="470" HorizontalAlignment="Left" VerticalAlignment="Top"/>
         </Canvas>
     </Grid>
 </Window>

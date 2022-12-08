@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Pirate_War_v1
 {
-    internal class Coordinates
+    public class Coordinates
     {
         public int X { get; }
         public int Y { get; }

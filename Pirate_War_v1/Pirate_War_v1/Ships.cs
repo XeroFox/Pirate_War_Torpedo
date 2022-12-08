@@ -11,7 +11,7 @@ using System.Xml.Linq;
 
 namespace Pirate_War_v1
 {
-    internal class Ships
+    public class Ships
     {
         public int Type { get; }
         public List<Coordinates> PlacedCoordinates { get; }

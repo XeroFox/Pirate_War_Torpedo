@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Pirate_War_v1
 {
-    internal class TurnElement
+    public class TurnElement
     {
         public string Name { get; set; }
         public int Round { get; set; }
