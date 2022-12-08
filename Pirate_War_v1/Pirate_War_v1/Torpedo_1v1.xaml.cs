@@ -212,6 +212,7 @@ namespace Pirate_War_v1
                 InfoText.Visibility = Visibility.Visible;
                 OkButton.Visibility = Visibility.Visible;
                 Bg.Visibility = Visibility.Visible;
+                refreshScores();
             }
             else if (STATE == States.INFO2)
             {
@@ -486,7 +487,7 @@ namespace Pirate_War_v1
                     {
                         Sound_Button.Fill = SoundSprites[0];
 
-                        soundSetVolume(1.0);
+                        soundSetVolume(0.7);
 
                     }
                     else
@@ -594,7 +595,7 @@ namespace Pirate_War_v1
                     {
                         Sound_Button.Fill = SoundSprites[0];
 
-                        soundSetVolume(1.0);
+                        soundSetVolume(0.7);
 
                     }
                     else

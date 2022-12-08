@@ -42,6 +42,8 @@
             <Rectangle Visibility="Hidden" Name="rotationShipView" Width="74" Height="75" Canvas.Left="604" Canvas.Top="400"/>
 
             <Ellipse Name="customPointer" Width="50" Height="50" Panel.ZIndex="1000"/>
+            <Rectangle Visibility="Visible" x:Name="Sound_Button" Width="100" Height="100" Canvas.Left="591" Canvas.Top="470" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+
 
         </Canvas>
     </Grid>

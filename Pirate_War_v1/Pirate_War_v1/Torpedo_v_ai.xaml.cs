@@ -46,6 +46,7 @@ namespace Pirate_War_v1
         List<ImageBrush> rotateSprites = new List<ImageBrush>();
         List<ImageBrush> shipSprites = new List<ImageBrush>();
         List<ImageBrush> markerSprites = new List<ImageBrush>();
+        List<ImageBrush> SoundSprites = new List<ImageBrush>();
 
         List<Rectangle> placingShipRect = new List<Rectangle>();
 
@@ -57,6 +58,7 @@ namespace Pirate_War_v1
         int mouseX = 0;
         int mouseY = 0;
         int mouseSide = 0;
+        bool muted = false;
 
         Rectangle selectedRectangle = new Rectangle
         {
@@ -144,12 +146,13 @@ namespace Pirate_War_v1
             }
             rotationShipView.Fill = rotateSprites[2];
             rotationButton.Fill = rotateSprites[0];
+            Sound_Button.Fill = SoundSprites[0];
             p1_frig.Foreground = Brushes.Green;
             setCustomPointerSprite(0);
 
             setAiRandomName();
 
-            drawTableShips(aiTable,1);
+            drawTableShips(aiTable, 1);
             drawSelectedGrid();
         }
 
@@ -228,10 +231,45 @@ namespace Pirate_War_v1
                     }
 
                 }
+                Point p = e.GetPosition(canvas);
+                if (p.X > 612 && p.X < 664 && p.Y > 502 && p.Y < 545)
+                {
+                    if (muted)
+                    {
+                        Sound_Button.Fill = SoundSprites[0];
+
+                        soundSetVolume(0.7);
+
+                    }
+                    else
+                    {
+                        Sound_Button.Fill = SoundSprites[1];
+
+                        soundSetVolume(0.0);
+                    }
+                    muted = !muted;
+                }
             }
             else if (STATE == States.PREP)
             {
                 Point p = e.GetPosition(canvas);
+                if (p.X > 612 && p.X < 664 && p.Y > 502 && p.Y < 545)
+                {
+                    if (muted)
+                    {
+                        Sound_Button.Fill = SoundSprites[0];
+
+                        soundSetVolume(0.7);
+
+                    }
+                    else
+                    {
+                        Sound_Button.Fill = SoundSprites[1];
+
+                        soundSetVolume(0.0);
+                    }
+                    muted = !muted;
+                }
                 if (placeable)
                 {
                     playerTable.placeShip(mouseY, mouseX, rotation, selectedShipType);
@@ -272,7 +310,7 @@ namespace Pirate_War_v1
                         refreshScores();
                         aiPossibleShots = playerTable.aiGeneratePossibleMoves();
                         gameStepsWindow.Show();
-                        gameStepsWindow.Left = this.Left+this.Width;
+                        gameStepsWindow.Left = this.Left + this.Width;
                         gameStepsWindow.Top = this.Top + this.Height / 6;
 
                         game_turn.Visibility = Visibility.Visible;
@@ -293,12 +331,17 @@ namespace Pirate_War_v1
                 rotationShipView.Fill = (rotation == 0 ? rotateSprites[2] : rotateSprites[3]);
             }
         }
+        private void soundSetVolume(double v)
+        {
+            mediaPlayer.Volume = v;
+        }
+
 
         public void MakeP1Shots(int mouseY, int mouseX)
         {
             if (aiTable.getCoordinate(mouseY, mouseX).Value == 0 || aiTable.getCoordinate(mouseY, mouseX).Value >= 2 && aiTable.getCoordinate(mouseY, mouseX).Value <= 4)
             {
-               
+
                 bool isScored = aiTable.isScored(mouseY, mouseX);
                 bool shot_result = aiTable.makeAShot(mouseY, mouseX);
                 createMarker(mouseX, mouseY, isScored, MARGINLEFT2);
@@ -335,7 +378,7 @@ namespace Pirate_War_v1
         {
             if (playerTable.getCoordinate(mouseY, mouseX).Value == 0 || playerTable.getCoordinate(mouseY, mouseX).Value >= 2 && playerTable.getCoordinate(mouseY, mouseX).Value <= 4)
             {
-              
+
                 bool isScored = playerTable.isScored(mouseY, mouseX);
                 bool shot_result = playerTable.makeAShot(mouseY, mouseX);
                 createMarker(mouseX, mouseY, isScored, MARGINLEFT1);
@@ -348,7 +391,7 @@ namespace Pirate_War_v1
                     {
                         playerTable.getShipByCoordinate(mouseY, mouseX).shipBody.Visibility = Visibility.Visible;
                         playerTable.getShipByCoordinate(mouseY, mouseX).shipBody.Fill = shipSprites[playerTable.getShipByCoordinate(mouseY, mouseX).SpriteIndex];
-                        currAiShips[aiTable.getShipByCoordinate(mouseY, mouseX).Type - 2]--;
+                        currPlayerShips[playerTable.getShipByCoordinate(mouseY, mouseX).Type - 2]--;
                         p1_frig.Text = currAiShips[2] + "/" + maxPlaceableShips[2];
                         p1_brig.Text = currAiShips[1] + "/" + maxPlaceableShips[1];
                         p1_gunboat.Text = currAiShips[0] + "/" + maxPlaceableShips[0];
@@ -388,7 +431,7 @@ namespace Pirate_War_v1
                 }
             }
 
-            if(Keyboard.IsKeyDown(Key.LeftCtrl) && e.Key == Key.B)
+            if (Keyboard.IsKeyDown(Key.LeftCtrl) && e.Key == Key.B)
             {
                 //resetToDefault();
                 newSteps = new List<TurnElement>();
@@ -787,7 +830,7 @@ namespace Pirate_War_v1
 
         void resetToDefault()
         {
-            foreach(Rectangle rect in placed_canvas_rectangles)
+            foreach (Rectangle rect in placed_canvas_rectangles)
             {
                 canvas.Children.Remove(rect);
             }
@@ -814,6 +857,15 @@ namespace Pirate_War_v1
         void loadSpriteDatas()
         {
             Cursor = Cursors.None;
+
+            //Sound Sprites
+            SoundSprites.Add(new ImageBrush
+            {
+                ImageSource = new BitmapImage(new Uri(Directory.GetCurrentDirectory() + "\\sources\\hang_on.png", UriKind.Absolute))
+            }); SoundSprites.Add(new ImageBrush
+            {
+                ImageSource = new BitmapImage(new Uri(Directory.GetCurrentDirectory() + "\\sources\\hang_off.png", UriKind.Absolute))
+            });
 
             // Rotation Sprites
             rotateSprites.Add(new ImageBrush
@@ -884,7 +936,7 @@ namespace Pirate_War_v1
         private void Window_LocationChanged(object sender, EventArgs e)
         {
             gameStepsWindow.Left = this.Left + this.Width;
-            gameStepsWindow.Top = this.Top + this.Height/6;
+            gameStepsWindow.Top = this.Top + this.Height / 6;
         }
 
         private void Window_Closed(object sender, EventArgs e)
