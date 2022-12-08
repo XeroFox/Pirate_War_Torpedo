@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Pirate_War_v1
 {
-    internal class GameData
+    public class GameData
     {
         public string P1_NAME { get; set; }
         public string P2_NAME { get; set; }
@@ -20,8 +20,11 @@ namespace Pirate_War_v1
         public List<TurnElement> Steps { get; set; }
         public string WON { get; set; }
 
+        public static GameData instance;
+
         public GameData(string p1_NAME, string p2_NAME)
         {
+            instance = this;
             P1_HIT = 0;
             P2_HIT = 0;
             TURN = 1;
@@ -40,13 +43,21 @@ namespace Pirate_War_v1
             GameStepsWindow.instance.listViewer.Items.Add(turnElement.ToString());
         }
 
-        public void refreshStepsWindow()
+        public void refreshStepsWindow(int index)
         {
             GameStepsWindow.instance.listViewer.Items.Clear();
-            foreach (TurnElement te in Steps)
+            List<TurnElement> Steps2 = new List<TurnElement>();
+            for (int i = 0; i <= index; i++)
             {
-                GameStepsWindow.instance.listViewer.Items.Add(te.ToString());
+               GameStepsWindow.instance.listViewer.Items.Add(Steps[i].ToString());
+                Steps2.Add(Steps[i]);
             }
+            if (game_select.instance.Mode)
+            {
+                Torpedo_1v1.instance.selectedTurnIndex = -1;
+            }
+            Steps = new List<TurnElement>(Steps2);
+
         }
 
         public void reset()

@@ -35,22 +35,25 @@ namespace Pirate_War_v1
             INFO2,
             INFOINGAME
         }
-        enum Turn
+        public enum Turn
         {
             P1,
             P2
         }
 
-        GameTable p1Table = new GameTable(game_select.instance.Player1Box.Text);
-        GameTable p2Table = new GameTable(game_select.instance.Player2Box.Text);
+        public GameTable p1Table = new GameTable(game_select.instance.Player1Box.Text);
+        public GameTable p2Table = new GameTable(game_select.instance.Player2Box.Text);
+        public static Torpedo_1v1 instance;
 
 
-        GameData gameData = new GameData(game_select.instance.Player1Box.Text, game_select.instance.Player2Box.Text);
+        public GameData gameData = new GameData(game_select.instance.Player1Box.Text, game_select.instance.Player2Box.Text);
 
         List<ImageBrush> cursorSprites = new List<ImageBrush>();
         List<ImageBrush> rotateSprites = new List<ImageBrush>();
         List<ImageBrush> eyeSprites = new List<ImageBrush>();
-        List<ImageBrush> shipSprites = new List<ImageBrush>();
+        List<ImageBrush> SoundSprites = new List<ImageBrush>();
+        bool muted = false;
+        public List<ImageBrush> shipSprites = new List<ImageBrush>();
         List<ImageBrush> markerSprites = new List<ImageBrush>();
 
         List<Rectangle> placingShipRect = new List<Rectangle>();
@@ -83,24 +86,32 @@ namespace Pirate_War_v1
         string[] columnName = new string[] { "A", "B", "C", "D", "E", "F", "G", "H" };
         BrushConverter bc = new BrushConverter();
 
-        int[] maxPlaceableShips = { 4, 2, 1 };
-        int[] currP1Ships = { 0, 0, 0 };
-        int[] currP2Ships = { 0, 0, 0 };
+        public int[] maxPlaceableShips = { 4, 2, 1 };
+        public int[] currP1Ships = { 0, 0, 0 };
+        public int[] currP2Ships = { 0, 0, 0 };
 
         bool placeable = false;
         bool p1shipVisible = false;
         bool p2shipVisible = false;
 
-        Turn game_curr_turn = Turn.P1;
-        int currTurn = 1;
+        public Turn game_curr_turn = Turn.P1;
+        public int currTurn = 1;
         GameStepsWindow gameStepsWindow = new GameStepsWindow();
-        Turn firstTurn = Turn.P1;
+        public Turn firstTurn = Turn.P1;
 
-        public int selectedTurnIndex = 0;
+
+        public List<Rectangle> placed_canvas_rectangles = new List<Rectangle>();
+        public List<TurnElement> newSteps = new List<TurnElement>();
+        public bool is_turn_changed = false;
+
+        public bool Mode = true;
+
+        public int selectedTurnIndex = -1;
 
 
         public Torpedo_1v1()
         {
+            instance = this;
             InitializeComponent();
             loadSpriteDatas();
             playMusic();
@@ -149,12 +160,13 @@ namespace Pirate_War_v1
             rotationButton.Fill = rotateSprites[0];
             P1_eyeButton.Fill = eyeSprites[1];
             P2_eyeButton.Fill = eyeSprites[1];
+            Sound_Button.Fill = SoundSprites[0];
             p1_frig.Foreground = Brushes.Green;
             setCustomPointerSprite(0);
 
         }
         // Grid kiarjzolása
-        void drawSelectedGrid()
+        public void drawSelectedGrid()
         {
             if (STATE == States.PLAYING)
             {
@@ -167,6 +179,7 @@ namespace Pirate_War_v1
                 rotationShipView.Visibility = Visibility.Hidden;
                 P1_eyeButton.Visibility = Visibility.Visible;
                 P1_eyeButton.Visibility = Visibility.Visible;
+                Sound_Button.Visibility = Visibility.Visible;
 
 
                 if (game_curr_turn == Turn.P1)
@@ -431,6 +444,7 @@ namespace Pirate_War_v1
             if (STATE == States.PLAYING)
             {
                 Point p = e.GetPosition(canvas);
+                Debug.WriteLine(p.X + ":" + p.Y);
                 if (game_curr_turn == Turn.P1)
                 {
 
@@ -466,6 +480,24 @@ namespace Pirate_War_v1
                         p2shipVisible = false;
                     }
                 }
+                if (p.X > 612 && p.X < 664 && p.Y > 502 && p.Y < 545)
+                {
+                    if (muted)
+                    {
+                        Sound_Button.Fill = SoundSprites[0];
+
+                        soundSetVolume(1.0);
+
+                    }
+                    else
+                    {
+                        Sound_Button.Fill = SoundSprites[1];
+
+                        soundSetVolume(0.0);
+                    }
+                    muted = !muted;
+                }
+
 
                 rotationShipView.Fill = (rotation == 0 ? rotateSprites[2] : rotateSprites[3]);
                 rotationShipView.Fill = (rotation == 0 ? rotateSprites[2] : rotateSprites[3]);
@@ -475,6 +507,14 @@ namespace Pirate_War_v1
                 {
                     if (p2Table.getCoordinate(mouseY, mouseX).Value == 0 || p2Table.getCoordinate(mouseY, mouseX).Value >= 2 && p2Table.getCoordinate(mouseY, mouseX).Value <= 4)
                     {
+                        if (is_turn_changed && selectedTurnIndex != -1)
+                        {
+
+                            is_turn_changed = false;
+                            gameData.refreshStepsWindow(selectedTurnIndex);
+                            //gameData.Steps = newSteps;
+                        }
+
                         bool isScored = p2Table.isScored(mouseY, mouseX);
                         bool shot_result = p2Table.makeAShot(mouseY, mouseX);
                         createMarker(mouseX, mouseY, isScored, MARGINLEFT2);
@@ -508,6 +548,12 @@ namespace Pirate_War_v1
                 {
                     if (p1Table.getCoordinate(mouseY, mouseX).Value == 0 || p1Table.getCoordinate(mouseY, mouseX).Value >= 2 && p1Table.getCoordinate(mouseY, mouseX).Value <= 4)
                     {
+                        if (is_turn_changed && selectedTurnIndex != -1)
+                        {
+                            is_turn_changed = false;
+                            gameData.refreshStepsWindow(selectedTurnIndex);
+                            //gameData.Steps = newSteps;
+                        }
                         bool isScored = p1Table.isScored(mouseY, mouseX);
                         bool shot_result = p1Table.makeAShot(mouseY, mouseX);
                         createMarker(mouseX, mouseY, isScored, MARGINLEFT1);
@@ -542,11 +588,43 @@ namespace Pirate_War_v1
             {
                 Point p = e.GetPosition(canvas);
                 LeftButtonDownPreps(p1Table, p, p1_gunboat, p1_brig, p1_frig, currP1Ships, MARGINLEFT1);
+                if (p.X > 612 && p.X < 664 && p.Y > 502 && p.Y < 545)
+                {
+                    if (muted)
+                    {
+                        Sound_Button.Fill = SoundSprites[0];
+
+                        soundSetVolume(1.0);
+
+                    }
+                    else
+                    {
+                        Sound_Button.Fill = SoundSprites[1];
+
+                        soundSetVolume(0.0);
+                    }
+                    muted = !muted;
+                }
             }
             else if (STATE == States.PREP2)
             {
                 Point p = e.GetPosition(canvas);
                 LeftButtonDownPreps(p2Table, p, p2_gunboat, p2_brig, p2_frig, currP2Ships, MARGINLEFT2);
+                if (p.X > 612 && p.X < 664 && p.Y > 502 && p.Y < 545)
+                {
+                    if (muted)
+                    {
+                        Sound_Button.Fill = SoundSprites[0];
+                        soundSetVolume(1.0);
+
+                    }
+                    else
+                    {
+                        Sound_Button.Fill = SoundSprites[1];
+                        soundSetVolume(0.0);
+                    }
+                    muted = !muted;
+                }
             }
             else if (STATE == States.INFO1)
             {
@@ -605,6 +683,79 @@ namespace Pirate_War_v1
             }
         }
 
+        private void soundSetVolume(double v)
+        {
+            mediaPlayer.Volume= v;
+        }
+
+        public void makeP1Shots(int mouseY, int mouseX)
+        {
+            if (p2Table.getCoordinate(mouseY, mouseX).Value == 0 || p2Table.getCoordinate(mouseY, mouseX).Value >= 2 && p2Table.getCoordinate(mouseY, mouseX).Value <= 4)
+            {
+                bool isScored = p2Table.isScored(mouseY, mouseX);
+                bool shot_result = p2Table.makeAShot(mouseY, mouseX);
+                createMarker(mouseX, mouseY, isScored, MARGINLEFT2);
+                //gameData.saveMove("P1", currTurn, p1Table.getCoordinate(mouseY, mouseX));
+                //Debug.WriteLine(gameData.Steps[gameData.Steps.Count - 1].ToString());
+                if (isScored)
+                {
+                    gameData.P1_HIT++;
+                    if (shot_result)
+                    {
+                        p2Table.getShipByCoordinate(mouseY, mouseX).shipBody.Visibility = Visibility.Visible;
+                        p2Table.getShipByCoordinate(mouseY, mouseX).shipBody.Fill = shipSprites[p2Table.getShipByCoordinate(mouseY, mouseX).SpriteIndex];
+                        currP2Ships[p2Table.getShipByCoordinate(mouseY, mouseX).Type - 2]--;
+                        p2_frig.Text = currP2Ships[2] + "/" + maxPlaceableShips[2];
+                        p2_brig.Text = currP2Ships[1] + "/" + maxPlaceableShips[1];
+                        p2_gunboat.Text = currP2Ships[0] + "/" + maxPlaceableShips[0];
+                    }
+                }
+                else
+                {
+                    gameData.P1_MISS++;
+                    game_curr_turn = Turn.P2;
+                    if (firstTurn == game_curr_turn) currTurn++;
+                }
+                //gameData.saveMove(mouseX - 1, mouseY, isScored, p1Table.Name);
+                drawSelectedGrid();
+                refreshScores();
+            }
+        }
+
+        public void MakeP2Shots(int mouseY, int mouseX)
+        {
+            if (p1Table.getCoordinate(mouseY, mouseX).Value == 0 || p1Table.getCoordinate(mouseY, mouseX).Value >= 2 && p1Table.getCoordinate(mouseY, mouseX).Value <= 4)
+            {
+                bool isScored = p1Table.isScored(mouseY, mouseX);
+                bool shot_result = p1Table.makeAShot(mouseY, mouseX);
+                createMarker(mouseX, mouseY, isScored, MARGINLEFT1);
+                //gameData.saveMove("P2", currTurn, p2Table.getCoordinate(mouseY, mouseX));
+                //Debug.WriteLine(gameData.Steps[gameData.Steps.Count - 1].ToString());
+                if (isScored)
+                {
+                    gameData.P2_HIT++;
+                    if (shot_result)
+                    {
+                        p1Table.getShipByCoordinate(mouseY, mouseX).shipBody.Visibility = Visibility.Visible;
+                        p1Table.getShipByCoordinate(mouseY, mouseX).shipBody.Fill = shipSprites[p1Table.getShipByCoordinate(mouseY, mouseX).SpriteIndex];
+                        currP1Ships[p1Table.getShipByCoordinate(mouseY, mouseX).Type - 2]--;
+                        p1_frig.Text = currP1Ships[2] + "/" + maxPlaceableShips[2];
+                        p1_brig.Text = currP1Ships[1] + "/" + maxPlaceableShips[1];
+                        p1_gunboat.Text = currP1Ships[0] + "/" + maxPlaceableShips[0];
+                    }
+                }
+                else
+                {
+                    gameData.P2_MISS++;
+                    game_curr_turn = Turn.P1;
+                    if (firstTurn == game_curr_turn) currTurn++;
+                }
+                //gameData.saveMove(mouseX - 1, mouseY, isScored, p1Table.Name);
+                drawSelectedGrid();
+                refreshScores();
+            }
+        }
+
         void LeftButtonDownPreps(GameTable pTable, Point p, TextBlock p_gunboat, TextBlock p_brig, TextBlock p_frig, int[] currPShips, int MARGINLEFT)
         {
             if (placeable)
@@ -612,6 +763,7 @@ namespace Pirate_War_v1
                 pTable.placeShip(mouseY, mouseX, rotation, selectedShipType);
                 pTable.getShipByCoordinate(mouseY, mouseX).shipBody.Fill = shipSprites[pTable.getShipByCoordinate(mouseY, mouseX).SpriteIndex];
                 canvas.Children.Add(pTable.getShipByCoordinate(mouseY, mouseX).shipBody);
+                placed_canvas_rectangles.Add(pTable.getShipByCoordinate(mouseY, mouseX).shipBody);
                 Canvas.SetTop(pTable.getShipByCoordinate(mouseY, mouseX).shipBody, MARGINTOP + (mouseY - 1) * CELLSIZE - (pTable.getShipByCoordinate(mouseY, mouseX).Rotation == 0 ? (pTable.getShipByCoordinate(mouseY, mouseX).Type == 2 ? -10 : pTable.getShipByCoordinate(mouseY, mouseX).Type == 3 ? 13 : 25) : -pTable.getShipByCoordinate(mouseY, mouseX).shipBody.Width));
                 Canvas.SetLeft(pTable.getShipByCoordinate(mouseY, mouseX).shipBody, MARGINLEFT + (mouseX - 1) * CELLSIZE - (pTable.getShipByCoordinate(mouseY, mouseX).Rotation == 0 ? (pTable.getShipByCoordinate(mouseY, mouseX).Type == 4 ? 15 : 0) : (pTable.getShipByCoordinate(mouseY, mouseX).Type == 2 ? -10 : pTable.getShipByCoordinate(mouseY, mouseX).Type == 3 ? 13 : 25)));
                 currPShips[selectedShipType - 2]++;
@@ -684,6 +836,46 @@ namespace Pirate_War_v1
                 rotation = (rotation == 0) ? 1 : 0;
             }
             rotationShipView.Fill = (rotation == 0 ? rotateSprites[2] : rotateSprites[3]);
+        }
+
+        void drawTableShips(GameTable gT, int PlayerIndex)
+        {
+            foreach (Ships element in gT.ships)
+            {
+                element.shipBody.Fill = shipSprites[element.SpriteIndex];
+                element.shipBody.Visibility = (PlayerIndex == 0 ? Visibility.Visible : Visibility.Visible);
+
+                canvas.Children.Add(element.shipBody);
+                placed_canvas_rectangles.Add(element.shipBody);
+                Canvas.SetTop(element.shipBody, MARGINTOP + (element.StartingCoordinates.X - 1) * CELLSIZE - (element.Rotation == 0 ? (element.Type == 2 ? -10 : element.Type == 3 ? 13 : 25) : -element.shipBody.Width));
+                Canvas.SetLeft(element.shipBody, (PlayerIndex == 0 ? MARGINLEFT1 : MARGINLEFT2) + (element.StartingCoordinates.Y - 1) * CELLSIZE - (element.Rotation == 0 ? (element.Type == 4 ? 15 : 0) : (element.Type == 2 ? -10 : element.Type == 3 ? 13 : 25)));
+
+            }
+        }
+
+        void resetToDefault()
+        {
+            foreach (Rectangle rect in placed_canvas_rectangles)
+            {
+                canvas.Children.Remove(rect);
+            }
+        }
+
+        public void backToSelectedTurn(int ind)
+        {
+            resetToDefault();
+            gameData.reset();
+            p1Table.setTableToDefault();
+            p2Table.setTableToDefault();
+            drawTableShips(p2Table, 1);
+            drawTableShips(p1Table, 0);
+            TurnElement te = null;
+
+            //ITT KELLENE LŐNI VALAHOGY MERT NEM MENT
+            game_curr_turn = Turn.P1;
+            currTurn = (te == null ? 1 : te.Round);
+
+
         }
 
 
@@ -766,9 +958,18 @@ namespace Pirate_War_v1
                 ImageSource = new BitmapImage(new Uri(Directory.GetCurrentDirectory() + "\\sources\\szem_lehuzva.png", UriKind.Absolute))
             });
 
+            //Sound Sprites
+            SoundSprites.Add(new ImageBrush
+            {
+                ImageSource = new BitmapImage(new Uri(Directory.GetCurrentDirectory() + "\\sources\\hang_on.png", UriKind.Absolute))
+            }); SoundSprites.Add(new ImageBrush
+            {
+                ImageSource = new BitmapImage(new Uri(Directory.GetCurrentDirectory() + "\\sources\\hang_off.png", UriKind.Absolute))
+            });
+
 
         }
-        void createMarker(int XX, int YY, bool scored, int MARGINLEFT)
+        public void createMarker(int XX, int YY, bool scored, int MARGINLEFT)
         {
             Rectangle markerRect = new Rectangle
             {
@@ -778,6 +979,7 @@ namespace Pirate_War_v1
                 Fill = (scored ? markerSprites[0] : markerSprites[1])
             };
             canvas.Children.Add(markerRect);
+            placed_canvas_rectangles.Add(markerRect);
             Canvas.SetTop(markerRect, MARGINTOP + (YY - 1) * CELLSIZE);
             Canvas.SetLeft(markerRect, MARGINLEFT + (XX - 1) * CELLSIZE);
 
@@ -795,11 +997,11 @@ namespace Pirate_War_v1
             }
 
         }
-        void refreshScores()
+        public void refreshScores()
         {
             p1_Scores.Text = "Score: " + EndOfMatch.P1Wins;
             p2_Scores.Text = "Score: " + EndOfMatch.P2Wins;
-            Debug.Write(EndOfMatch.P1Wins.ToString() + " : " + EndOfMatch.P2Wins.ToString());
+            //Debug.Write(EndOfMatch.P1Wins.ToString() + " : " + EndOfMatch.P2Wins.ToString());
             if (game_curr_turn == Turn.P1)
             {
                 curr_turn.Text = p1Table.Name + "'s Turn";

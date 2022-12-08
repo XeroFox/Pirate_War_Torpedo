@@ -26,6 +26,7 @@ namespace Pirate_War_v1
         int szamlalo1 = 0;
         int szamlalo2 = 0;
         public static game_select instance;
+        public bool Mode;
         public game_select()
         {
             InitializeComponent();
@@ -144,6 +145,7 @@ namespace Pirate_War_v1
                 PlayerAiEllen.Visibility = Visibility.Hidden;
 
             }
+            Mode = true;
         }
 
         private void AI_ellen_Click(object sender, RoutedEventArgs e)
@@ -161,6 +163,7 @@ namespace Pirate_War_v1
                 Player1Box.Visibility = Visibility.Hidden;
                 Player2Box.Visibility = Visibility.Hidden;
             }
+            Mode = false;
         }
 
         private void Player1_TextChanged(object sender, TextChangedEventArgs e)

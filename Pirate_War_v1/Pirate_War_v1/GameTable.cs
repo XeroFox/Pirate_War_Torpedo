@@ -13,7 +13,7 @@ using System.Windows.Shell;
 
 namespace Pirate_War_v1
 {
-    internal class GameTable
+    public class GameTable
     {
         public string Name { get; set; }
         public List<Coordinates> Table { get; set; }
