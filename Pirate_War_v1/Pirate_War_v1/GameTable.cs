@@ -180,19 +180,50 @@ namespace Pirate_War_v1
             if(getCoordinate(XX,YY).Value == 0)
             {
                 getCoordinate(XX, YY).Value = 1;
-                SoundPlayer zene = new SoundPlayer(Directory.GetCurrentDirectory() + "\\sounds\\shot_miss.wav");
-                zene.Load();
-                zene.Play();
+                if (game_select.instance.Mode)
+                {
+                    if (!Torpedo_1v1.instance.muted)
+                    {
+                        SoundPlayer zene = new SoundPlayer(Directory.GetCurrentDirectory() + "\\sounds\\shot_miss.wav");
+                        zene.Load();
+                        zene.Play();
+                    }
+                }
+                else
+                {
+                    if (!Torpedo_v_ai.instance.muted)
+                    {
+                        SoundPlayer zene = new SoundPlayer(Directory.GetCurrentDirectory() + "\\sounds\\shot_miss.wav");
+                        zene.Load();
+                        zene.Play();
+                    }
+                }
             }
             else if(getCoordinate(XX, YY).Value > 1 && getCoordinate(XX, YY).Value <= 4)
             {
                 shipType = getCoordinate(XX, YY).Value;
                 getCoordinate(XX, YY).Value = getCoordinate(XX, YY).Value + getCoordinate(XX, YY).Value * 10;
                 result = checkIfDestroyed(XX, YY, shipType);
+                if (game_select.instance.Mode)
+                {
+                    if (!Torpedo_1v1.instance.muted)
+                    {
+                        SoundPlayer zene = new SoundPlayer(Directory.GetCurrentDirectory() + "\\sounds\\shot_hit.wav");
+                        zene.Load();
+                        zene.Play();
+                    }
+                }
+                else
+                {
+                    if (!Torpedo_v_ai.instance.muted)
+                    {
+                        SoundPlayer zene = new SoundPlayer(Directory.GetCurrentDirectory() + "\\sounds\\shot_hit.wav");
+                        zene.Load();
+                        zene.Play();
+                    }
+                }
                 
-                SoundPlayer zene = new SoundPlayer(Directory.GetCurrentDirectory() + "\\sounds\\shot_hit.wav");
-                zene.Load();
-                zene.Play();
+                
             }
             return result;
         }

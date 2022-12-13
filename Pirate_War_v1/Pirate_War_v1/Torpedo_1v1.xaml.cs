@@ -52,7 +52,7 @@ namespace Pirate_War_v1
         List<ImageBrush> rotateSprites = new List<ImageBrush>();
         List<ImageBrush> eyeSprites = new List<ImageBrush>();
         List<ImageBrush> SoundSprites = new List<ImageBrush>();
-        bool muted = false;
+        public bool muted = false;
         public List<ImageBrush> shipSprites = new List<ImageBrush>();
         List<ImageBrush> markerSprites = new List<ImageBrush>();
 
