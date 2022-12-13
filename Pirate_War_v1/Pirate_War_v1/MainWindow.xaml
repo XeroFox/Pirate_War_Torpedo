@@ -73,5 +73,8 @@
         <Button x:Name="Credits" Content="Credits" HorizontalAlignment="Center" Margin="0,510,0,0" VerticalAlignment="Top" FontSize="48" Width="280" Background="#FF3DBF98" FontFamily="Bauhaus 93" Click="CreditsClicked"/>
         <Button x:Name="Exit" Content="Exit" HorizontalAlignment="Center" Margin="0,590,0,0" VerticalAlignment="Top" FontSize="48" Width="280" Background="#FF3DBF98" FontFamily="Bauhaus 93" Click="ExitClicked"/>
         <Label Content="Pirate War" HorizontalAlignment="Center" Margin="0,72,0,0" VerticalAlignment="Top" FontSize="84" Foreground="White" FontFamily="Bauhaus 93"/>
+        <Canvas x:Name="canvas"  MouseMove="canvas_MouseMove" MouseLeftButtonDown="canvas_MouseLeftButtonDown" MouseRightButtonDown="canvas_MouseRightButtonDown">
+            <Rectangle x:Name="Sound_button" Width="200" Height="200" Canvas.Left="140" Canvas.Top="252"/>
+        </Canvas>
     </Grid>
 </Window>

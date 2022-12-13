@@ -58,7 +58,7 @@ namespace Pirate_War_v1
         int mouseX = 0;
         int mouseY = 0;
         int mouseSide = 0;
-        bool muted = false;
+        public bool muted = false;
 
         Rectangle selectedRectangle = new Rectangle
         {
