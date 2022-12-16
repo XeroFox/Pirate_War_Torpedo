@@ -69,12 +69,9 @@ namespace Pirate_War_v1
             P2_MISS = 0;
         }
 
-        public string toJSON()
+        public override string? ToString()
         {
-
-            string jsonString = jsonString = JsonSerializer.Serialize(this);
-
-            return jsonString;
+            return "P1_H: " + P1_HIT + "P2_H: " + P2_HIT + "TURN: " + TURN + "P1_M: " + P1_MISS + "P2_M: " + P2_MISS + "P1_NAME: " + P1_NAME + "P2_NAME: " + P2_NAME + "WINNER: " + WON;
         }
     }
 }

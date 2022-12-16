@@ -7,6 +7,7 @@
         mc:Ignorable="d"
         Title="Torpedo_1v1" Height="720" Width="1280"
         ResizeMode="NoResize"
+        Closed="Window_Closed"
         WindowStartupLocation="CenterScreen"
         KeyDown="Window_KeyDown">
     <Grid>

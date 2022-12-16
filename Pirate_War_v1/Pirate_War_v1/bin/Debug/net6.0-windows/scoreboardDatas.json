@@ -1,0 +1,22 @@
+[
+  {
+    "P1_NAME": "karcsi",
+    "P2_NAME": "harcsi",
+    "P1_HIT": 2,
+    "P2_HIT": 18,
+    "P1_MISS": 3,
+    "P2_MISS": 2,
+    "TURN": 1,
+    "WON": ""
+  },
+  {
+    "P1_NAME": "kacsa",
+    "P2_NAME": "cike",
+    "P1_HIT": 0,
+    "P2_HIT": 18,
+    "P1_MISS": 1,
+    "P2_MISS": 0,
+    "TURN": 1,
+    "WON": "cike"
+  }
+]
