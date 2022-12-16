@@ -16,6 +16,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Media.Media3D;
 using System.Windows.Shapes;
 using System.Windows.Threading;
+using static Pirate_War_v1.Torpedo_1v1;
 using static System.Formats.Asn1.AsnWriter;
 
 namespace Pirate_War_v1
@@ -414,7 +415,7 @@ namespace Pirate_War_v1
 
         private void canvas_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
         {
-            Debug.WriteLine(gameData.toJSON());
+            
         }
 
         private void Window_KeyDown(object sender, KeyEventArgs e)
@@ -512,6 +513,7 @@ namespace Pirate_War_v1
             ai_hit.Text = gameData.P2_HIT.ToString();
             ai_miss.Text = gameData.P2_MISS.ToString();
             game_turn.Text = currTurn.ToString();
+            gameData.TURN = currTurn;
         }
 
         void drawSelectedGrid()
@@ -678,6 +680,13 @@ namespace Pirate_War_v1
                 eom.Player2Box.FontSize = 30;
                 eom.Player1Box.Foreground = (whoWins == 0 ? Brushes.Green : Brushes.Red);
                 eom.Show();
+
+                FinalData finalData = new FinalData(gameData.P1_NAME, gameData.P2_NAME, gameData.P1_HIT, gameData.P2_HIT, gameData.P1_MISS, gameData.P2_MISS, gameData.TURN, gameData.WON);
+                ScoreData scoreData = new ScoreData();
+                scoreData.loadJsonFile();
+                scoreData.gameDatas.Add(finalData);
+                scoreData.writeJsonFile();
+
                 this.Close();
             }
         }
@@ -818,7 +827,7 @@ namespace Pirate_War_v1
             foreach (Ships element in gT.ships)
             {
                 element.shipBody.Fill = shipSprites[element.SpriteIndex];
-                element.shipBody.Visibility = (PlayerIndex == 0 ? Visibility.Visible : Visibility.Visible);
+                element.shipBody.Visibility = (PlayerIndex == 0 ? Visibility.Visible : Visibility.Hidden);
 
                 canvas.Children.Add(element.shipBody);
                 placed_canvas_rectangles.Add(element.shipBody);

@@ -38,14 +38,14 @@ namespace Pirate_War_v1
             {
                 Sound_button.Fill = new ImageBrush
                 {
-                    ImageSource = new BitmapImage(new Uri(Directory.GetCurrentDirectory() + "\\sources\\hang_off.png", UriKind.Absolute))
+                    ImageSource = new BitmapImage(new Uri(Directory.GetCurrentDirectory() + "\\sources\\hang_off2.png", UriKind.Absolute))
                 };
             }
             else
             {
                 Sound_button.Fill = new ImageBrush
                 {
-                    ImageSource = new BitmapImage(new Uri(Directory.GetCurrentDirectory() + "\\sources\\hang_on.png", UriKind.Absolute))
+                    ImageSource = new BitmapImage(new Uri(Directory.GetCurrentDirectory() + "\\sources\\hang_on2.png", UriKind.Absolute))
                 };
             }
             PlayBG();
@@ -60,7 +60,9 @@ namespace Pirate_War_v1
         }
         private void ScoreboardClicked(object sender, RoutedEventArgs e)
         {
-
+            game_select objgame_select = new game_select();
+            this.Close();
+            objgame_select.Show();
         }
         private void HowToPlayClicked(object sender, RoutedEventArgs e)
         {
@@ -87,7 +89,7 @@ namespace Pirate_War_v1
                     menubgSound.Volume= 0.8f;
                     Sound_button.Fill = new ImageBrush
                     {
-                        ImageSource = new BitmapImage(new Uri(Directory.GetCurrentDirectory() + "\\sources\\hang_on.png", UriKind.Absolute))
+                        ImageSource = new BitmapImage(new Uri(Directory.GetCurrentDirectory() + "\\sources\\hang_on2.png", UriKind.Absolute))
                     };
                     muted = !muted;
                 }
@@ -95,7 +97,7 @@ namespace Pirate_War_v1
                     menubgSound.Volume = 0.0f;
                     Sound_button.Fill = new ImageBrush
                     {
-                        ImageSource = new BitmapImage(new Uri(Directory.GetCurrentDirectory() + "\\sources\\hang_off.png", UriKind.Absolute))
+                        ImageSource = new BitmapImage(new Uri(Directory.GetCurrentDirectory() + "\\sources\\hang_off2.png", UriKind.Absolute))
                     };
                     muted = !muted;
                 }
@@ -107,7 +109,7 @@ namespace Pirate_War_v1
 
         private void PlayBG()
         {
-            Uri uri = new Uri(System.IO.Directory.GetCurrentDirectory() + @"\sounds\menu_bg_music.wav", UriKind.Absolute);
+            Uri uri = new Uri(Directory.GetCurrentDirectory() + @"\sounds\menu_bg_music.wav", UriKind.Absolute);
             menubgSound.Open(uri);
             menubgSound.MediaEnded += new EventHandler(Media_Ended);
             menubgSound.Play();

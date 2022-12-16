@@ -379,7 +379,7 @@ namespace Pirate_War_v1
         // ------------------- JOBB KLIKK ESEMÉNY ----------------------
         private void canvas_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
         {
-            Debug.WriteLine(gameData.toJSON());
+            
         }
         // ------------------------- GOMB NYOMÁS ESEMÉNY -------------------
         private void Window_KeyDown(object sender, KeyEventArgs e)
@@ -844,7 +844,7 @@ namespace Pirate_War_v1
             foreach (Ships element in gT.ships)
             {
                 element.shipBody.Fill = shipSprites[element.SpriteIndex];
-                element.shipBody.Visibility = (PlayerIndex == 0 ? Visibility.Visible : Visibility.Visible);
+                element.shipBody.Visibility = Visibility.Hidden;
 
                 canvas.Children.Add(element.shipBody);
                 placed_canvas_rectangles.Add(element.shipBody);
@@ -1016,6 +1016,7 @@ namespace Pirate_War_v1
             p2_hit.Text = gameData.P2_HIT.ToString();
             p2_miss.Text = gameData.P2_MISS.ToString();
             game_turn.Text = currTurn.ToString();
+            gameData.TURN = currTurn;
 
             WinCheck(played);
         }
@@ -1031,12 +1032,18 @@ namespace Pirate_War_v1
                     eom.P2Miss.Content = "Miss: " + p2_miss.Text;
                     eom.P2Hit.Content = "Hit: " + p2_hit.Text;
                     eom.winnerText.Content = p2Table.Name + " WINS!!";
+                    gameData.WON = p2Table.Name;
                     eom.WINNER = "2";
                     eom.Player1Box.Text = p1Table.Name;
                     eom.Player2Box.Foreground = Brushes.Green;
                     eom.Player2Box.Text = p2Table.Name;
                     eom.Player1Box.Foreground = Brushes.Red;
                     eom.Show();
+                    FinalData finalData = new FinalData(gameData.P1_NAME, gameData.P2_NAME, gameData.P1_HIT, gameData.P2_HIT, gameData.P1_MISS, gameData.P2_MISS, gameData.TURN, gameData.WON);
+                    ScoreData scoreData = new ScoreData();
+                    scoreData.loadJsonFile();
+                    scoreData.gameDatas.Add(finalData);
+                    scoreData.writeJsonFile();
                     this.Close();
                 }
                 if (p2_brig.Text == "0/2" && p2_frig.Text == "0/1" && p2_gunboat.Text == "0/4")
@@ -1047,12 +1054,18 @@ namespace Pirate_War_v1
                     eom.P2Miss.Content = "Miss: " + p2_miss.Text;
                     eom.P2Hit.Content = "Hit: " + p2_hit.Text;
                     eom.winnerText.Content = p1Table.Name + " WINS!!";
+                    gameData.WON = p1Table.Name;
                     eom.WINNER = "1";
                     eom.Player1Box.Text = p1Table.Name;
                     eom.Player1Box.Foreground = Brushes.Green;
                     eom.Player2Box.Text = p2Table.Name;
                     eom.Player2Box.Foreground = Brushes.Red;
                     eom.Show();
+                    FinalData finalData = new FinalData(gameData.P1_NAME, gameData.P2_NAME, gameData.P1_HIT, gameData.P2_HIT, gameData.P1_MISS, gameData.P2_MISS, gameData.TURN, gameData.WON);
+                    ScoreData scoreData = new ScoreData();
+                    scoreData.loadJsonFile();
+                    scoreData.gameDatas.Add(finalData);
+                    scoreData.writeJsonFile();
                     this.Close();
                 }
             }
