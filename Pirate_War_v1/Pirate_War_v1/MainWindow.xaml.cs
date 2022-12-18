@@ -60,13 +60,15 @@ namespace Pirate_War_v1
         }
         private void ScoreboardClicked(object sender, RoutedEventArgs e)
         {
-            game_select objgame_select = new game_select();
+            Scoreboard scBoard = new Scoreboard();
             this.Close();
-            objgame_select.Show();
+            scBoard.Show();
         }
         private void HowToPlayClicked(object sender, RoutedEventArgs e)
         {
-
+            HowToPlay htp = new HowToPlay();
+            this.Close();
+            htp.Show();
         }
         private void CreditsClicked(object sender, RoutedEventArgs e)
         {
