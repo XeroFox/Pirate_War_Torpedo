@@ -427,5 +427,10 @@ namespace Pirate_War_v1
                 i++;
             }
         }
+
+        public override int GetHashCode()
+        {
+            return $"{this.Name}{this.Table}{this.ships}{this.startingShips}".GetHashCode();
+        }
     }
 }

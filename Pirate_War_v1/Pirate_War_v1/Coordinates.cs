@@ -35,5 +35,10 @@ namespace Pirate_War_v1
 
             return result;
         }
+
+        public override int GetHashCode()
+        {
+            return $"{this.X}{this.Y}{this.Value}".GetHashCode();
+        }
     }
 }

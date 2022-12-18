@@ -36,5 +36,10 @@ namespace Pirate_War_v1
                 RenderTransform = (Rotation == 1 ? new RotateTransform(270) : new RotateTransform(0)),
             };
         }
+
+        public override int GetHashCode()
+        {
+            return $"{this.Type}{this.PlacedCoordinates}{this.StartingCoordinates}{this.SpriteIndex}{this.Rotation}{this.Destroyed}{this.shipBody}".GetHashCode();
+        }
     }
 }
